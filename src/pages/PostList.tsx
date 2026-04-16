@@ -1,44 +1,17 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { supabase } from '../lib/supabase'
 import type { Tables } from '../types/database'
 
 type Post = Tables<'post'>
 
-export default function PostList() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+interface PostListProps {
+  posts: Post[]
+  title: string
+}
 
-  useEffect(() => {
-    async function fetchPosts() {
-      const { data, error } = await supabase
-        .from('post')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        setError(error.message)
-      } else {
-        setPosts(data)
-      }
-      setLoading(false)
-    }
-
-    fetchPosts()
-  }, [])
-
-  if (loading) {
-    return <p>Loading posts...</p>
-  }
-
-  if (error) {
-    return <p className="text-red-500">Error: {error}</p>
-  }
-
+export default function PostList({ posts, title }: PostListProps) {
   return (
-    <>
-      <h1 className="text-3xl font-bold mb-6">Posts</h1>
+    <main className="min-w-0 flex-1">
+      <h1 className="text-3xl font-bold mb-6">{title}</h1>
       {posts.length === 0 ? (
         <p>No posts yet.</p>
       ) : (
@@ -59,6 +32,6 @@ export default function PostList() {
           ))}
         </ul>
       )}
-    </>
+    </main>
   )
 }

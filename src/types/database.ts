@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      category: {
+        Row: {
+          id: number
+          name: string
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       post: {
         Row: {
           content: string
@@ -21,6 +39,7 @@ export type Database = {
           excerpt: string
           id: number
           title: string
+          category_id: number | null
         }
         Insert: {
           content: string
@@ -28,6 +47,7 @@ export type Database = {
           excerpt: string
           id?: number
           title: string
+          category_id?: number | null
         }
         Update: {
           content?: string
@@ -35,8 +55,17 @@ export type Database = {
           excerpt?: string
           id?: number
           title?: string
+          category_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "post_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "category"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
