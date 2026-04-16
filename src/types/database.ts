@@ -35,6 +35,30 @@ export type Database = {
         }
         Relationships: []
       }
+      page: {
+        Row: {
+          content: string
+          created_at: string
+          id: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: never
+          slug: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: never
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
       post: {
         Row: {
           category_id: number | null

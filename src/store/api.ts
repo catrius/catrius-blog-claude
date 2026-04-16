@@ -4,10 +4,11 @@ import type { Tables } from '../types/database'
 
 type Post = Tables<'post'>
 type Category = Tables<'category'>
+type Page = Tables<'page'>
 
 export const api = createApi({
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['Post', 'Category'],
+  tagTypes: ['Post', 'Category', 'Page'],
   endpoints: (builder) => ({
     getPosts: builder.query<Post[], void>({
       queryFn: async () => {
@@ -55,7 +56,41 @@ export const api = createApi({
       },
       providesTags: ['Category'],
     }),
+
+    getPages: builder.query<Page[], void>({
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('page')
+          .select('*')
+          .order('title')
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Page' as const, id })),
+              { type: 'Page', id: 'LIST' },
+            ]
+          : [{ type: 'Page', id: 'LIST' }],
+    }),
+
+    getPage: builder.query<Page, string>({
+      queryFn: async (slug) => {
+        const { data, error } = await supabase
+          .from('page')
+          .select('*')
+          .eq('slug', slug)
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result) =>
+        result ? [{ type: 'Page', id: result.id }] : [],
+    }),
   }),
 })
 
-export const { useGetPostsQuery, useGetPostQuery, useGetCategoriesQuery } = api
+export const { useGetPostsQuery, useGetPostQuery, useGetCategoriesQuery, useGetPagesQuery, useGetPageQuery } = api
