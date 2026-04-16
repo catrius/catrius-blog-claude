@@ -28,18 +28,19 @@ export const api = createApi({
           : [{ type: 'Post', id: 'LIST' }],
     }),
 
-    getPost: builder.query<Post, number>({
-      queryFn: async (id) => {
+    getPost: builder.query<Post, string>({
+      queryFn: async (slug) => {
         const { data, error } = await supabase
           .from('post')
           .select('*')
-          .eq('id', id)
+          .eq('slug', slug)
           .single()
 
         if (error) return { error }
         return { data }
       },
-      providesTags: (_result, _error, id) => [{ type: 'Post', id }],
+      providesTags: (result) =>
+        result ? [{ type: 'Post', id: result.id }] : [],
     }),
 
     getCategories: builder.query<Category[], void>({

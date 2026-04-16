@@ -16,6 +16,16 @@ npm run update-claude:full  # Full repo scan and CLAUDE.md rewrite
 
 No test framework is configured.
 
+## Supabase CLI (remote database)
+
+To run SQL against the linked remote Supabase database, use `npx supabase db query --linked`:
+
+```bash
+npx supabase db query --linked "SELECT * FROM category;"
+```
+
+The project is already linked (project ID `tjfhuqfoswtmsdmmepcd`). After schema changes, regenerate types with `npm run update-database`.
+
 ## Architecture
 
 This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded from the Vite React template.

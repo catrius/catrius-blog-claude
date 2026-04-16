@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router'
 import { useGetPostQuery } from '../store/api'
 
 export default function PostDetail() {
-  const { id } = useParams<{ id: string }>()
-  const { data: post, isLoading, error } = useGetPostQuery(Number(id))
+  const { slug } = useParams<{ slug: string }>()
+  const { data: post, isLoading, error } = useGetPostQuery(slug!)
 
   if (isLoading) {
     return <p>Loading post...</p>

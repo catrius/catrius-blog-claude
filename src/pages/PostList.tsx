@@ -21,7 +21,7 @@ export default function PostList({ posts, title }: PostListProps) {
               key={post.id}
               className="rounded-lg border border-gray-200 p-6 hover:border-blue-500 transition-colors dark:border-gray-700"
             >
-              <Link to={`/posts/${post.id}`} className="block no-underline text-inherit">
+              <Link to={`/posts/${post.slug}`} className="block no-underline text-inherit">
                 <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
                 <p className="text-gray-500 mb-3 dark:text-gray-400">{post.excerpt}</p>
                 <time className="text-sm text-gray-400 dark:text-gray-500">

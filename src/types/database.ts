@@ -16,46 +16,52 @@ export type Database = {
     Tables: {
       category: {
         Row: {
+          created_at: string
           id: number
           name: string
-          created_at: string
+          slug: string
         }
         Insert: {
+          created_at?: string
           id?: number
           name: string
-          created_at?: string
+          slug: string
         }
         Update: {
+          created_at?: string
           id?: number
           name?: string
-          created_at?: string
+          slug?: string
         }
         Relationships: []
       }
       post: {
         Row: {
+          category_id: number | null
           content: string
           created_at: string
           excerpt: string
           id: number
+          slug: string
           title: string
-          category_id: number | null
         }
         Insert: {
+          category_id?: number | null
           content: string
           created_at?: string
           excerpt: string
           id?: number
+          slug: string
           title: string
-          category_id?: number | null
         }
         Update: {
+          category_id?: number | null
           content?: string
           created_at?: string
           excerpt?: string
           id?: number
+          slug?: string
           title?: string
-          category_id?: number | null
         }
         Relationships: [
           {
@@ -64,7 +70,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "category"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }

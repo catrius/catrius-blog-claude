@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useParams } from 'react-router'
 import { useGetPostsQuery, useGetCategoriesQuery } from '../store/api'
 import NavBar from '../components/NavBar'
 import PostList from './PostList'
 
 export default function Home() {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+  const { categorySlug } = useParams<{ categorySlug: string }>()
   const { data: posts = [], isLoading: postsLoading, error: postsError } = useGetPostsQuery()
   const { data: categories = [], isLoading: categoriesLoading } = useGetCategoriesQuery()
 
@@ -16,8 +16,12 @@ export default function Home() {
     return <p className="text-red-500">Error loading posts.</p>
   }
 
-  const filteredPosts = selectedCategoryId
-    ? posts.filter((post) => post.category_id === selectedCategoryId)
+  const selectedCategory = categorySlug
+    ? categories.find((c) => c.slug === categorySlug)
+    : null
+
+  const filteredPosts = selectedCategory
+    ? posts.filter((post) => post.category_id === selectedCategory.id)
     : posts
 
   const postCountsByCategory = new Map<number, number>()
@@ -27,9 +31,7 @@ export default function Home() {
     }
   }
 
-  const title = selectedCategoryId
-    ? categories.find((c) => c.id === selectedCategoryId)?.name ?? 'Posts'
-    : 'Posts'
+  const title = selectedCategory?.name ?? 'Posts'
 
   return (
     <div>
@@ -37,8 +39,7 @@ export default function Home() {
         categories={categories}
         postCountsByCategory={postCountsByCategory}
         totalPostCount={posts.length}
-        selectedCategoryId={selectedCategoryId}
-        onSelectCategory={setSelectedCategoryId}
+        selectedCategorySlug={categorySlug ?? null}
       />
       <PostList posts={filteredPosts} title={title} />
     </div>

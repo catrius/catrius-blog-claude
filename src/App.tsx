@@ -7,7 +7,8 @@ function App() {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/posts/:id" element={<PostDetail />} />
+        <Route path="/categories/:categorySlug" element={<Home />} />
+        <Route path="/posts/:slug" element={<PostDetail />} />
       </Routes>
     </div>
   )
