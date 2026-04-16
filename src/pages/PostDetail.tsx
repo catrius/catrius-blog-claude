@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Markdown from 'react-markdown'
 import { Link, useParams } from 'react-router'
 import { supabase } from '../lib/supabase'
 import type { Tables } from '../types/database'
@@ -52,7 +53,9 @@ export default function PostDetail() {
       <time className="block text-sm text-gray-400 mb-6 dark:text-gray-500">
         {new Date(post.created_at).toLocaleDateString()}
       </time>
-      <p className="leading-7 text-gray-800 dark:text-gray-200">{post.content}</p>
+      <div className="prose dark:prose-invert max-w-none">
+        <Markdown>{post.content}</Markdown>
+      </div>
     </article>
   )
 }
