@@ -1,5 +1,5 @@
 import Markdown from 'react-markdown'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { useGetPostQuery } from '../store/api'
 
 export default function PostDetail() {
@@ -7,29 +7,15 @@ export default function PostDetail() {
   const { data: post, isLoading, error } = useGetPostQuery(slug!)
 
   if (isLoading) {
-    return <p>Loading post...</p>
+    return null
   }
 
   if (error || !post) {
-    return (
-      <>
-        <p className="text-red-500">Post not found.</p>
-        <Link to="/" className="
-          text-blue-500
-          hover:underline
-        ">&larr; Back to posts</Link>
-      </>
-    )
+    return <p className="text-red-500">Post not found.</p>
   }
 
   return (
     <article>
-      <Link to="/" className="
-        mb-6 inline-block text-blue-500
-        hover:underline
-      ">
-        &larr; Back to posts
-      </Link>
       <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
       <time className="
         mb-6 block text-sm text-gray-400

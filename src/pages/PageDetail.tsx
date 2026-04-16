@@ -1,5 +1,5 @@
 import Markdown from 'react-markdown'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { useGetPageQuery } from '../store/api'
 
 export default function PageDetail() {
@@ -7,29 +7,15 @@ export default function PageDetail() {
   const { data: page, isLoading, error } = useGetPageQuery(slug!)
 
   if (isLoading) {
-    return <p>Loading page...</p>
+    return null
   }
 
   if (error || !page) {
-    return (
-      <>
-        <p className="text-red-500">Page not found.</p>
-        <Link to="/" className="
-          text-blue-500
-          hover:underline
-        ">&larr; Back to posts</Link>
-      </>
-    )
+    return <p className="text-red-500">Page not found.</p>
   }
 
   return (
     <article>
-      <Link to="/" className="
-        mb-6 inline-block text-blue-500
-        hover:underline
-      ">
-        &larr; Back to posts
-      </Link>
       <h1 className="mb-6 text-3xl font-bold">{page.title}</h1>
       <div className="
         prose max-w-none

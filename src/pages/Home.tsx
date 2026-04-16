@@ -42,7 +42,7 @@ export default function Home() {
   }
 
   if (postsLoading || categoriesLoading) {
-    return <p>Loading posts...</p>
+    return null
   }
 
   if (postsError) {

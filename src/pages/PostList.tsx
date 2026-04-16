@@ -82,11 +82,6 @@ export default function PostList({
             ))}
           </ul>
           <div ref={sentinelRef} className="h-1" />
-          {isFetching && (
-            <p className="py-4 text-center text-gray-500">
-              Loading more posts...
-            </p>
-          )}
         </>
       )}
     </main>
