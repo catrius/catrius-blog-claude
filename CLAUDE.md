@@ -5,10 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev       # Start Vite dev server with HMR (http://localhost:5173)
-npm run build     # Type-check (tsc -b) then build for production
-npm run lint      # ESLint across the project
-npm run preview   # Preview production build locally
+npm run dev              # Start Vite dev server with HMR (http://localhost:5173)
+npm run build            # Type-check (tsc -b) then build for production
+npm run lint             # ESLint across the project
+npm run preview          # Preview production build locally
+npm run update-claude    # Incremental CLAUDE.md update (diffs from last-indexed hash)
+npm run update-claude:full  # Full repo scan and CLAUDE.md rewrite
 ```
 
 No test framework is configured.
@@ -45,9 +47,6 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `App.css` | Component styles for `App.tsx`. Styles `.counter` button, `.hero` 3D perspective transforms, `#center` layout, `#next-steps` two-column docs/social grid, link hover effects, `.ticks` decorative borders, responsive breakpoints at 1024px. |
 | `env.d.ts` | Vite env type declarations for `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. |
 | `lib/supabase.ts` | Supabase client singleton. Validates env vars at import time. |
-| `assets/hero.png` | Hero background image used in the landing page. |
-| `assets/react.svg` | React logo displayed in the 3D hero section. |
-| `assets/vite.svg` | Vite logo displayed in the 3D hero section. |
 
 ### Public (`public/`)
 
@@ -81,3 +80,7 @@ Flat config format (ESLint v9). Extends: JS recommended, typescript-eslint recom
 ## Self-Maintenance
 
 When making significant changes (adding/removing files, changing architecture, adding dependencies, modifying build config), update this CLAUDE.md incrementally to reflect those changes. Keep updates minimal and targeted — do not rescan the whole repo.
+
+When doing a broad update of CLAUDE.md, use `git diff <last-indexed-hash>..HEAD --stat` to find what changed since the last index, then only read and re-document those files. Update the hash at the bottom after.
+
+<!-- last-indexed: 55cb04a -->
