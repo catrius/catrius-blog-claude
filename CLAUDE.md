@@ -25,6 +25,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **State management:** Local only. No global state library. `App.tsx` uses a single `useState` for a counter demo.
 
+**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts`. Requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` env vars (see `.env.example`). Provides Auth, Database, Storage, and Realtime.
+
 **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin, plus plain CSS with CSS nesting. Tailwind is imported at the top of `src/index.css`. Light/dark theming via CSS custom properties with `prefers-color-scheme` media query.
 
 **Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`. Images in `src/assets/` imported as modules.
@@ -41,6 +43,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `App.tsx` | Root component. Renders a landing page with a 3D hero section (layered React/Vite logos over `hero.png`), a counter button (`useState`), documentation links, and social links. No props. No custom hooks. |
 | `index.css` | Global styles & theming. Defines CSS custom properties (`--text`, `--bg`, `--accent`, font families, etc.) with light/dark variants via `prefers-color-scheme`. Styles `body`, `h1`/`h2`, `p`, `code`, and `#root` container (max-width 1126px, centered flex column). |
 | `App.css` | Component styles for `App.tsx`. Styles `.counter` button, `.hero` 3D perspective transforms, `#center` layout, `#next-steps` two-column docs/social grid, link hover effects, `.ticks` decorative borders, responsive breakpoints at 1024px. |
+| `env.d.ts` | Vite env type declarations for `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. |
+| `lib/supabase.ts` | Supabase client singleton. Validates env vars at import time. |
 | `assets/hero.png` | Hero background image used in the landing page. |
 | `assets/react.svg` | React logo displayed in the 3D hero section. |
 | `assets/vite.svg` | Vite logo displayed in the 3D hero section. |
@@ -61,7 +65,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.app.json` | App TS config. Target ES2023, react-jsx, bundler resolution, strict checks, `verbatimModuleSyntax`. Includes `src/`. |
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh. Lints `*.{ts,tsx}`, ignores `dist/`. |
-| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4). Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0. |
+| `.env.example` | Template for required env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`). Copy to `.env.local`. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@supabase/supabase-js`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0. |
 
 ## TypeScript
 

@@ -1,5 +1,5 @@
 {
-  "name": "Catri.us",
+  "name": "catrius_blog",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,9 +8,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update-database": "supabase gen types --lang=typescript --project-id tjfhuqfoswtmsdmmepcd > src/types/database.ts && eslint ./src/types/database.ts --fix"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
     "@tailwindcss/vite": "^4.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -31,6 +33,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
+    "supabase": "^2.92.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.0",
     "vite": "^8.0.4"
