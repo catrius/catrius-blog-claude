@@ -21,11 +21,11 @@ export default function PostDetail() {
 
   return (
     <article>
-      <Link to="/" className="inline-block mb-6 text-blue-500 hover:underline">
+      <Link to="/" className="mb-6 inline-block text-blue-500 hover:underline">
         &larr; Back to posts
       </Link>
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      <time className="block text-sm text-gray-400 mb-6 dark:text-gray-500">
+      <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+      <time className="mb-6 block text-sm text-gray-400 dark:text-gray-500">
         {new Date(post.created_at).toLocaleDateString()}
       </time>
       <div className="prose dark:prose-invert max-w-none">

@@ -60,7 +60,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
       {/* Sidebar panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col bg-white transition-transform duration-300 dark:bg-gray-950 md:hidden ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col bg-white transition-transform duration-300 md:hidden dark:bg-gray-950 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* Close button */}
         <div className="flex items-center justify-end px-4 py-4">
@@ -89,7 +89,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           {/* Pages */}
           {pages.length > 0 && (
             <div className="mb-8">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              <h3 className="mb-3 text-xs font-semibold tracking-wider text-gray-400 uppercase dark:text-gray-500">
                 Pages
               </h3>
               <ul className="space-y-1">
@@ -113,7 +113,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
           {/* Categories */}
           <div>
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+            <h3 className="mb-3 text-xs font-semibold tracking-wider text-gray-400 uppercase dark:text-gray-500">
               Categories
             </h3>
             <ul className="space-y-1">

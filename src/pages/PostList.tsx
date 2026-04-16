@@ -40,23 +40,23 @@ export default function PostList({
 
   return (
     <main className="min-w-0 flex-1">
-      <h1 className="text-3xl font-bold mb-6">{title}</h1>
+      <h1 className="mb-6 text-3xl font-bold">{title}</h1>
       {posts.length === 0 && !isFetching ? (
         <p>No posts yet.</p>
       ) : (
         <>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {posts.map((post) => (
               <li
                 key={post.id}
-                className="rounded-lg border border-gray-200 p-6 hover:border-blue-500 transition-colors dark:border-gray-700"
+                className="rounded-lg border border-gray-200 p-6 transition-colors hover:border-blue-500 dark:border-gray-700"
               >
                 <Link
                   to={`/posts/${post.slug}`}
-                  className="block no-underline text-inherit"
+                  className="block text-inherit no-underline"
                 >
-                  <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-                  <p className="text-gray-500 mb-3 dark:text-gray-400">
+                  <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
+                  <p className="mb-3 text-gray-500 dark:text-gray-400">
                     {post.excerpt}
                   </p>
                   <time className="text-sm text-gray-400 dark:text-gray-500">
@@ -68,7 +68,7 @@ export default function PostList({
           </ul>
           <div ref={sentinelRef} className="h-1" />
           {isFetching && (
-            <p className="text-center py-4 text-gray-500">
+            <p className="py-4 text-center text-gray-500">
               Loading more posts...
             </p>
           )}

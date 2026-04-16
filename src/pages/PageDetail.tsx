@@ -21,10 +21,10 @@ export default function PageDetail() {
 
   return (
     <article>
-      <Link to="/" className="inline-block mb-6 text-blue-500 hover:underline">
+      <Link to="/" className="mb-6 inline-block text-blue-500 hover:underline">
         &larr; Back to posts
       </Link>
-      <h1 className="text-3xl font-bold mb-6">{page.title}</h1>
+      <h1 className="mb-6 text-3xl font-bold">{page.title}</h1>
       <div className="prose dark:prose-invert max-w-none">
         <Markdown>{page.content}</Markdown>
       </div>
