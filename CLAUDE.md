@@ -25,7 +25,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **State management:** Local only. No global state library. `App.tsx` uses a single `useState` for a counter demo.
 
-**Styling:** Plain CSS with CSS nesting (handled natively by Vite). Light/dark theming via CSS custom properties defined in `src/index.css` with `prefers-color-scheme` media query. No CSS framework or CSS-in-JS.
+**Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin, plus plain CSS with CSS nesting. Tailwind is imported at the top of `src/index.css`. Light/dark theming via CSS custom properties with `prefers-color-scheme` media query.
 
 **Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`. Images in `src/assets/` imported as modules.
 
@@ -56,7 +56,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
-| `vite.config.ts` | Vite config. Plugins: `@vitejs/plugin-react`, `@rolldown/plugin-babel` with `reactCompilerPreset()`. |
+| `vite.config.ts` | Vite config. Plugins: `@tailwindcss/vite`, `@vitejs/plugin-react`, `@rolldown/plugin-babel` with `reactCompilerPreset()`. |
 | `tsconfig.json` | Root TS config. Composite references to `tsconfig.app.json` and `tsconfig.node.json`. |
 | `tsconfig.app.json` | App TS config. Target ES2023, react-jsx, bundler resolution, strict checks, `verbatimModuleSyntax`. Includes `src/`. |
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
