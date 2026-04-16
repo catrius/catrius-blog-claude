@@ -9,6 +9,7 @@ npm run dev              # Start Vite dev server with HMR (http://localhost:5173
 npm run build            # Type-check (tsc -b) then build for production
 npm run lint             # ESLint across the project
 npm run preview          # Preview production build locally
+npm run update-database  # Regenerate Supabase types from remote schema → src/types/database.ts
 npm run update-claude    # Incremental CLAUDE.md update (diffs from last-indexed hash)
 npm run update-claude:full  # Full repo scan and CLAUDE.md rewrite
 ```
@@ -21,17 +22,17 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **React Compiler** is enabled via `@rolldown/plugin-babel` with `reactCompilerPreset()` in `vite.config.ts`. This automatically optimizes memoization — avoid manual `useMemo`/`useCallback` unless there's a specific reason.
 
-**Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode) → `src/App.tsx` (single top-level component).
+**Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
-**Routing:** None. Single-page app with no client-side router.
+**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/posts/:id` → `PostDetail`.
 
-**State management:** Local only. No global state library. `App.tsx` uses a single `useState` for a counter demo.
+**State management:** Local only. No global state library. Page components use `useState`/`useEffect` for data fetching from Supabase.
 
-**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts`. Requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` env vars (see `.env.example`). Provides Auth, Database, Storage, and Realtime.
+**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts` (typed with generated `Database` type). Requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` env vars (see `.env.example`). Schema has `post` and `category` tables; types are generated via `npm run update-database` into `src/types/database.ts`.
 
-**Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin, plus plain CSS with CSS nesting. Tailwind is imported at the top of `src/index.css`. Light/dark theming via CSS custom properties with `prefers-color-scheme` media query.
+**Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). `src/index.css` contains only Tailwind imports — all styling is done with Tailwind utility classes.
 
-**Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`. Images in `src/assets/` imported as modules.
+**Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`.
 
 **Git hooks:** Husky pre-commit hook (`.husky/pre-commit`) runs `npm run lint && npx tsc -b` before every commit.
 
@@ -41,12 +42,16 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
-| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>` on `#root`. Imports global styles. |
-| `App.tsx` | Root component. Renders a landing page with a 3D hero section (layered React/Vite logos over `hero.png`), a counter button (`useState`), documentation links, and social links. No props. No custom hooks. |
-| `index.css` | Global styles & theming. Defines CSS custom properties (`--text`, `--bg`, `--accent`, font families, etc.) with light/dark variants via `prefers-color-scheme`. Styles `body`, `h1`/`h2`, `p`, `code`, and `#root` container (max-width 1126px, centered flex column). |
-| `App.css` | Component styles for `App.tsx`. Styles `.counter` button, `.hero` 3D perspective transforms, `#center` layout, `#next-steps` two-column docs/social grid, link hover effects, `.ticks` decorative borders, responsive breakpoints at 1024px. |
+| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>` and `<BrowserRouter>` on `#root`. Imports global styles. |
+| `App.tsx` | Router shell. Defines `Routes`: `/` → `Home`, `/posts/:id` → `PostDetail`. Wrapped in a max-width container. |
+| `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
+| `pages/Home.tsx` | Home page. Fetches posts and categories from Supabase, renders `Sidebar` + `PostList`. Supports filtering by category. |
+| `pages/PostDetail.tsx` | Single post page. Fetches post by `id` param, renders Markdown content via `react-markdown` with prose styling. |
+| `pages/PostList.tsx` | Presentational component. Renders a list of post cards with title, excerpt, date, and links to detail page. |
+| `components/Sidebar.tsx` | Category sidebar (hidden on mobile). Shows "All Posts" + per-category buttons with post counts. Controls filtering in `Home`. |
+| `types/database.ts` | Auto-generated Supabase database types (via `npm run update-database`). Defines `post` and `category` table types and helper generics (`Tables`, `TablesInsert`, `TablesUpdate`). |
 | `env.d.ts` | Vite env type declarations for `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. |
-| `lib/supabase.ts` | Supabase client singleton. Validates env vars at import time. |
+| `lib/supabase.ts` | Supabase typed client singleton. Validates env vars at import time. |
 
 ### Public (`public/`)
 
@@ -65,7 +70,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh. Lints `*.{ts,tsx}`, ignores `dist/`. |
 | `.env.example` | Template for required env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`). Copy to `.env.local`. |
-| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@supabase/supabase-js`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@supabase/supabase-js`, `react-router`, `react-markdown`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `supabase` CLI. |
 
 ## TypeScript
 
@@ -83,4 +88,4 @@ When making significant changes (adding/removing files, changing architecture, a
 
 When doing a broad update of CLAUDE.md, use `git diff <last-indexed-hash>..HEAD --stat` to find what changed since the last index, then only read and re-document those files. Update the hash at the bottom after.
 
-<!-- last-indexed: 55cb04a -->
+<!-- last-indexed: 625b239 -->

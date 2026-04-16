@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "prepare": "husky",
     "update-database": "supabase gen types --lang=typescript --project-id tjfhuqfoswtmsdmmepcd > src/types/database.ts && eslint ./src/types/database.ts --fix",
-    "update-claude": "claude --print 'Read the last-indexed hash from CLAUDE.md, run git diff <hash>..HEAD --stat to find what changed, then update only the affected sections in CLAUDE.md. Update the last-indexed hash to the current HEAD when done.'",
-    "update-claude:full": "claude --print 'Scan the entire repo. Update every section of CLAUDE.md to reflect the current state of all files, architecture, dependencies, and config. Update the last-indexed hash to the current HEAD when done.'"
+    "update-claude": "claude 'Read the last-indexed hash from CLAUDE.md, run git diff <hash>..HEAD --stat to find what changed, then update only the affected sections in CLAUDE.md. Update the last-indexed hash to the current HEAD when done.'",
+    "update-claude:full": "claude 'Scan the entire repo. Update every section of CLAUDE.md to reflect the current state of all files, architecture, dependencies, and config. Update the last-indexed hash to the current HEAD when done.'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.3",
