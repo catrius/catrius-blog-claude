@@ -2,7 +2,7 @@ import type { Tables } from '../types/database'
 
 type Category = Tables<'category'>
 
-interface SidebarProps {
+interface NavBarProps {
   categories: Category[]
   postCountsByCategory: Map<number, number>
   totalPostCount: number
@@ -10,50 +10,47 @@ interface SidebarProps {
   onSelectCategory: (id: number | null) => void
 }
 
-export default function Sidebar({
+export default function NavBar({
   categories,
   postCountsByCategory,
   totalPostCount,
   selectedCategoryId,
   onSelectCategory,
-}: SidebarProps) {
+}: NavBarProps) {
   return (
-    <aside className="hidden w-56 shrink-0 md:block">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-        Categories
-      </h2>
-      <ul className="flex flex-col gap-1">
+    <nav className="mb-6 overflow-x-auto">
+      <ul className="flex gap-2">
         <li>
           <button
             onClick={() => onSelectCategory(null)}
-            className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
+            className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-colors ${
               selectedCategoryId === null
                 ? 'bg-blue-100 font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
                 : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
             }`}
           >
             All Posts
-            <span className="ml-auto float-right text-gray-400 dark:text-gray-500">{totalPostCount}</span>
+            <span className="ml-1.5 text-gray-400 dark:text-gray-500">({totalPostCount})</span>
           </button>
         </li>
         {categories.map((category) => (
           <li key={category.id}>
             <button
               onClick={() => onSelectCategory(category.id)}
-              className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
+              className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-colors ${
                 selectedCategoryId === category.id
                   ? 'bg-blue-100 font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
               }`}
             >
               {category.name}
-              <span className="ml-auto float-right text-gray-400 dark:text-gray-500">
-                {postCountsByCategory.get(category.id) ?? 0}
+              <span className="ml-1.5 text-gray-400 dark:text-gray-500">
+                ({postCountsByCategory.get(category.id) ?? 0})
               </span>
             </button>
           </li>
         ))}
       </ul>
-    </aside>
+    </nav>
   )
 }

@@ -1,44 +1,19 @@
-import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 import { Link, useParams } from 'react-router'
-import { supabase } from '../lib/supabase'
-import type { Tables } from '../types/database'
-
-type Post = Tables<'post'>
+import { useGetPostQuery } from '../store/api'
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>()
-  const [post, setPost] = useState<Post | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { data: post, isLoading, error } = useGetPostQuery(Number(id))
 
-  useEffect(() => {
-    async function fetchPost() {
-      const { data, error } = await supabase
-        .from('post')
-        .select('*')
-        .eq('id', Number(id))
-        .single()
-
-      if (error) {
-        setError(error.message)
-      } else {
-        setPost(data)
-      }
-      setLoading(false)
-    }
-
-    fetchPost()
-  }, [id])
-
-  if (loading) {
+  if (isLoading) {
     return <p>Loading post...</p>
   }
 
   if (error || !post) {
     return (
       <>
-        <p className="text-red-500">{error ?? 'Post not found.'}</p>
+        <p className="text-red-500">Post not found.</p>
         <Link to="/" className="text-blue-500 hover:underline">&larr; Back to posts</Link>
       </>
     )

@@ -1,48 +1,19 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
-import type { Tables } from '../types/database'
-import Sidebar from '../components/Sidebar'
+import { useState } from 'react'
+import { useGetPostsQuery, useGetCategoriesQuery } from '../store/api'
+import NavBar from '../components/NavBar'
 import PostList from './PostList'
 
-type Post = Tables<'post'>
-type Category = Tables<'category'>
-
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { data: posts = [], isLoading: postsLoading, error: postsError } = useGetPostsQuery()
+  const { data: categories = [], isLoading: categoriesLoading } = useGetCategoriesQuery()
 
-  useEffect(() => {
-    async function fetchData() {
-      const [postsResult, categoriesResult] = await Promise.all([
-        supabase.from('post').select('*').order('created_at', { ascending: false }),
-        supabase.from('category').select('*').order('name'),
-      ])
-
-      if (postsResult.error) {
-        setError(postsResult.error.message)
-      } else {
-        setPosts(postsResult.data)
-      }
-
-      if (categoriesResult.data) {
-        setCategories(categoriesResult.data)
-      }
-
-      setLoading(false)
-    }
-
-    fetchData()
-  }, [])
-
-  if (loading) {
+  if (postsLoading || categoriesLoading) {
     return <p>Loading posts...</p>
   }
 
-  if (error) {
-    return <p className="text-red-500">Error: {error}</p>
+  if (postsError) {
+    return <p className="text-red-500">Error loading posts.</p>
   }
 
   const filteredPosts = selectedCategoryId
@@ -61,8 +32,8 @@ export default function Home() {
     : 'Posts'
 
   return (
-    <div className="flex gap-8">
-      <Sidebar
+    <div>
+      <NavBar
         categories={categories}
         postCountsByCategory={postCountsByCategory}
         totalPostCount={posts.length}

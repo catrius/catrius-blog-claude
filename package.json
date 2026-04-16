@@ -14,12 +14,14 @@
     "update-claude:full": "claude 'Scan the entire repo. Update every section of CLAUDE.md to reflect the current state of all files, architecture, dependencies, and config. Update the last-indexed hash to the current HEAD when done.'"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "@supabase/supabase-js": "^2.103.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",
+    "react-redux": "^9.2.0",
     "react-router": "^7.14.1",
     "tailwindcss": "^4.2.2"
   },
