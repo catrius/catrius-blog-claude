@@ -41,44 +41,69 @@ export default function NavBar({
   }
 
   return (
-    <nav className="relative mb-6 hidden md:block">
+    <nav className="
+      relative mb-6 hidden
+      md:block
+    ">
       <div
-        className={`${fadeBase} left-0 bg-gradient-to-r from-white dark:from-gray-950 ${isBeginning ? 'opacity-0' : 'opacity-100'}`}
+        className={`
+          ${fadeBase}
+          left-0 bg-linear-to-r from-white
+          dark:from-gray-950
+          ${isBeginning ? `opacity-0` : `opacity-100`}
+        `}
       />
       <div
-        className={`${fadeBase} right-0 bg-gradient-to-l from-white dark:from-gray-950 ${isEnd ? 'opacity-0' : 'opacity-100'}`}
+        className={`
+          ${fadeBase}
+          right-0 bg-linear-to-l from-white
+          dark:from-gray-950
+          ${isEnd ? `opacity-0` : `opacity-100`}
+        `}
       />
       <Swiper
         modules={[FreeMode]}
         freeMode
         slidesPerView="auto"
         spaceBetween={8}
-        className="!overflow-hidden"
+        className="overflow-hidden!"
         onSlideChange={handleProgress}
         onReachBeginning={handleProgress}
         onReachEnd={handleProgress}
         onAfterInit={handleProgress}
         onSliderMove={handleProgress}
       >
-        <SwiperSlide className="!w-auto">
+        <SwiperSlide className="w-auto!">
           <Link
             to="/"
-            className={`${pillBase} ${selectedCategorySlug === null ? pillActive : pillInactive}`}
+            className={`
+              ${pillBase}
+              ${selectedCategorySlug === null ? pillActive : pillInactive}
+            `}
           >
             All Posts
-            <span className="ml-1.5 text-gray-400 dark:text-gray-500">
+            <span className="
+              ml-1.5 text-gray-400
+              dark:text-gray-500
+            ">
               ({totalPostCount})
             </span>
           </Link>
         </SwiperSlide>
         {categories.map((category) => (
-          <SwiperSlide key={category.id} className="!w-auto">
+          <SwiperSlide key={category.id} className="w-auto!">
             <Link
               to={`/categories/${category.slug}`}
-              className={`${pillBase} ${selectedCategorySlug === category.slug ? pillActive : pillInactive}`}
+              className={`
+                ${pillBase}
+                ${selectedCategorySlug === category.slug ? pillActive : pillInactive}
+              `}
             >
               {category.name}
-              <span className="ml-1.5 text-gray-400 dark:text-gray-500">
+              <span className="
+                ml-1.5 text-gray-400
+                dark:text-gray-500
+              ">
                 ({postCountsByCategory.get(category.id) ?? 0})
               </span>
             </Link>

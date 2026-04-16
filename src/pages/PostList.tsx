@@ -45,21 +45,36 @@ export default function PostList({
         <p>No posts yet.</p>
       ) : (
         <>
-          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="
+            grid grid-cols-1 gap-6
+            sm:grid-cols-2
+            lg:grid-cols-3
+            xl:grid-cols-4
+          ">
             {posts.map((post) => (
               <li
                 key={post.id}
-                className="rounded-lg border border-gray-200 p-6 transition-colors hover:border-blue-500 dark:border-gray-700"
+                className="
+                  rounded-lg border border-gray-200 p-6 transition-colors
+                  hover:border-blue-500
+                  dark:border-gray-700
+                "
               >
                 <Link
                   to={`/posts/${post.slug}`}
                   className="block text-inherit no-underline"
                 >
                   <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
-                  <p className="mb-3 text-gray-500 dark:text-gray-400">
+                  <p className="
+                    mb-3 text-gray-500
+                    dark:text-gray-400
+                  ">
                     {post.excerpt}
                   </p>
-                  <time className="text-sm text-gray-400 dark:text-gray-500">
+                  <time className="
+                    text-sm text-gray-400
+                    dark:text-gray-500
+                  ">
                     {new Date(post.created_at).toLocaleDateString()}
                   </time>
                 </Link>

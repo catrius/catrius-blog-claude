@@ -1,9 +1,9 @@
 import js from '@eslint/js'
 import globals from 'globals'
+import betterTailwindcss from 'eslint-plugin-better-tailwindcss'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import tailwindcss from 'eslint-plugin-tailwindcss'
-import tseslint from 'typescript-eslint'
+import tseslint, { parser as tsParser } from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
@@ -15,15 +15,22 @@ export default defineConfig([
       tseslint.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
-      tailwindcss.configs['flat/recommended'],
+      betterTailwindcss.configs.recommended,
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parser: tsParser,
+      parserOptions: {
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     settings: {
-      tailwindcss: {
-        config: {},
+      'better-tailwindcss': {
+        entryPoint: 'src/index.css',
       },
     },
   },

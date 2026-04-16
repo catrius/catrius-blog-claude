@@ -14,21 +14,33 @@ export default function PostDetail() {
     return (
       <>
         <p className="text-red-500">Post not found.</p>
-        <Link to="/" className="text-blue-500 hover:underline">&larr; Back to posts</Link>
+        <Link to="/" className="
+          text-blue-500
+          hover:underline
+        ">&larr; Back to posts</Link>
       </>
     )
   }
 
   return (
     <article>
-      <Link to="/" className="mb-6 inline-block text-blue-500 hover:underline">
+      <Link to="/" className="
+        mb-6 inline-block text-blue-500
+        hover:underline
+      ">
         &larr; Back to posts
       </Link>
       <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
-      <time className="mb-6 block text-sm text-gray-400 dark:text-gray-500">
+      <time className="
+        mb-6 block text-sm text-gray-400
+        dark:text-gray-500
+      ">
         {new Date(post.created_at).toLocaleDateString()}
       </time>
-      <div className="prose dark:prose-invert max-w-none">
+      <div className="
+        prose max-w-none
+        dark:prose-invert
+      ">
         <Markdown>{post.content}</Markdown>
       </div>
     </article>

@@ -14,18 +14,27 @@ export default function PageDetail() {
     return (
       <>
         <p className="text-red-500">Page not found.</p>
-        <Link to="/" className="text-blue-500 hover:underline">&larr; Back to posts</Link>
+        <Link to="/" className="
+          text-blue-500
+          hover:underline
+        ">&larr; Back to posts</Link>
       </>
     )
   }
 
   return (
     <article>
-      <Link to="/" className="mb-6 inline-block text-blue-500 hover:underline">
+      <Link to="/" className="
+        mb-6 inline-block text-blue-500
+        hover:underline
+      ">
         &larr; Back to posts
       </Link>
       <h1 className="mb-6 text-3xl font-bold">{page.title}</h1>
-      <div className="prose dark:prose-invert max-w-none">
+      <div className="
+        prose max-w-none
+        dark:prose-invert
+      ">
         <Markdown>{page.content}</Markdown>
       </div>
     </article>
