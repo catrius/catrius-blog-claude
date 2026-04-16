@@ -21,9 +21,47 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode) → `src/App.tsx` (single top-level component).
 
+**Routing:** None. Single-page app with no client-side router.
+
+**State management:** Local only. No global state library. `App.tsx` uses a single `useState` for a counter demo.
+
 **Styling:** Plain CSS with CSS nesting (handled natively by Vite). Light/dark theming via CSS custom properties defined in `src/index.css` with `prefers-color-scheme` media query. No CSS framework or CSS-in-JS.
 
 **Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`. Images in `src/assets/` imported as modules.
+
+**Git hooks:** Husky pre-commit hook (`.husky/pre-commit`) runs `npm run lint && npx tsc -b` before every commit.
+
+## File Inventory
+
+### Source (`src/`)
+
+| File | Purpose |
+|---|---|
+| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>` on `#root`. Imports global styles. |
+| `App.tsx` | Root component. Renders a landing page with a 3D hero section (layered React/Vite logos over `hero.png`), a counter button (`useState`), documentation links, and social links. No props. No custom hooks. |
+| `index.css` | Global styles & theming. Defines CSS custom properties (`--text`, `--bg`, `--accent`, font families, etc.) with light/dark variants via `prefers-color-scheme`. Styles `body`, `h1`/`h2`, `p`, `code`, and `#root` container (max-width 1126px, centered flex column). |
+| `App.css` | Component styles for `App.tsx`. Styles `.counter` button, `.hero` 3D perspective transforms, `#center` layout, `#next-steps` two-column docs/social grid, link hover effects, `.ticks` decorative borders, responsive breakpoints at 1024px. |
+| `assets/hero.png` | Hero background image used in the landing page. |
+| `assets/react.svg` | React logo displayed in the 3D hero section. |
+| `assets/vite.svg` | Vite logo displayed in the 3D hero section. |
+
+### Public (`public/`)
+
+| File | Purpose |
+|---|---|
+| `favicon.svg` | Browser favicon. |
+| `icons.svg` | SVG sprite sheet. Icons: `documentation-icon`, `social-icon`, `github-icon`, `discord-icon`, `x-icon`, `bluesky-icon`. Referenced via `<use href="#id">`. |
+
+### Config (root)
+
+| File | Purpose |
+|---|---|
+| `vite.config.ts` | Vite config. Plugins: `@vitejs/plugin-react`, `@rolldown/plugin-babel` with `reactCompilerPreset()`. |
+| `tsconfig.json` | Root TS config. Composite references to `tsconfig.app.json` and `tsconfig.node.json`. |
+| `tsconfig.app.json` | App TS config. Target ES2023, react-jsx, bundler resolution, strict checks, `verbatimModuleSyntax`. Includes `src/`. |
+| `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
+| `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh. Lints `*.{ts,tsx}`, ignores `dist/`. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4). Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0. |
 
 ## TypeScript
 
