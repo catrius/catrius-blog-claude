@@ -60,6 +60,7 @@ export default function Home() {
 
   return (
     <div>
+      {/* Hidden on mobile — categories are in the sidebar */}
       <NavBar
         categories={categories}
         postCountsByCategory={postCountsByCategory}

@@ -34,11 +34,11 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider` and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
-**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/posts/:id` → `PostDetail`.
+**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`.
 
-**State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`). Local `useState` is used only for UI state (e.g., category filter selection).
+**State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
 
-**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts` (typed with generated `Database` type). Requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` env vars (see `.env.example`). Schema has `post` and `category` tables; types are generated via `npm run update-database` into `src/types/database.ts`.
+**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts` (typed with generated `Database` type). Requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` env vars (see `.env.example`). Schema has `post`, `category`, and `page` tables; types are generated via `npm run update-database` into `src/types/database.ts`.
 
 **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). `src/index.css` contains only Tailwind imports — all styling is done with Tailwind utility classes.
 
@@ -53,15 +53,19 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | File | Purpose |
 |---|---|
 | `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
-| `App.tsx` | Router shell. Defines `Routes`: `/` → `Home`, `/posts/:id` → `PostDetail`. Wrapped in a max-width container. |
+| `App.tsx` | Router shell. Defines `Routes`: `/` → `Home`, `/categories/:categorySlug` → `Home`, `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Wrapped in shared `Header`/`Footer` layout. |
 | `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
-| `pages/Home.tsx` | Home page. Uses `useGetPostsQuery` and `useGetCategoriesQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category. |
+| `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. |
 | `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. |
-| `pages/PostList.tsx` | Presentational component. Renders a list of post cards with title, excerpt, date, and links to detail page. |
-| `components/NavBar.tsx` | Category filter bar. Shows "All Posts" + per-category pill buttons with post counts. Controls filtering in `Home`. |
-| `store/api.ts` | RTK Query API slice. Defines `getPosts`, `getPost`, and `getCategories` endpoints using Supabase client via `queryFn`. Exports auto-generated hooks. |
+| `pages/PageDetail.tsx` | Static page view. Uses `useGetPageQuery` hook, renders Markdown content with prose styling. |
+| `pages/PostList.tsx` | Presentational component. Renders a responsive grid of post cards with infinite scroll (IntersectionObserver sentinel). |
+| `components/NavBar.tsx` | Category filter bar (desktop only, `hidden md:block`). Horizontal Swiper of pill buttons with post counts. On mobile, categories are in the Sidebar instead. |
+| `components/Header.tsx` | Site header with logo, page-link Swiper (desktop), and hamburger menu button (mobile). Manages Sidebar open/close state. |
+| `components/Footer.tsx` | Site footer with copyright and social links (GitHub, X, Bluesky, Discord). |
+| `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains page links and category navigation. Hidden on `md+` screens. |
+| `store/api.ts` | RTK Query API slice. Defines `getPosts` (paginated), `getPost`, `getCategories`, `getPostCounts`, `getPages`, and `getPage` endpoints using Supabase client via `queryFn`. Exports auto-generated hooks. |
 | `store/store.ts` | Redux store. Configures store with RTK Query reducer and middleware. |
-| `types/database.ts` | Auto-generated Supabase database types (via `npm run update-database`). Defines `post` and `category` table types and helper generics (`Tables`, `TablesInsert`, `TablesUpdate`). |
+| `types/database.ts` | Auto-generated Supabase database types (via `npm run update-database`). Defines `post`, `category`, and `page` table types and helper generics (`Tables`, `TablesInsert`, `TablesUpdate`). |
 | `env.d.ts` | Vite env type declarations for `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. |
 | `lib/supabase.ts` | Supabase typed client singleton. Validates env vars at import time. |
 
@@ -82,7 +86,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh. Lints `*.{ts,tsx}`, ignores `dist/`. |
 | `.env.example` | Template for required env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`). Copy to `.env.local`. |
-| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `supabase` CLI. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `swiper`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `supabase` CLI. |
 
 ## TypeScript
 
@@ -96,8 +100,21 @@ Flat config format (ESLint v9). Extends: JS recommended, typescript-eslint recom
 
 ## Self-Maintenance
 
-When making significant changes (adding/removing files, changing architecture, adding dependencies, modifying build config), update this CLAUDE.md incrementally to reflect those changes. Keep updates minimal and targeted — do not rescan the whole repo.
+**IMPORTANT — Update this file as part of every task that changes the items below.** Do not defer updates to a later step; make them inline as you work.
 
-When doing a broad update of CLAUDE.md, use `git diff <last-indexed-hash>..HEAD --stat` to find what changed since the last index, then only read and re-document those files. Update the hash at the bottom after.
+Update CLAUDE.md when any of these happen:
+- **New or removed source file** → add/remove its row in the File Inventory table.
+- **New or removed route** → update the Routing line and the `App.tsx` row.
+- **New or removed RTK Query endpoint/hook** → update the State management line and the `store/api.ts` row.
+- **New Supabase table** → update the Supabase line and `types/database.ts` row.
+- **New runtime dependency** → update the `package.json` row.
+- **Build/config change** → update the Commands section or relevant config row.
+- **Architecture change** (e.g., new layout component, responsive strategy) → update the Architecture section.
 
-<!-- last-indexed: 625b239 -->
+Keep updates minimal and targeted — only touch the lines affected by your change.
+
+After updating, bump the last-indexed hash at the bottom of this file to the current HEAD.
+
+For a broad catch-up, run `git diff <last-indexed-hash>..HEAD --stat`, read only the changed files, and update accordingly.
+
+<!-- last-indexed: 5906547 -->

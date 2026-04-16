@@ -41,7 +41,7 @@ export default function NavBar({
   }
 
   return (
-    <nav className="relative mb-6">
+    <nav className="relative mb-6 hidden md:block">
       <div
         className={`${fadeBase} left-0 bg-gradient-to-r from-white dark:from-gray-950 ${isBeginning ? 'opacity-0' : 'opacity-100'}`}
       />
