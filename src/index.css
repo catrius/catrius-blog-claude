@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@layer base {
+  .w-md-editor-text-pre,
+  .w-md-editor-text-input,
+  .w-md-editor-text > .w-md-editor-text-pre > code,
+  .w-md-editor-preview {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+  }
+}

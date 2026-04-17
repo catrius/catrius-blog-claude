@@ -1,7 +1,20 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import MDEditor from '@uiw/react-md-editor'
 import { useGetCategoriesQuery } from '../../store/api'
 import type { Tables } from '../../types/database'
+
+const mobileQuery = '(max-width: 767px)'
+function subscribeToMedia(cb: () => void) {
+  const mql = window.matchMedia(mobileQuery)
+  mql.addEventListener('change', cb)
+  return () => mql.removeEventListener('change', cb)
+}
+function getIsMobile() {
+  return window.matchMedia(mobileQuery).matches
+}
+function getIsMobileServer() {
+  return false
+}
 
 type Post = Tables<'post'>
 
@@ -32,14 +45,20 @@ export default function PostForm({
   isSubmitting,
 }: PostFormProps) {
   const { data: categories = [] } = useGetCategoriesQuery()
+  const isMobile = useSyncExternalStore(subscribeToMedia, getIsMobile, getIsMobileServer)
+  const [mobilePreview, setMobilePreview] = useState<'edit' | 'preview'>('edit')
   const [title, setTitle] = useState(initialData?.title ?? '')
   const [slug, setSlug] = useState(initialData?.slug ?? '')
-  const [slugManual, setSlugManual] = useState(!!initialData)
+  const [slugManual, setSlugManual] = useState(
+    initialData ? slugify(initialData.title) !== initialData.slug : false,
+  )
   const [excerpt, setExcerpt] = useState(initialData?.excerpt ?? '')
   const [content, setContent] = useState(initialData?.content ?? '')
   const [categoryId, setCategoryId] = useState<number | null>(
     initialData?.category_id ?? null,
   )
+
+  const editorPreview = isMobile ? mobilePreview : 'live'
 
   function handleTitleChange(value: string) {
     setTitle(value)
@@ -69,7 +88,7 @@ export default function PostForm({
   `
 
   return (
-    <form onSubmit={handleSubmit} className="flex min-h-[calc(100vh-10rem)] flex-col gap-5">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label
           htmlFor="title"
@@ -91,31 +110,47 @@ export default function PostForm({
         />
       </div>
 
+
       <div>
-        <div className="mb-1 flex items-center gap-2">
-          <label
-            htmlFor="slug"
-            className="
-              text-sm font-medium text-gray-700
-              dark:text-gray-300
-            "
-          >
-            Slug
-          </label>
-          {!initialData && (
-            <button
-              type="button"
-              onClick={() => setSlugManual(!slugManual)}
-              className="
-                text-xs text-gray-400
-                hover:text-gray-600
-                dark:hover:text-gray-300
-              "
-            >
-              {slugManual ? 'Auto' : 'Manual'}
-            </button>
-          )}
-        </div>
+        <label
+          htmlFor="auto-slug"
+          className="
+            mb-1 block text-sm font-medium text-gray-700
+            dark:text-gray-300
+          "
+        >
+          Slugify
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            id="auto-slug"
+            type="checkbox"
+            checked={!slugManual}
+            onChange={(e) => {
+              const auto = e.target.checked
+              setSlugManual(!auto)
+              if (auto) {
+                setSlug(slugify(title))
+              }
+            }}
+            className="rounded border-gray-300 dark:border-gray-600"
+          />
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Generate slug from title
+          </span>
+        </label>
+      </div>
+
+      <div>
+        <label
+          htmlFor="slug"
+          className="
+            mb-1 block text-sm font-medium text-gray-700
+            dark:text-gray-300
+          "
+        >
+          Slug
+        </label>
         <input
           id="slug"
           type="text"
@@ -125,7 +160,7 @@ export default function PostForm({
             setSlug(e.target.value)
             setSlugManual(true)
           }}
-          className={inputClass}
+          className={`${inputClass} ${!slugManual ? 'bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400' : ''}`}
           placeholder="post-slug"
         />
       </div>
@@ -178,27 +213,54 @@ export default function PostForm({
         </select>
       </div>
 
-      <div data-color-mode="light" className="flex min-h-0 flex-1 flex-col dark:hidden">
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Content
-        </label>
-        <MDEditor
-          value={content}
-          onChange={(val) => setContent(val ?? '')}
-          height="100%"
-          style={{ flex: 1 }}
-        />
-      </div>
-      <div data-color-mode="dark" className="hidden min-h-0 flex-1 flex-col dark:flex">
-        <label className="mb-1 block text-sm font-medium text-gray-300">
-          Content
-        </label>
-        <MDEditor
-          value={content}
-          onChange={(val) => setContent(val ?? '')}
-          height="100%"
-          style={{ flex: 1 }}
-        />
+      <div>
+        <div className="mb-1 flex items-center justify-between">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Content
+          </label>
+          {isMobile && (
+            <div className="flex gap-1 rounded-md border border-gray-300 p-0.5 dark:border-gray-600">
+              <button
+                type="button"
+                onClick={() => setMobilePreview('edit')}
+                className={`rounded px-2.5 py-0.5 text-xs font-medium ${
+                  mobilePreview === 'edit'
+                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}
+              >
+                Write
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobilePreview('preview')}
+                className={`rounded px-2.5 py-0.5 text-xs font-medium ${
+                  mobilePreview === 'preview'
+                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}
+              >
+                Preview
+              </button>
+            </div>
+          )}
+        </div>
+        <div data-color-mode="light" className="dark:hidden">
+          <MDEditor
+            value={content}
+            onChange={(val) => setContent(val ?? '')}
+            height={700}
+            preview={editorPreview}
+          />
+        </div>
+        <div data-color-mode="dark" className="hidden dark:block">
+          <MDEditor
+            value={content}
+            onChange={(val) => setContent(val ?? '')}
+            height={700}
+            preview={editorPreview}
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-3">

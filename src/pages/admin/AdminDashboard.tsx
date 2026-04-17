@@ -98,7 +98,7 @@ export default function AdminDashboard() {
                 >
                   <td className="py-3 pr-4">
                     <Link
-                      to={`/posts/${post.slug}`}
+                      to={`/admin/posts/${post.id}/edit`}
                       className="
                         text-gray-900 no-underline
                         hover:text-blue-600
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
                   <td className="py-3 text-right">
                     <div className="flex justify-end gap-2">
                       <Link
-                        to={`/admin/posts/${post.id}/edit`}
+                        to={`/posts/${post.slug}`}
                         className="
                           rounded-sm px-2 py-1 text-xs text-blue-600
                           no-underline
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
                           dark:hover:bg-blue-900/30
                         "
                       >
-                        Edit
+                        Preview
                       </Link>
                       <button
                         onClick={() =>
