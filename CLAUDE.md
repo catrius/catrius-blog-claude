@@ -16,6 +16,8 @@ npm run update-claude:full  # Full repo scan and CLAUDE.md rewrite
 
 No test framework is configured.
 
+**Dev server:** Do not start the dev server yourself. Check if one is already running (e.g., `lsof -ti:5173`) and use it.
+
 ## Supabase CLI (remote database)
 
 To run SQL against the linked remote Supabase database, use `npx supabase db query --linked`:
