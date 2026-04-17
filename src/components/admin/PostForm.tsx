@@ -1,6 +1,7 @@
-import { useState, useSyncExternalStore } from 'react'
-import MDEditor from '@uiw/react-md-editor'
+import { useState, useRef, useSyncExternalStore } from 'react'
+import MDEditor, { type ICommand } from '@uiw/react-md-editor'
 import { useGetCategoriesQuery } from '@/store/api'
+import { useAuth } from '@/lib/AuthContext'
 import type { Tables } from '@/types/database'
 
 const mobileQuery = '(max-width: 767px)'
@@ -39,12 +40,33 @@ function slugify(text: string) {
     .replace(/-+/g, '-')
 }
 
+async function uploadImage(
+  file: File,
+  accessToken: string,
+): Promise<string> {
+  const res = await fetch(
+    `/api/upload?filename=${encodeURIComponent(file.name)}`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: file,
+    },
+  )
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Upload failed' }))
+    throw new Error(err.error ?? 'Upload failed')
+  }
+  const blob = (await res.json()) as { url: string }
+  return blob.url
+}
+
 export default function PostForm({
   initialData,
   onSubmit,
   isSubmitting,
 }: PostFormProps) {
   const { data: categories = [] } = useGetCategoriesQuery()
+  const { session } = useAuth()
   const isMobile = useSyncExternalStore(subscribeToMedia, getIsMobile, getIsMobileServer)
   const [mobilePreview, setMobilePreview] = useState<'edit' | 'preview'>('edit')
   const [title, setTitle] = useState(initialData?.title ?? '')
@@ -57,6 +79,76 @@ export default function PostForm({
   const [categoryId, setCategoryId] = useState<number | null>(
     initialData?.category_id ?? null,
   )
+  const [uploading, setUploading] = useState(false)
+  const uploadCounterRef = useRef(0)
+
+  async function handleImageFile(file: File) {
+    const token = session?.access_token
+    if (!token) return
+
+    const id = ++uploadCounterRef.current
+    const placeholder = `![Uploading image${id}...]()`
+    setContent((prev) => prev + `\n${placeholder}`)
+    setUploading(true)
+    try {
+      const url = await uploadImage(file, token)
+      const alt = file.name.replace(/\.[^.]+$/, '')
+      setContent((prev) =>
+        prev.replace(placeholder, `![${alt}](${url})`),
+      )
+    } catch {
+      setContent((prev) => prev.replace(`\n${placeholder}`, ''))
+      alert('Image upload failed. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  function handlePaste(e: React.ClipboardEvent) {
+    const items = e.clipboardData?.items
+    if (!items) return
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault()
+        const file = item.getAsFile()
+        if (file) handleImageFile(file)
+        return
+      }
+    }
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    const files = e.dataTransfer?.files
+    if (!files?.length) return
+    for (const file of files) {
+      if (file.type.startsWith('image/')) {
+        e.preventDefault()
+        handleImageFile(file)
+        return
+      }
+    }
+  }
+
+  const imageUploadCommand: ICommand = {
+    name: 'image-upload',
+    keyCommand: 'image-upload',
+    buttonProps: { 'aria-label': 'Upload image', title: 'Upload image' },
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M1 8a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 8.07 3h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 16.07 6H17a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8Zm13.5 3a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM10 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
+      </svg>
+    ),
+    execute: () => {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = 'image/*'
+      input.onchange = () => {
+        const file = input.files?.[0]
+        if (file) handleImageFile(file)
+      }
+      input.click()
+    },
+  }
 
   const editorPreview = isMobile ? mobilePreview : 'live'
 
@@ -281,23 +373,45 @@ export default function PostForm({
             </div>
           )}
         </div>
-        <div data-color-mode="light" className="dark:hidden">
+        {uploading && (
+          <p className="
+            mb-1 text-sm text-blue-600
+            dark:text-blue-400
+          ">
+            Uploading image…
+          </p>
+        )}
+        <div
+          data-color-mode="light"
+          className="dark:hidden"
+          onPaste={handlePaste}
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+        >
           <MDEditor
             value={content}
             onChange={(val) => setContent(val ?? '')}
             height={700}
             preview={editorPreview}
+            extraCommands={[imageUploadCommand]}
           />
         </div>
-        <div data-color-mode="dark" className="
-          hidden
-          dark:block
-        ">
+        <div
+          data-color-mode="dark"
+          className="
+            hidden
+            dark:block
+          "
+          onPaste={handlePaste}
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+        >
           <MDEditor
             value={content}
             onChange={(val) => setContent(val ?? '')}
             height={700}
             preview={editorPreview}
+            extraCommands={[imageUploadCommand]}
           />
         </div>
       </div>

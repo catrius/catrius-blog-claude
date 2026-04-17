@@ -8,7 +8,7 @@ import tseslint, { parser as tsParser } from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'api']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

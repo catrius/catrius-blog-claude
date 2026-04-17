@@ -18,6 +18,8 @@ No test framework is configured.
 
 **Dev server:** Do not start the dev server yourself. Check if one is already running (e.g., `lsof -ti:5173`) and use it.
 
+**Git diffs:** Exclude `package-lock.json` from diffs when reviewing changes (use `git diff -- ':!package-lock.json'`). The lock file delta is noise — dependency changes are visible in `package.json`.
+
 ## Supabase CLI (remote database)
 
 To run SQL against the linked remote Supabase database, use `npx supabase db query --linked`:
@@ -46,6 +48,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). `src/index.css` contains only Tailwind imports — all styling is done with Tailwind utility classes.
 
+**Image uploads:** Admin post editor supports image uploads via Vercel Blob. Images can be added via the toolbar camera button, clipboard paste, or drag-and-drop. The upload is handled by a Vercel serverless function (`api/upload.ts`) that verifies the Supabase auth token and streams the file to Blob storage. Requires `BLOB_READ_WRITE_TOKEN` env var (provided automatically by Vercel Blob store integration).
+
 **Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`.
 
 **Git hooks:** Husky pre-commit hook (`.husky/pre-commit`) runs `npm run lint && npx tsc -b` before every commit.
@@ -71,7 +75,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `components/Footer.tsx` | Site footer with copyright and social links (GitHub, X, Bluesky, Discord). |
 | `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains page links, category navigation, and auth controls. Hidden on `md+` screens. |
 | `components/AdminRoute.tsx` | Route guard for admin pages. Checks `useAuth()`, renders `<Outlet />` if admin, redirects to `/` otherwise. |
-| `components/admin/PostForm.tsx` | Shared post create/edit form with title, slug (auto-generated), excerpt, content (`@uiw/react-md-editor` with built-in preview), and category select. |
+| `components/admin/PostForm.tsx` | Shared post create/edit form with title, slug (auto-generated), excerpt, content (`@uiw/react-md-editor` with built-in preview), category select, and image upload (toolbar button, paste, drag-and-drop → Vercel Blob). |
 | `components/admin/DeleteConfirmDialog.tsx` | Modal dialog for confirming post deletion. Uses native `<dialog>` element. |
 | `store/api.ts` | RTK Query API slice. Queries: `getPosts` (paginated), `getPost` (by slug), `getPostById`, `getAdminPosts`, `getCategories`, `getPostCounts`, `getPages`, `getPage`. Mutations: `createPost`, `updatePost`, `deletePost`. All use Supabase client via `queryFn`. Exports auto-generated hooks. |
 | `store/store.ts` | Redux store. Configures store with RTK Query reducer and middleware. |
@@ -87,6 +91,12 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `favicon.svg` | Browser favicon. |
 | `icons.svg` | SVG sprite sheet. Icons: `documentation-icon`, `social-icon`, `github-icon`, `discord-icon`, `x-icon`, `bluesky-icon`. Referenced via `<use href="#id">`. |
 
+### API (`api/`)
+
+| File | Purpose |
+|---|---|
+| `upload.ts` | Vercel serverless function. Accepts POST with file body + `?filename=` query param. Verifies Supabase auth token (admin-only), uploads to Vercel Blob under `blog/` prefix, returns blob metadata. |
+
 ### Config (root)
 
 | File | Purpose |
@@ -96,8 +106,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.app.json` | App TS config. Target ES2023, react-jsx, bundler resolution, strict checks, `verbatimModuleSyntax`. Path alias `@/*` → `src/*`. Includes `src/`. |
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh, better-tailwindcss recommended. Uses typescript-eslint parser with project-aware type checking. Lints `*.{ts,tsx}`, ignores `dist/`. |
-| `.env.example` | Template for required env vars (`VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `VITE_PUBLIC_ADMIN_USER_ID`). Copy to `.env.local`. |
-| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `@uiw/react-md-editor`, `swiper`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
+| `.env.example` | Template for required env vars (`VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `VITE_PUBLIC_ADMIN_USER_ID`, `BLOB_READ_WRITE_TOKEN`). Copy to `.env.local`. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `@uiw/react-md-editor`, `swiper`, `@tailwindcss/typography`, `tailwindcss`, `@vercel/blob`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
 
 ## TypeScript
 
