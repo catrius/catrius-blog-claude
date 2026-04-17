@@ -10,6 +10,24 @@ export default function AdminPages() {
     id: number
     title: string
   } | null>(null)
+  const [search, setSearch] = useState('')
+  const [dateFilter, setDateFilter] = useState('')
+
+  const filteredPages = pages.filter((p) => {
+    if (search && !p.title.toLowerCase().includes(search.toLowerCase()))
+      return false
+    if (dateFilter) {
+      const created = new Date(p.created_at)
+      const now = new Date()
+      const daysAgo = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
+      if (dateFilter === '7' && daysAgo > 7) return false
+      if (dateFilter === '30' && daysAgo > 30) return false
+      if (dateFilter === '90' && daysAgo > 90) return false
+      if (dateFilter === 'year' && created.getFullYear() !== now.getFullYear())
+        return false
+    }
+    return true
+  })
 
   async function handleDeletePage() {
     if (!deletingPage) return
@@ -37,44 +55,92 @@ export default function AdminPages() {
         </Link>
       </div>
 
-      {pages.length === 0 ? (
-        <p className="
-          text-gray-500
-          dark:text-gray-400
-        ">
-          No pages yet. Create your first page!
-        </p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="
-                border-b border-gray-200
-                dark:border-gray-800
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr>
+              <th className="pr-4 pb-2">
+                <input
+                  type="text"
+                  placeholder="Filter by title..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="
+                    w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                    font-normal
+                    placeholder:text-gray-400
+                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500
+                    focus:outline-none
+                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
+                    dark:placeholder:text-gray-500
+                    dark:focus:border-blue-400 dark:focus:ring-blue-400
+                  "
+                />
+              </th>
+              <th className="
+                hidden pr-4 pb-2
+                md:table-cell
               ">
-                <th className="
-                  pr-4 pb-3 font-medium text-gray-500
+                <select
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  className="
+                    w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                    font-normal
+                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500
+                    focus:outline-none
+                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
+                    dark:focus:border-blue-400 dark:focus:ring-blue-400
+                  "
+                >
+                  <option value="">All time</option>
+                  <option value="7">Last 7 days</option>
+                  <option value="30">Last 30 days</option>
+                  <option value="90">Last 90 days</option>
+                  <option value="year">This year</option>
+                </select>
+              </th>
+              <th className="pb-2" />
+            </tr>
+            <tr className="
+              border-b border-gray-200
+              dark:border-gray-800
+            ">
+              <th className="
+                pt-2 pr-4 pb-3 font-medium text-gray-500
+                dark:text-gray-400
+              ">
+                Title
+              </th>
+              <th className="
+                hidden pt-2 pr-4 pb-3 font-medium text-gray-500
+                md:table-cell
+                dark:text-gray-400
+              ">
+                Date
+              </th>
+              <th className="
+                pt-2 pb-3 text-right font-medium text-gray-500
+                dark:text-gray-400
+              ">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredPages.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="
+                  py-6 text-center text-gray-500
                   dark:text-gray-400
                 ">
-                  Title
-                </th>
-                <th className="
-                  hidden pr-4 pb-3 font-medium text-gray-500
-                  md:table-cell
-                  dark:text-gray-400
-                ">
-                  Date
-                </th>
-                <th className="
-                  pb-3 text-right font-medium text-gray-500
-                  dark:text-gray-400
-                ">
-                  Actions
-                </th>
+                  {search || dateFilter
+                    ? 'No pages match your filters.'
+                    : 'No pages yet. Create your first page!'}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {pages.map((page) => (
+            ) : (
+              filteredPages.map((page) => (
                 <tr
                   key={page.id}
                   className="
@@ -132,11 +198,11 @@ export default function AdminPages() {
                     </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <DeleteConfirmDialog
         open={!!deletingPage}
