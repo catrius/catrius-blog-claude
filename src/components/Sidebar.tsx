@@ -5,6 +5,7 @@ import {
   useGetCategoriesQuery,
   useGetPostCountsQuery,
 } from '../store/api'
+import { useAuth } from '../lib/AuthContext'
 
 interface SidebarProps {
   open: boolean
@@ -15,6 +16,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const { data: pages = [] } = useGetPagesQuery()
   const { data: categories = [] } = useGetCategoriesQuery()
   const { data: postCounts } = useGetPostCountsQuery()
+  const { user, isAdmin, isLoading: authLoading, signInWithGoogle, signOut } = useAuth()
   const location = useLocation()
 
   const categorySlug = location.pathname.startsWith('/categories/')
@@ -207,6 +209,64 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               ))}
             </ul>
           </div>
+
+          {/* Auth controls */}
+          {!authLoading && (
+            <div className="
+              mt-8 border-t border-gray-200 pt-6
+              dark:border-gray-800
+            ">
+              {user ? (
+                <div className="space-y-1">
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      className={`
+                        block rounded-md px-3 py-2 text-sm no-underline
+                        transition-colors
+                        ${location.pathname.startsWith('/admin') ? `
+                          bg-gray-100 font-medium text-gray-900
+                          dark:bg-gray-800 dark:text-white
+                        ` : `
+                          text-gray-700
+                          hover:bg-gray-50
+                          dark:text-gray-300
+                          dark:hover:bg-gray-800/50
+                        `}
+                      `}
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={signOut}
+                    className="
+                      block w-full rounded-md px-3 py-2 text-left text-sm
+                      text-gray-700 transition-colors
+                      hover:bg-gray-50
+                      dark:text-gray-300
+                      dark:hover:bg-gray-800/50
+                    "
+                  >
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={signInWithGoogle}
+                  className="
+                    block w-full rounded-md px-3 py-2 text-left text-sm
+                    text-gray-700 transition-colors
+                    hover:bg-gray-50
+                    dark:text-gray-300
+                    dark:hover:bg-gray-800/50
+                  "
+                >
+                  Sign in
+                </button>
+              )}
+            </div>
+          )}
         </nav>
       </div>
     </>

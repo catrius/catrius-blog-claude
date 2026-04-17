@@ -6,6 +6,7 @@ import 'swiper/css'
 import 'swiper/css/free-mode'
 import type { Swiper as SwiperType } from 'swiper'
 import { useGetPagesQuery } from '../store/api'
+import { useAuth } from '../lib/AuthContext'
 import Sidebar from './Sidebar'
 
 const linkBase = 'text-sm no-underline transition-colors'
@@ -17,6 +18,7 @@ const fadeBase =
 
 export default function Header() {
   const { data: pages = [] } = useGetPagesQuery()
+  const { user, isAdmin, isLoading: authLoading, signInWithGoogle, signOut } = useAuth()
   const location = useLocation()
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
@@ -91,6 +93,52 @@ export default function Header() {
               })}
             </Swiper>
           </nav>
+
+          {/* Auth controls — desktop only */}
+          {!authLoading && (
+            <div className="
+              hidden items-center gap-3 border-l border-gray-200 pl-6
+              md:flex
+              dark:border-gray-800
+            ">
+              {user ? (
+                <>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      className={`
+                        ${linkBase}
+                        ${location.pathname.startsWith('/admin') ? linkActive : linkInactive}
+                      `}
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={signOut}
+                    className={`
+                      ${linkBase}
+                      ${linkInactive}
+                      cursor-pointer
+                    `}
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={signInWithGoogle}
+                  className={`
+                    ${linkBase}
+                    ${linkInactive}
+                    cursor-pointer
+                  `}
+                >
+                  Sign in
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Hamburger button — mobile only */}
           <button

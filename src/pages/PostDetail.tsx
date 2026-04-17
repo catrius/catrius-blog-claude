@@ -1,10 +1,24 @@
+import { useState } from 'react'
 import Markdown from 'react-markdown'
-import { useParams } from 'react-router'
-import { useGetPostQuery } from '../store/api'
+import { Link, useNavigate, useParams } from 'react-router'
+import { useGetPostQuery, useDeletePostMutation } from '../store/api'
+import { useAuth } from '../lib/AuthContext'
+import DeleteConfirmDialog from '../components/admin/DeleteConfirmDialog'
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
+  const navigate = useNavigate()
+  const { isAdmin } = useAuth()
   const { data: post, isLoading, error } = useGetPostQuery(slug!)
+  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation()
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+  async function handleDelete() {
+    if (!post) return
+    await deletePost(post.id)
+    setShowDeleteDialog(false)
+    navigate('/')
+  }
 
   if (isLoading) {
     return null
@@ -23,12 +37,48 @@ export default function PostDetail() {
       ">
         {new Date(post.created_at).toLocaleDateString()}
       </time>
+      {isAdmin && (
+        <div className="mb-6 flex gap-2">
+          <Link
+            to={`/admin/posts/${post.id}/edit`}
+            className="
+              rounded-sm bg-blue-50 px-3 py-1 text-sm text-blue-700 no-underline
+              hover:bg-blue-100
+              dark:bg-blue-900/30 dark:text-blue-300
+              dark:hover:bg-blue-900/50
+            "
+          >
+            Edit
+          </Link>
+          <button
+            onClick={() => setShowDeleteDialog(true)}
+            className="
+              rounded-sm bg-red-50 px-3 py-1 text-sm text-red-700
+              hover:bg-red-100
+              dark:bg-red-900/30 dark:text-red-300
+              dark:hover:bg-red-900/50
+            "
+          >
+            Delete
+          </button>
+        </div>
+      )}
       <div className="
         prose max-w-none
         dark:prose-invert
       ">
         <Markdown>{post.content}</Markdown>
       </div>
+
+      {isAdmin && (
+        <DeleteConfirmDialog
+          open={showDeleteDialog}
+          postTitle={post.title}
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteDialog(false)}
+          isDeleting={isDeleting}
+        />
+      )}
     </article>
   )
 }

@@ -1,10 +1,12 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { supabase } from '../lib/supabase'
-import type { Tables } from '../types/database'
+import type { Tables, TablesInsert, TablesUpdate } from '../types/database'
 
 type Post = Tables<'post'>
 type Category = Tables<'category'>
 type Page = Tables<'page'>
+type PostInsert = TablesInsert<'post'>
+type PostUpdate = TablesUpdate<'post'>
 
 export const PAGE_SIZE = 12
 
@@ -145,6 +147,85 @@ export const api = createApi({
       providesTags: (result) =>
         result ? [{ type: 'Page', id: result.id }] : [],
     }),
+
+    getPostById: builder.query<Post, number>({
+      queryFn: async (id) => {
+        const { data, error } = await supabase
+          .from('post')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result) =>
+        result ? [{ type: 'Post', id: result.id }] : [],
+    }),
+
+    getAdminPosts: builder.query<Post[], void>({
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('post')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Post' as const, id })),
+              { type: 'Post', id: 'LIST' },
+            ]
+          : [{ type: 'Post', id: 'LIST' }],
+    }),
+
+    createPost: builder.mutation<Post, PostInsert>({
+      queryFn: async (newPost) => {
+        const { data, error } = await supabase
+          .from('post')
+          .insert(newPost)
+          .select()
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+    }),
+
+    updatePost: builder.mutation<Post, { id: number; changes: PostUpdate }>({
+      queryFn: async ({ id, changes }) => {
+        const { data, error } = await supabase
+          .from('post')
+          .update(changes)
+          .eq('id', id)
+          .select()
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'Post', id },
+        { type: 'Post', id: 'LIST' },
+      ],
+    }),
+
+    deletePost: builder.mutation<null, number>({
+      queryFn: async (id) => {
+        const { error } = await supabase.from('post').delete().eq('id', id)
+
+        if (error) return { error }
+        return { data: null }
+      },
+      invalidatesTags: (_result, _error, id) => [
+        { type: 'Post', id },
+        { type: 'Post', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -155,4 +236,9 @@ export const {
   useGetPostCountsQuery,
   useGetPagesQuery,
   useGetPageQuery,
+  useGetPostByIdQuery,
+  useGetAdminPostsQuery,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation,
 } = api

@@ -32,13 +32,15 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **React Compiler** is enabled via `@rolldown/plugin-babel` with `reactCompilerPreset()` in `vite.config.ts`. This automatically optimizes memoization — avoid manual `useMemo`/`useCallback` unless there's a specific reason.
 
-**Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider` and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
+**Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
-**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`.
+**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`.
 
-**State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
+**State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`, `useGetPostByIdQuery`, `useGetAdminPostsQuery`, `useCreatePostMutation`, `useUpdatePostMutation`, `useDeletePostMutation`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
 
-**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts` (typed with generated `Database` type). Requires `VITE_PUBLIC_SUPABASE_URL` and `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY` env vars (see `.env.example`). Schema has `post`, `category`, and `page` tables; types are generated via `npm run update-database` into `src/types/database.ts`.
+**Auth:** Supabase Google OAuth managed via `AuthContext` (`src/lib/AuthContext.tsx`). `AuthProvider` wraps the app and exposes `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()` via `useAuth()` hook. Admin identity is checked client-side against `VITE_PUBLIC_ADMIN_USER_ID` env var; server-side enforcement uses Supabase RLS policies on the `post` table.
+
+**Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts` (typed with generated `Database` type). Requires `VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `VITE_PUBLIC_ADMIN_USER_ID` env vars (see `.env.example`). Schema has `post`, `category`, and `page` tables; types are generated via `npm run update-database` into `src/types/database.ts`. Google OAuth is enabled for admin login; RLS policies on `post` restrict mutations to the admin user.
 
 **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). `src/index.css` contains only Tailwind imports — all styling is done with Tailwind utility classes.
 
@@ -52,22 +54,29 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
-| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
-| `App.tsx` | Router shell. Defines `Routes`: `/` → `Home`, `/categories/:categorySlug` → `Home`, `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Wrapped in shared `Header`/`Footer` layout. |
+| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, `<AuthProvider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
+| `App.tsx` | Router shell. Defines public routes (`/`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts/new`, `/admin/posts/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
 | `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
 | `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. |
-| `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. |
+| `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. Shows Edit/Delete buttons when admin is logged in (hybrid admin controls). |
 | `pages/PageDetail.tsx` | Static page view. Uses `useGetPageQuery` hook, renders Markdown content with prose styling. |
+| `pages/admin/AdminDashboard.tsx` | Admin post list table with New/Edit/Delete actions. Uses `useGetAdminPostsQuery` and `useDeletePostMutation`. |
+| `pages/admin/AdminPostNew.tsx` | Create post page. Renders `PostForm`, calls `useCreatePostMutation`, navigates to `/admin` on success. |
+| `pages/admin/AdminPostEdit.tsx` | Edit post page. Fetches post by ID via `useGetPostByIdQuery`, renders `PostForm`, calls `useUpdatePostMutation`. |
 | `pages/PostList.tsx` | Presentational component. Renders a responsive grid of post cards with infinite scroll (IntersectionObserver sentinel). |
 | `components/NavBar.tsx` | Category filter bar (desktop only, `hidden md:block`). Horizontal Swiper of pill buttons with post counts. On mobile, categories are in the Sidebar instead. |
-| `components/Header.tsx` | Site header with logo, page-link Swiper (desktop), and hamburger menu button (mobile). Manages Sidebar open/close state. |
+| `components/Header.tsx` | Site header with logo, page-link Swiper (desktop), auth controls (Sign in/Admin/Sign out), and hamburger menu button (mobile). Manages Sidebar open/close state. |
 | `components/Footer.tsx` | Site footer with copyright and social links (GitHub, X, Bluesky, Discord). |
-| `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains page links and category navigation. Hidden on `md+` screens. |
-| `store/api.ts` | RTK Query API slice. Defines `getPosts` (paginated), `getPost`, `getCategories`, `getPostCounts`, `getPages`, and `getPage` endpoints using Supabase client via `queryFn`. Exports auto-generated hooks. |
+| `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains page links, category navigation, and auth controls. Hidden on `md+` screens. |
+| `components/AdminRoute.tsx` | Route guard for admin pages. Checks `useAuth()`, renders `<Outlet />` if admin, redirects to `/` otherwise. |
+| `components/admin/PostForm.tsx` | Shared post create/edit form with title, slug (auto-generated), excerpt, content (markdown textarea with preview toggle), and category select. |
+| `components/admin/DeleteConfirmDialog.tsx` | Modal dialog for confirming post deletion. Uses native `<dialog>` element. |
+| `store/api.ts` | RTK Query API slice. Queries: `getPosts` (paginated), `getPost` (by slug), `getPostById`, `getAdminPosts`, `getCategories`, `getPostCounts`, `getPages`, `getPage`. Mutations: `createPost`, `updatePost`, `deletePost`. All use Supabase client via `queryFn`. Exports auto-generated hooks. |
 | `store/store.ts` | Redux store. Configures store with RTK Query reducer and middleware. |
 | `types/database.ts` | Auto-generated Supabase database types (via `npm run update-database`). Defines `post`, `category`, and `page` table types and helper generics (`Tables`, `TablesInsert`, `TablesUpdate`). |
-| `env.d.ts` | Vite env type declarations for `VITE_PUBLIC_SUPABASE_URL` and `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. |
+| `env.d.ts` | Vite env type declarations for `VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `VITE_PUBLIC_ADMIN_USER_ID`. |
 | `lib/supabase.ts` | Supabase typed client singleton. Validates env vars at import time. |
+| `lib/AuthContext.tsx` | Auth context and provider for Supabase Google OAuth. Exposes `useAuth()` hook with `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()`. |
 
 ### Public (`public/`)
 
@@ -85,7 +94,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.app.json` | App TS config. Target ES2023, react-jsx, bundler resolution, strict checks, `verbatimModuleSyntax`. Includes `src/`. |
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh, better-tailwindcss recommended. Uses typescript-eslint parser with project-aware type checking. Lints `*.{ts,tsx}`, ignores `dist/`. |
-| `.env.example` | Template for required env vars (`VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`). Copy to `.env.local`. |
+| `.env.example` | Template for required env vars (`VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `VITE_PUBLIC_ADMIN_USER_ID`). Copy to `.env.local`. |
 | `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `swiper`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
 
 ## TypeScript

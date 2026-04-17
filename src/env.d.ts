@@ -12,6 +12,7 @@ declare module 'swiper/css/free-mode' {
 interface ImportMetaEnv {
   readonly VITE_PUBLIC_SUPABASE_URL: string
   readonly VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY: string
+  readonly VITE_PUBLIC_ADMIN_USER_ID: string
 }
 
 interface ImportMeta {
