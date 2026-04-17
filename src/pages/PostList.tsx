@@ -65,18 +65,18 @@ export default function PostList({
                   className="block text-inherit no-underline"
                 >
                   <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
+                  <time className="
+                    mb-3 block text-sm text-gray-400
+                    dark:text-gray-500
+                  ">
+                    {new Date(post.created_at).toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
+                  </time>
                   <p className="
-                    mb-3 text-gray-500
+                    text-gray-500
                     dark:text-gray-400
                   ">
                     {post.excerpt}
                   </p>
-                  <time className="
-                    text-sm text-gray-400
-                    dark:text-gray-500
-                  ">
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </time>
                 </Link>
               </li>
             ))}
