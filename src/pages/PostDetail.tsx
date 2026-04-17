@@ -30,15 +30,8 @@ export default function PostDetail() {
 
   return (
     <article>
-      <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
-      <time className="
-        mb-6 block text-sm text-gray-400
-        dark:text-gray-500
-      ">
-        {new Date(post.created_at).toLocaleDateString()}
-      </time>
       {isAdmin && (
-        <div className="mb-6 flex gap-2">
+        <div className="mb-4 flex gap-2">
           <Link
             to={`/admin/posts/${post.id}/edit`}
             className="
@@ -63,6 +56,13 @@ export default function PostDetail() {
           </button>
         </div>
       )}
+      <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+      <time className="
+        mb-6 block text-sm text-gray-400
+        dark:text-gray-500
+      ">
+        {new Date(post.created_at).toLocaleDateString()}
+      </time>
       <div className="
         prose max-w-none
         dark:prose-invert
