@@ -27,7 +27,7 @@ export default function AdminDashboard() {
   if (isLoading) return null
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Posts</h1>
         <Link

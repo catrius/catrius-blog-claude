@@ -46,7 +46,7 @@ export default function AdminPostEdit() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto">
       <h1 className="mb-6 text-2xl font-bold">Edit Post</h1>
       {error && (
         <p className="

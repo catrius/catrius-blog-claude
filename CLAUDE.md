@@ -71,7 +71,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `components/Footer.tsx` | Site footer with copyright and social links (GitHub, X, Bluesky, Discord). |
 | `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains page links, category navigation, and auth controls. Hidden on `md+` screens. |
 | `components/AdminRoute.tsx` | Route guard for admin pages. Checks `useAuth()`, renders `<Outlet />` if admin, redirects to `/` otherwise. |
-| `components/admin/PostForm.tsx` | Shared post create/edit form with title, slug (auto-generated), excerpt, content (markdown textarea with preview toggle), and category select. |
+| `components/admin/PostForm.tsx` | Shared post create/edit form with title, slug (auto-generated), excerpt, content (`@uiw/react-md-editor` with built-in preview), and category select. |
 | `components/admin/DeleteConfirmDialog.tsx` | Modal dialog for confirming post deletion. Uses native `<dialog>` element. |
 | `store/api.ts` | RTK Query API slice. Queries: `getPosts` (paginated), `getPost` (by slug), `getPostById`, `getAdminPosts`, `getCategories`, `getPostCounts`, `getPages`, `getPage`. Mutations: `createPost`, `updatePost`, `deletePost`. All use Supabase client via `queryFn`. Exports auto-generated hooks. |
 | `store/store.ts` | Redux store. Configures store with RTK Query reducer and middleware. |
@@ -97,7 +97,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh, better-tailwindcss recommended. Uses typescript-eslint parser with project-aware type checking. Lints `*.{ts,tsx}`, ignores `dist/`. |
 | `.env.example` | Template for required env vars (`VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `VITE_PUBLIC_ADMIN_USER_ID`). Copy to `.env.local`. |
-| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `swiper`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `@uiw/react-md-editor`, `swiper`, `@tailwindcss/typography`, `tailwindcss`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
 
 ## TypeScript
 

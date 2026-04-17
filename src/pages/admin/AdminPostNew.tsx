@@ -31,7 +31,7 @@ export default function AdminPostNew() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto">
       <h1 className="mb-6 text-2xl font-bold">New Post</h1>
       {error && (
         <p className="

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Markdown from 'react-markdown'
+import MDEditor from '@uiw/react-md-editor'
 import { useGetCategoriesQuery } from '../../store/api'
 import type { Tables } from '../../types/database'
 
@@ -40,7 +40,6 @@ export default function PostForm({
   const [categoryId, setCategoryId] = useState<number | null>(
     initialData?.category_id ?? null,
   )
-  const [showPreview, setShowPreview] = useState(false)
 
   function handleTitleChange(value: string) {
     setTitle(value)
@@ -70,7 +69,7 @@ export default function PostForm({
   `
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="flex min-h-[calc(100vh-10rem)] flex-col gap-5">
       <div>
         <label
           htmlFor="title"
@@ -179,50 +178,27 @@ export default function PostForm({
         </select>
       </div>
 
-      <div>
-        <div className="mb-1 flex items-center justify-between">
-          <label
-            htmlFor="content"
-            className="
-              text-sm font-medium text-gray-700
-              dark:text-gray-300
-            "
-          >
-            Content
-          </label>
-          <button
-            type="button"
-            onClick={() => setShowPreview(!showPreview)}
-            className="
-              text-xs text-gray-400
-              hover:text-gray-600
-              dark:hover:text-gray-300
-            "
-          >
-            {showPreview ? 'Edit' : 'Preview'}
-          </button>
-        </div>
-        {showPreview ? (
-          <div className="
-            prose max-w-none rounded-md border border-gray-300 p-4
-            dark:border-gray-700 dark:prose-invert
-          ">
-            <Markdown>{content || '*Nothing to preview*'}</Markdown>
-          </div>
-        ) : (
-          <textarea
-            id="content"
-            required
-            rows={16}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className={`
-              ${inputClass}
-              font-mono
-            `}
-            placeholder="Write your post in Markdown..."
-          />
-        )}
+      <div data-color-mode="light" className="flex min-h-0 flex-1 flex-col dark:hidden">
+        <label className="mb-1 block text-sm font-medium text-gray-700">
+          Content
+        </label>
+        <MDEditor
+          value={content}
+          onChange={(val) => setContent(val ?? '')}
+          height="100%"
+          style={{ flex: 1 }}
+        />
+      </div>
+      <div data-color-mode="dark" className="hidden min-h-0 flex-1 flex-col dark:flex">
+        <label className="mb-1 block text-sm font-medium text-gray-300">
+          Content
+        </label>
+        <MDEditor
+          value={content}
+          onChange={(val) => setContent(val ?? '')}
+          height="100%"
+          style={{ flex: 1 }}
+        />
       </div>
 
       <div className="flex items-center gap-3">
