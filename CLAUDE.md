@@ -38,7 +38,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
-**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`, `/admin/pages/new` → `AdminPageNew`, `/admin/pages/:id/edit` → `AdminPageEdit`.
+**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard` (hub with counts/links), `/admin/posts` → `AdminPosts`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`, `/admin/pages` → `AdminPages`, `/admin/pages/new` → `AdminPageNew`, `/admin/pages/:id/edit` → `AdminPageEdit`.
 
 **State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`, `useGetPostByIdQuery`, `useGetAdminPostsQuery`, `useCreatePostMutation`, `useUpdatePostMutation`, `useDeletePostMutation`, `useGetPageByIdQuery`, `useGetAdminPagesQuery`, `useCreatePageMutation`, `useUpdatePageMutation`, `useDeletePageMutation`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
 
@@ -61,12 +61,14 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | File | Purpose |
 |---|---|
 | `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, `<AuthProvider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
-| `App.tsx` | Router shell. Defines public routes (`/`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts/new`, `/admin/posts/:id/edit`, `/admin/pages/new`, `/admin/pages/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
+| `App.tsx` | Router shell. Defines public routes (`/`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts`, `/admin/posts/new`, `/admin/posts/:id/edit`, `/admin/pages`, `/admin/pages/new`, `/admin/pages/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
 | `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
 | `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. |
 | `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. Shows Edit/Delete buttons when admin is logged in (hybrid admin controls). |
 | `pages/PageDetail.tsx` | Static page view. Uses `useGetPageQuery` hook, renders Markdown content with prose styling. |
-| `pages/admin/AdminDashboard.tsx` | Admin post and page list tables with New/Edit/Delete actions. Uses `useGetAdminPostsQuery`, `useDeletePostMutation`, `useGetAdminPagesQuery`, and `useDeletePageMutation`. |
+| `pages/admin/AdminDashboard.tsx` | Admin hub page. Shows post/page counts with links to `/admin/posts` and `/admin/pages`. Uses `useGetAdminPostsQuery` and `useGetAdminPagesQuery` for counts. |
+| `pages/admin/AdminPosts.tsx` | Admin post list table with New/Edit/Delete actions. Uses `useGetAdminPostsQuery`, `useGetCategoriesQuery`, and `useDeletePostMutation`. |
+| `pages/admin/AdminPages.tsx` | Admin page list table with New/Edit/Delete actions. Uses `useGetAdminPagesQuery` and `useDeletePageMutation`. |
 | `pages/admin/AdminPostNew.tsx` | Create post page. Renders `PostForm`, calls `useCreatePostMutation`, navigates to `/admin` on success. |
 | `pages/admin/AdminPostEdit.tsx` | Edit post page. Fetches post by ID via `useGetPostByIdQuery`, renders `PostForm`, calls `useUpdatePostMutation`. |
 | `pages/admin/AdminPageNew.tsx` | Create page. Renders `PostForm` with `variant="page"`, calls `useCreatePageMutation`, navigates to `/admin` on success. |
@@ -120,10 +122,6 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 ## ESLint
 
 Flat config format (ESLint v9). Extends: JS recommended, typescript-eslint recommended, react-hooks, react-refresh, `eslint-plugin-better-tailwindcss` recommended (stylistic + correctness rules: class ordering, line wrapping, canonical classes, duplicate/deprecated class removal, unknown/conflicting class detection). Uses typescript-eslint parser with `project: ['./tsconfig.app.json', './tsconfig.node.json']` for type-aware linting. Entry point set to `src/index.css` for TW v4 config resolution. Only lints `**/*.{ts,tsx}`.
-
-## Commit Messages
-
-When generating commit messages, follow Conventional Commits format: `<type>(scope): <description>`. Use imperative present tense ("add" not "added"), keep the subject line under 72 characters, no trailing period. Include a body for non-trivial changes explaining what and why. No emoji, no signatures (`Co-Authored-By`, `Generated with`), no metadata — output only the commit message wrapped in `<commit></commit>` tags. Always read the full `git diff` before writing the message — do not stall or output intent without executing the tool call.
 
 ## Self-Maintenance
 

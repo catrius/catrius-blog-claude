@@ -8,8 +8,10 @@ import Footer from '@/components/Footer'
 import AdminRoute from '@/components/AdminRoute'
 
 const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'))
+const AdminPosts = lazy(() => import('@/pages/admin/AdminPosts'))
 const AdminPostNew = lazy(() => import('@/pages/admin/AdminPostNew'))
 const AdminPostEdit = lazy(() => import('@/pages/admin/AdminPostEdit'))
+const AdminPages = lazy(() => import('@/pages/admin/AdminPages'))
 const AdminPageNew = lazy(() => import('@/pages/admin/AdminPageNew'))
 const AdminPageEdit = lazy(() => import('@/pages/admin/AdminPageEdit'))
 
@@ -33,6 +35,14 @@ function App() {
               }
             />
             <Route
+              path="/admin/posts"
+              element={
+                <Suspense fallback={null}>
+                  <AdminPosts />
+                </Suspense>
+              }
+            />
+            <Route
               path="/admin/posts/new"
               element={
                 <Suspense fallback={null}>
@@ -45,6 +55,14 @@ function App() {
               element={
                 <Suspense fallback={null}>
                   <AdminPostEdit />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/pages"
+              element={
+                <Suspense fallback={null}>
+                  <AdminPages />
                 </Suspense>
               }
             />
