@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import globals from 'globals'
 import betterTailwindcss from 'eslint-plugin-better-tailwindcss'
+import importX from 'eslint-plugin-import-x'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint, { parser as tsParser } from 'typescript-eslint'
@@ -13,6 +14,8 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
+      importX.flatConfigs.recommended,
+      importX.flatConfigs.typescript,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       betterTailwindcss.configs.recommended,
@@ -31,6 +34,11 @@ export default defineConfig([
     settings: {
       'better-tailwindcss': {
         entryPoint: 'src/index.css',
+      },
+      'import-x/resolver': {
+        typescript: {
+          project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        },
       },
     },
   },

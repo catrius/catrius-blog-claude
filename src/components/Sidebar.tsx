@@ -4,8 +4,8 @@ import {
   useGetPagesQuery,
   useGetCategoriesQuery,
   useGetPostCountsQuery,
-} from '../store/api'
-import { useAuth } from '../lib/AuthContext'
+} from '@/store/api'
+import { useAuth } from '@/lib/AuthContext'
 
 interface SidebarProps {
   open: boolean

@@ -1,15 +1,15 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router'
-import Home from './pages/Home'
-import PostDetail from './pages/PostDetail'
-import PageDetail from './pages/PageDetail'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import AdminRoute from './components/AdminRoute'
+import Home from '@/pages/Home'
+import PostDetail from '@/pages/PostDetail'
+import PageDetail from '@/pages/PageDetail'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import AdminRoute from '@/components/AdminRoute'
 
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
-const AdminPostNew = lazy(() => import('./pages/admin/AdminPostNew'))
-const AdminPostEdit = lazy(() => import('./pages/admin/AdminPostEdit'))
+const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'))
+const AdminPostNew = lazy(() => import('@/pages/admin/AdminPostNew'))
+const AdminPostEdit = lazy(() => import('@/pages/admin/AdminPostEdit'))
 
 function App() {
   return (

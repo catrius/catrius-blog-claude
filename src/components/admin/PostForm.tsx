@@ -1,7 +1,7 @@
 import { useState, useSyncExternalStore } from 'react'
 import MDEditor from '@uiw/react-md-editor'
-import { useGetCategoriesQuery } from '../../store/api'
-import type { Tables } from '../../types/database'
+import { useGetCategoriesQuery } from '@/store/api'
+import type { Tables } from '@/types/database'
 
 const mobileQuery = '(max-width: 767px)'
 function subscribeToMedia(cb: () => void) {
@@ -133,9 +133,15 @@ export default function PostForm({
                 setSlug(slugify(title))
               }
             }}
-            className="rounded border-gray-300 dark:border-gray-600"
+            className="
+              rounded-sm border-gray-300
+              dark:border-gray-600
+            "
           />
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="
+            text-sm text-gray-600
+            dark:text-gray-400
+          ">
             Generate slug from title
           </span>
         </label>
@@ -160,7 +166,13 @@ export default function PostForm({
             setSlug(e.target.value)
             setSlugManual(true)
           }}
-          className={`${inputClass} ${!slugManual ? 'bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400' : ''}`}
+          className={`
+            ${inputClass}
+            ${!slugManual ? `
+              bg-gray-50 text-gray-500
+              dark:bg-gray-800 dark:text-gray-400
+            ` : ''}
+          `}
           placeholder="post-slug"
         />
       </div>
@@ -215,30 +227,54 @@ export default function PostForm({
 
       <div>
         <div className="mb-1 flex items-center justify-between">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="
+            text-sm font-medium text-gray-700
+            dark:text-gray-300
+          ">
             Content
           </label>
           {isMobile && (
-            <div className="flex gap-1 rounded-md border border-gray-300 p-0.5 dark:border-gray-600">
+            <div className="
+              flex gap-1 rounded-md border border-gray-300 p-0.5
+              dark:border-gray-600
+            ">
               <button
                 type="button"
                 onClick={() => setMobilePreview('edit')}
-                className={`rounded px-2.5 py-0.5 text-xs font-medium ${
+                className={`
+                  rounded-sm px-2.5 py-0.5 text-xs font-medium
+                  ${
                   mobilePreview === 'edit'
-                    ? 'bg-blue-600 text-white dark:bg-blue-500'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`}
+                    ? `
+                      bg-blue-600 text-white
+                      dark:bg-blue-500
+                    `
+                    : `
+                      text-gray-600
+                      dark:text-gray-400
+                    `
+                }
+                `}
               >
                 Write
               </button>
               <button
                 type="button"
                 onClick={() => setMobilePreview('preview')}
-                className={`rounded px-2.5 py-0.5 text-xs font-medium ${
+                className={`
+                  rounded-sm px-2.5 py-0.5 text-xs font-medium
+                  ${
                   mobilePreview === 'preview'
-                    ? 'bg-blue-600 text-white dark:bg-blue-500'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`}
+                    ? `
+                      bg-blue-600 text-white
+                      dark:bg-blue-500
+                    `
+                    : `
+                      text-gray-600
+                      dark:text-gray-400
+                    `
+                }
+                `}
               >
                 Preview
               </button>
@@ -253,7 +289,10 @@ export default function PostForm({
             preview={editorPreview}
           />
         </div>
-        <div data-color-mode="dark" className="hidden dark:block">
+        <div data-color-mode="dark" className="
+          hidden
+          dark:block
+        ">
           <MDEditor
             value={content}
             onChange={(val) => setContent(val ?? '')}

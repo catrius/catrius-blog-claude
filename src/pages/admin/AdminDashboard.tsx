@@ -4,8 +4,8 @@ import {
   useGetAdminPostsQuery,
   useGetCategoriesQuery,
   useDeletePostMutation,
-} from '../../store/api'
-import DeleteConfirmDialog from '../../components/admin/DeleteConfirmDialog'
+} from '@/store/api'
+import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
 
 export default function AdminDashboard() {
   const { data: posts = [], isLoading } = useGetAdminPostsQuery()

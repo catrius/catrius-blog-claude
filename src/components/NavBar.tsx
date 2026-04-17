@@ -5,7 +5,7 @@ import { FreeMode } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/free-mode'
 import type { Swiper as SwiperType } from 'swiper'
-import type { Tables } from '../types/database'
+import type { Tables } from '@/types/database'
 
 type Category = Tables<'category'>
 

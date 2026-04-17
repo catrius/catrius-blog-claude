@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router'
-import type { Tables } from '../types/database'
+import type { Tables } from '@/types/database'
 
 type Post = Tables<'post'>
 

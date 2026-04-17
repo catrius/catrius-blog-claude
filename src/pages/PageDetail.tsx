@@ -1,6 +1,6 @@
 import Markdown from 'react-markdown'
 import { useParams } from 'react-router'
-import { useGetPageQuery } from '../store/api'
+import { useGetPageQuery } from '@/store/api'
 
 export default function PageDetail() {
   const { slug } = useParams<{ slug: string }>()

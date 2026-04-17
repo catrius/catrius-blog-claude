@@ -5,9 +5,9 @@ import {
   useGetPostCountsQuery,
   useGetCategoriesQuery,
   PAGE_SIZE,
-} from '../store/api'
-import NavBar from '../components/NavBar'
-import PostList from './PostList'
+} from '@/store/api'
+import NavBar from '@/components/NavBar'
+import PostList from '@/pages/PostList'
 
 export default function Home() {
   const { categorySlug } = useParams<{ categorySlug: string }>()

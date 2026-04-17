@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router'
 import {
   useGetPostByIdQuery,
   useUpdatePostMutation,
-} from '../../store/api'
-import PostForm from '../../components/admin/PostForm'
+} from '@/store/api'
+import PostForm from '@/components/admin/PostForm'
 
 export default function AdminPostEdit() {
   const { id } = useParams<{ id: string }>()

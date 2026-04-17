@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useCreatePostMutation } from '../../store/api'
-import PostForm from '../../components/admin/PostForm'
+import { useCreatePostMutation } from '@/store/api'
+import PostForm from '@/components/admin/PostForm'
 
 export default function AdminPostNew() {
   const navigate = useNavigate()

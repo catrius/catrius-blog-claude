@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import Markdown from 'react-markdown'
 import { Link, useNavigate, useParams } from 'react-router'
-import { useGetPostQuery, useDeletePostMutation } from '../store/api'
-import { useAuth } from '../lib/AuthContext'
-import DeleteConfirmDialog from '../components/admin/DeleteConfirmDialog'
+import { useGetPostQuery, useDeletePostMutation } from '@/store/api'
+import { useAuth } from '@/lib/AuthContext'
+import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>()

@@ -1,6 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { supabase } from '../lib/supabase'
-import type { Tables, TablesInsert, TablesUpdate } from '../types/database'
+import { supabase } from '@/lib/supabase'
+import type { Tables, TablesInsert, TablesUpdate } from '@/types/database'
 
 type Post = Tables<'post'>
 type Category = Tables<'category'>
