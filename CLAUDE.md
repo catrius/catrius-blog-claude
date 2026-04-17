@@ -121,6 +121,10 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 Flat config format (ESLint v9). Extends: JS recommended, typescript-eslint recommended, react-hooks, react-refresh, `eslint-plugin-better-tailwindcss` recommended (stylistic + correctness rules: class ordering, line wrapping, canonical classes, duplicate/deprecated class removal, unknown/conflicting class detection). Uses typescript-eslint parser with `project: ['./tsconfig.app.json', './tsconfig.node.json']` for type-aware linting. Entry point set to `src/index.css` for TW v4 config resolution. Only lints `**/*.{ts,tsx}`.
 
+## Commit Messages
+
+When generating commit messages, follow Conventional Commits format: `<type>(scope): <description>`. Use imperative present tense ("add" not "added"), keep the subject line under 72 characters, no trailing period. Include a body for non-trivial changes explaining what and why. No emoji, no signatures (`Co-Authored-By`, `Generated with`), no metadata — output only the commit message wrapped in `<commit></commit>` tags. Always read the full `git diff` before writing the message — do not stall or output intent without executing the tool call.
+
 ## Self-Maintenance
 
 **IMPORTANT — Update this file as part of every task that changes the items below.** Do not defer updates to a later step; make them inline as you work.
