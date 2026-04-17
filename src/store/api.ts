@@ -7,6 +7,8 @@ type Category = Tables<'category'>
 type Page = Tables<'page'>
 type PostInsert = TablesInsert<'post'>
 type PostUpdate = TablesUpdate<'post'>
+type PageInsert = TablesInsert<'page'>
+type PageUpdate = TablesUpdate<'page'>
 
 export const PAGE_SIZE = 12
 
@@ -226,6 +228,85 @@ export const api = createApi({
         { type: 'Post', id: 'LIST' },
       ],
     }),
+
+    getPageById: builder.query<Page, number>({
+      queryFn: async (id) => {
+        const { data, error } = await supabase
+          .from('page')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result) =>
+        result ? [{ type: 'Page', id: result.id }] : [],
+    }),
+
+    getAdminPages: builder.query<Page[], void>({
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('page')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Page' as const, id })),
+              { type: 'Page', id: 'LIST' },
+            ]
+          : [{ type: 'Page', id: 'LIST' }],
+    }),
+
+    createPage: builder.mutation<Page, PageInsert>({
+      queryFn: async (newPage) => {
+        const { data, error } = await supabase
+          .from('page')
+          .insert(newPage)
+          .select()
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      invalidatesTags: [{ type: 'Page', id: 'LIST' }],
+    }),
+
+    updatePage: builder.mutation<Page, { id: number; changes: PageUpdate }>({
+      queryFn: async ({ id, changes }) => {
+        const { data, error } = await supabase
+          .from('page')
+          .update(changes)
+          .eq('id', id)
+          .select()
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'Page', id },
+        { type: 'Page', id: 'LIST' },
+      ],
+    }),
+
+    deletePage: builder.mutation<null, number>({
+      queryFn: async (id) => {
+        const { error } = await supabase.from('page').delete().eq('id', id)
+
+        if (error) return { error }
+        return { data: null }
+      },
+      invalidatesTags: (_result, _error, id) => [
+        { type: 'Page', id },
+        { type: 'Page', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -241,4 +322,9 @@ export const {
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+  useGetPageByIdQuery,
+  useGetAdminPagesQuery,
+  useCreatePageMutation,
+  useUpdatePageMutation,
+  useDeletePageMutation,
 } = api

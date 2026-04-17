@@ -10,6 +10,8 @@ import AdminRoute from '@/components/AdminRoute'
 const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'))
 const AdminPostNew = lazy(() => import('@/pages/admin/AdminPostNew'))
 const AdminPostEdit = lazy(() => import('@/pages/admin/AdminPostEdit'))
+const AdminPageNew = lazy(() => import('@/pages/admin/AdminPageNew'))
+const AdminPageEdit = lazy(() => import('@/pages/admin/AdminPageEdit'))
 
 function App() {
   return (
@@ -43,6 +45,22 @@ function App() {
               element={
                 <Suspense fallback={null}>
                   <AdminPostEdit />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/pages/new"
+              element={
+                <Suspense fallback={null}>
+                  <AdminPageNew />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/pages/:id/edit"
+              element={
+                <Suspense fallback={null}>
+                  <AdminPageEdit />
                 </Suspense>
               }
             />

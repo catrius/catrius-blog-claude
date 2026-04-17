@@ -17,16 +17,15 @@ function getIsMobileServer() {
   return false
 }
 
-type Post = Tables<'post'>
-
 interface PostFormProps {
-  initialData?: Post
+  variant?: 'post' | 'page'
+  initialData?: Tables<'post'> | Tables<'page'>
   onSubmit: (data: {
     title: string
     slug: string
-    excerpt: string
+    excerpt?: string
     content: string
-    category_id: number | null
+    category_id?: number | null
   }) => Promise<void>
   isSubmitting: boolean
 }
@@ -61,11 +60,13 @@ async function uploadImage(
 }
 
 export default function PostForm({
+  variant = 'post',
   initialData,
   onSubmit,
   isSubmitting,
 }: PostFormProps) {
-  const { data: categories = [] } = useGetCategoriesQuery()
+  const isPost = variant === 'post'
+  const { data: categories = [] } = useGetCategoriesQuery(undefined, { skip: !isPost })
   const { session } = useAuth()
   const isMobile = useSyncExternalStore(subscribeToMedia, getIsMobile, getIsMobileServer)
   const [mobilePreview, setMobilePreview] = useState<'edit' | 'preview'>('edit')
@@ -74,10 +75,11 @@ export default function PostForm({
   const [slugManual, setSlugManual] = useState(
     initialData ? slugify(initialData.title) !== initialData.slug : false,
   )
-  const [excerpt, setExcerpt] = useState(initialData?.excerpt ?? '')
+  const postData = isPost ? (initialData as Tables<'post'> | undefined) : undefined
+  const [excerpt, setExcerpt] = useState(postData?.excerpt ?? '')
   const [content, setContent] = useState(initialData?.content ?? '')
   const [categoryId, setCategoryId] = useState<number | null>(
-    initialData?.category_id ?? null,
+    postData?.category_id ?? null,
   )
   const [uploading, setUploading] = useState(false)
 
@@ -175,9 +177,8 @@ export default function PostForm({
     await onSubmit({
       title,
       slug,
-      excerpt,
       content,
-      category_id: categoryId,
+      ...(isPost && { excerpt, category_id: categoryId }),
     })
   }
 
@@ -209,7 +210,7 @@ export default function PostForm({
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           className={inputClass}
-          placeholder="Post title"
+          placeholder={isPost ? 'Post title' : 'Page title'}
         />
       </div>
 
@@ -276,57 +277,61 @@ export default function PostForm({
               dark:bg-gray-800 dark:text-gray-400
             ` : ''}
           `}
-          placeholder="post-slug"
+          placeholder={isPost ? 'post-slug' : 'page-slug'}
         />
       </div>
 
-      <div>
-        <label
-          htmlFor="excerpt"
-          className="
-            mb-1 block text-sm font-medium text-gray-700
-            dark:text-gray-300
-          "
-        >
-          Excerpt
-        </label>
-        <textarea
-          id="excerpt"
-          required
-          rows={2}
-          value={excerpt}
-          onChange={(e) => setExcerpt(e.target.value)}
-          className={inputClass}
-          placeholder="Brief description of the post"
-        />
-      </div>
+      {isPost && (
+        <div>
+          <label
+            htmlFor="excerpt"
+            className="
+              mb-1 block text-sm font-medium text-gray-700
+              dark:text-gray-300
+            "
+          >
+            Excerpt
+          </label>
+          <textarea
+            id="excerpt"
+            required
+            rows={2}
+            value={excerpt}
+            onChange={(e) => setExcerpt(e.target.value)}
+            className={inputClass}
+            placeholder="Brief description of the post"
+          />
+        </div>
+      )}
 
-      <div>
-        <label
-          htmlFor="category"
-          className="
-            mb-1 block text-sm font-medium text-gray-700
-            dark:text-gray-300
-          "
-        >
-          Category
-        </label>
-        <select
-          id="category"
-          value={categoryId ?? ''}
-          onChange={(e) =>
-            setCategoryId(e.target.value ? Number(e.target.value) : null)
-          }
-          className={inputClass}
-        >
-          <option value="">No category</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {isPost && (
+        <div>
+          <label
+            htmlFor="category"
+            className="
+              mb-1 block text-sm font-medium text-gray-700
+              dark:text-gray-300
+            "
+          >
+            Category
+          </label>
+          <select
+            id="category"
+            value={categoryId ?? ''}
+            onChange={(e) =>
+              setCategoryId(e.target.value ? Number(e.target.value) : null)
+            }
+            className={inputClass}
+          >
+            <option value="">No category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <div className="mb-1 flex items-center justify-between">
@@ -442,8 +447,8 @@ export default function PostForm({
           {isSubmitting
             ? 'Saving...'
             : initialData
-              ? 'Update Post'
-              : 'Create Post'}
+              ? `Update ${isPost ? 'Post' : 'Page'}`
+              : `Create ${isPost ? 'Post' : 'Page'}`}
         </button>
       </div>
     </form>

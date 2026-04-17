@@ -1,45 +1,36 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import {
-  useGetPostByIdQuery,
-  useUpdatePostMutation,
+  useGetPageByIdQuery,
+  useUpdatePageMutation,
 } from '@/store/api'
 import PostForm from '@/components/admin/PostForm'
 
-export default function AdminPostEdit() {
+export default function AdminPageEdit() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const {
-    data: post,
+    data: page,
     isLoading,
     error: fetchError,
-  } = useGetPostByIdQuery(Number(id))
-  const [updatePost] = useUpdatePostMutation()
+  } = useGetPageByIdQuery(Number(id))
+  const [updatePage] = useUpdatePageMutation()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(data: {
     title: string
     slug: string
-    excerpt?: string
     content: string
-    category_id?: number | null
   }) {
     setIsSubmitting(true)
     setError(null)
     try {
-      await updatePost({
-        id: Number(id),
-        changes: {
-          ...data,
-          excerpt: data.excerpt ?? '',
-          category_id: data.category_id ?? null,
-        },
-      }).unwrap()
+      await updatePage({ id: Number(id), changes: data }).unwrap()
       navigate('/admin')
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'Failed to update post',
+        err instanceof Error ? err.message : 'Failed to update page',
       )
     } finally {
       setIsSubmitting(false)
@@ -48,13 +39,13 @@ export default function AdminPostEdit() {
 
   if (isLoading) return null
 
-  if (fetchError || !post) {
-    return <p className="text-red-500">Post not found.</p>
+  if (fetchError || !page) {
+    return <p className="text-red-500">Page not found.</p>
   }
 
   return (
     <div className="mx-auto">
-      <h1 className="mb-6 text-2xl font-bold">Edit Post</h1>
+      <h1 className="mb-6 text-2xl font-bold">Edit Page</h1>
       {error && (
         <p className="
           mb-4 rounded-md bg-red-50 p-3 text-sm text-red-600
@@ -64,7 +55,8 @@ export default function AdminPostEdit() {
         </p>
       )}
       <PostForm
-        initialData={post}
+        variant="page"
+        initialData={page}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
       />

@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react'
 
 interface DeleteConfirmDialogProps {
   open: boolean
-  postTitle: string
+  itemTitle: string
+  itemType?: string
   onConfirm: () => void
   onCancel: () => void
   isDeleting: boolean
@@ -10,7 +11,8 @@ interface DeleteConfirmDialogProps {
 
 export default function DeleteConfirmDialog({
   open,
-  postTitle,
+  itemTitle,
+  itemType = 'post',
   onConfirm,
   onCancel,
   isDeleting,
@@ -42,13 +44,13 @@ export default function DeleteConfirmDialog({
         mb-2 text-lg font-semibold text-gray-900
         dark:text-white
       ">
-        Delete post
+        Delete {itemType}
       </h2>
       <p className="
         mb-6 text-sm text-gray-600
         dark:text-gray-400
       ">
-        Are you sure you want to delete &ldquo;{postTitle}&rdquo;? This action
+        Are you sure you want to delete &ldquo;{itemTitle}&rdquo;? This action
         cannot be undone.
       </p>
       <div className="flex justify-end gap-3">

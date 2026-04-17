@@ -73,7 +73,7 @@ export default function PostDetail() {
       {isAdmin && (
         <DeleteConfirmDialog
           open={showDeleteDialog}
-          postTitle={post.title}
+          itemTitle={post.title}
           onConfirm={handleDelete}
           onCancel={() => setShowDeleteDialog(false)}
           isDeleting={isDeleting}

@@ -38,9 +38,9 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
-**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`.
+**Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`, `/admin/pages/new` → `AdminPageNew`, `/admin/pages/:id/edit` → `AdminPageEdit`.
 
-**State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`, `useGetPostByIdQuery`, `useGetAdminPostsQuery`, `useCreatePostMutation`, `useUpdatePostMutation`, `useDeletePostMutation`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
+**State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`, `useGetPostByIdQuery`, `useGetAdminPostsQuery`, `useCreatePostMutation`, `useUpdatePostMutation`, `useDeletePostMutation`, `useGetPageByIdQuery`, `useGetAdminPagesQuery`, `useCreatePageMutation`, `useUpdatePageMutation`, `useDeletePageMutation`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
 
 **Auth:** Supabase Google OAuth managed via `AuthContext` (`src/lib/AuthContext.tsx`). `AuthProvider` wraps the app and exposes `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()` via `useAuth()` hook. Admin identity is checked client-side against `VITE_PUBLIC_ADMIN_USER_ID` env var; server-side enforcement uses Supabase RLS policies on the `post` table.
 
@@ -48,7 +48,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). `src/index.css` contains only Tailwind imports — all styling is done with Tailwind utility classes.
 
-**Image uploads:** Admin post editor supports image uploads via Vercel Blob. Images can be added via the toolbar camera button, clipboard paste, or drag-and-drop. The upload is handled by a Vercel serverless function (`api/upload.ts`) that verifies the Supabase auth token and streams the file to Blob storage. Requires `BLOB_READ_WRITE_TOKEN` env var (provided automatically by Vercel Blob store integration).
+**Image uploads:** Admin post and page editors support image uploads via Vercel Blob. Images can be added via the toolbar camera button, clipboard paste, or drag-and-drop. The upload is handled by a Vercel serverless function (`api/upload.ts`) that verifies the Supabase auth token and streams the file to Blob storage. Requires `BLOB_READ_WRITE_TOKEN` env var (provided automatically by Vercel Blob store integration).
 
 **Assets:** SVG icon sprite sheet in `public/icons.svg` referenced via `<use href>`.
 
@@ -61,23 +61,25 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | File | Purpose |
 |---|---|
 | `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, `<AuthProvider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
-| `App.tsx` | Router shell. Defines public routes (`/`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts/new`, `/admin/posts/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
+| `App.tsx` | Router shell. Defines public routes (`/`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts/new`, `/admin/posts/:id/edit`, `/admin/pages/new`, `/admin/pages/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
 | `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
 | `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. |
 | `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. Shows Edit/Delete buttons when admin is logged in (hybrid admin controls). |
 | `pages/PageDetail.tsx` | Static page view. Uses `useGetPageQuery` hook, renders Markdown content with prose styling. |
-| `pages/admin/AdminDashboard.tsx` | Admin post list table with New/Edit/Delete actions. Uses `useGetAdminPostsQuery` and `useDeletePostMutation`. |
+| `pages/admin/AdminDashboard.tsx` | Admin post and page list tables with New/Edit/Delete actions. Uses `useGetAdminPostsQuery`, `useDeletePostMutation`, `useGetAdminPagesQuery`, and `useDeletePageMutation`. |
 | `pages/admin/AdminPostNew.tsx` | Create post page. Renders `PostForm`, calls `useCreatePostMutation`, navigates to `/admin` on success. |
 | `pages/admin/AdminPostEdit.tsx` | Edit post page. Fetches post by ID via `useGetPostByIdQuery`, renders `PostForm`, calls `useUpdatePostMutation`. |
+| `pages/admin/AdminPageNew.tsx` | Create page. Renders `PostForm` with `variant="page"`, calls `useCreatePageMutation`, navigates to `/admin` on success. |
+| `pages/admin/AdminPageEdit.tsx` | Edit page. Fetches page by ID via `useGetPageByIdQuery`, renders `PostForm` with `variant="page"`, calls `useUpdatePageMutation`. |
 | `pages/PostList.tsx` | Presentational component. Renders a responsive grid of post cards with infinite scroll (IntersectionObserver sentinel). |
 | `components/NavBar.tsx` | Category filter bar (desktop only, `hidden md:block`). Horizontal Swiper of pill buttons with post counts. On mobile, categories are in the Sidebar instead. |
 | `components/Header.tsx` | Site header with logo, page-link Swiper (desktop), auth controls (Sign in/Admin/Sign out), and hamburger menu button (mobile). Manages Sidebar open/close state. |
 | `components/Footer.tsx` | Site footer with copyright and social links (GitHub, X, Bluesky, Discord). |
 | `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains page links, category navigation, and auth controls. Hidden on `md+` screens. |
 | `components/AdminRoute.tsx` | Route guard for admin pages. Checks `useAuth()`, renders `<Outlet />` if admin, redirects to `/` otherwise. |
-| `components/admin/PostForm.tsx` | Shared post create/edit form with title, slug (auto-generated), excerpt, content (`@uiw/react-md-editor` with built-in preview), category select, and image upload (toolbar button, paste, drag-and-drop → Vercel Blob). |
-| `components/admin/DeleteConfirmDialog.tsx` | Modal dialog for confirming post deletion. Uses native `<dialog>` element. |
-| `store/api.ts` | RTK Query API slice. Queries: `getPosts` (paginated), `getPost` (by slug), `getPostById`, `getAdminPosts`, `getCategories`, `getPostCounts`, `getPages`, `getPage`. Mutations: `createPost`, `updatePost`, `deletePost`. All use Supabase client via `queryFn`. Exports auto-generated hooks. |
+| `components/admin/PostForm.tsx` | Shared post/page create/edit form. Accepts `variant` prop (`'post'` default, `'page'`). Post variant shows title, slug, excerpt, category, content editor, and image upload. Page variant omits excerpt and category. Uses `@uiw/react-md-editor` with built-in preview and image upload (toolbar button, paste, drag-and-drop → Vercel Blob). |
+| `components/admin/DeleteConfirmDialog.tsx` | Modal dialog for confirming item deletion. Accepts `itemTitle` and `itemType` props (defaults to "post"). Uses native `<dialog>` element. |
+| `store/api.ts` | RTK Query API slice. Queries: `getPosts` (paginated), `getPost` (by slug), `getPostById`, `getAdminPosts`, `getCategories`, `getPostCounts`, `getPages`, `getPage`, `getPageById`, `getAdminPages`. Mutations: `createPost`, `updatePost`, `deletePost`, `createPage`, `updatePage`, `deletePage`. All use Supabase client via `queryFn`. Exports auto-generated hooks. |
 | `store/store.ts` | Redux store. Configures store with RTK Query reducer and middleware. |
 | `types/database.ts` | Auto-generated Supabase database types (via `npm run update-database`). Defines `post`, `category`, and `page` table types and helper generics (`Tables`, `TablesInsert`, `TablesUpdate`). |
 | `env.d.ts` | Vite env type declarations for `VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `VITE_PUBLIC_ADMIN_USER_ID`. |
@@ -138,4 +140,4 @@ After updating, bump the last-indexed hash at the bottom of this file to the cur
 
 For a broad catch-up, run `git diff <last-indexed-hash>..HEAD --stat`, read only the changed files, and update accordingly.
 
-<!-- last-indexed: 5906547 -->
+<!-- last-indexed: a1a4814 -->
