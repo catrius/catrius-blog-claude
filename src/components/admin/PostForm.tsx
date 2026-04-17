@@ -1,4 +1,4 @@
-import { useState, useRef, useSyncExternalStore } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import MDEditor, { type ICommand } from '@uiw/react-md-editor'
 import { useGetCategoriesQuery } from '@/store/api'
 import { useAuth } from '@/lib/AuthContext'
@@ -80,24 +80,30 @@ export default function PostForm({
     initialData?.category_id ?? null,
   )
   const [uploading, setUploading] = useState(false)
-  const uploadCounterRef = useRef(0)
 
-  async function handleImageFile(file: File) {
+  function getEditorCursorPos(node: HTMLElement): number | undefined {
+    const textarea = node.querySelector('textarea')
+    return textarea?.selectionStart ?? undefined
+  }
+
+  async function handleImageFile(file: File, cursorPos?: number) {
     const token = session?.access_token
     if (!token) return
 
-    const id = ++uploadCounterRef.current
-    const placeholder = `![Uploading image${id}...]()`
-    setContent((prev) => prev + `\n${placeholder}`)
+    const alt = file.name.replace(/\.[^.]+$/, '')
+    const placeholder = `![Uploading ${alt}…]()`
+    setContent((prev) => {
+      const pos = cursorPos ?? prev.length
+      return prev.slice(0, pos) + placeholder + prev.slice(pos)
+    })
     setUploading(true)
     try {
       const url = await uploadImage(file, token)
-      const alt = file.name.replace(/\.[^.]+$/, '')
       setContent((prev) =>
         prev.replace(placeholder, `![${alt}](${url})`),
       )
     } catch {
-      setContent((prev) => prev.replace(`\n${placeholder}`, ''))
+      setContent((prev) => prev.replace(placeholder, ''))
       alert('Image upload failed. Please try again.')
     } finally {
       setUploading(false)
@@ -111,7 +117,10 @@ export default function PostForm({
       if (item.type.startsWith('image/')) {
         e.preventDefault()
         const file = item.getAsFile()
-        if (file) handleImageFile(file)
+        if (file) {
+          const pos = getEditorCursorPos(e.currentTarget as HTMLElement)
+          handleImageFile(file, pos)
+        }
         return
       }
     }
@@ -123,7 +132,8 @@ export default function PostForm({
     for (const file of files) {
       if (file.type.startsWith('image/')) {
         e.preventDefault()
-        handleImageFile(file)
+        const pos = getEditorCursorPos(e.currentTarget as HTMLElement)
+        handleImageFile(file, pos)
         return
       }
     }
@@ -138,13 +148,14 @@ export default function PostForm({
         <path fillRule="evenodd" d="M1 8a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 8.07 3h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 16.07 6H17a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8Zm13.5 3a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM10 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
       </svg>
     ),
-    execute: () => {
+    execute: (state) => {
+      const cursorPos = state.selection.start
       const input = document.createElement('input')
       input.type = 'file'
       input.accept = 'image/*'
       input.onchange = () => {
         const file = input.files?.[0]
-        if (file) handleImageFile(file)
+        if (file) handleImageFile(file, cursorPos)
       }
       input.click()
     },
