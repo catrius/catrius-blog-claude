@@ -47,7 +47,7 @@ export default function PostDetail() {
           <button
             onClick={() => setShowDeleteDialog(true)}
             className="
-              rounded-sm bg-red-50 px-3 py-1 text-sm text-red-700
+              cursor-pointer rounded-sm bg-red-50 px-3 py-1 text-sm text-red-700
               hover:bg-red-100
               dark:bg-red-900/30 dark:text-red-300
               dark:hover:bg-red-900/50

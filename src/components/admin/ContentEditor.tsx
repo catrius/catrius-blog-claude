@@ -195,7 +195,7 @@ export default function ContentEditor({
               type="button"
               onClick={() => setMobilePreview('edit')}
               className={`
-                rounded-sm px-2.5 py-0.5 text-xs font-medium
+                cursor-pointer rounded-sm px-2.5 py-0.5 text-xs font-medium
                 ${
                 mobilePreview === 'edit'
                   ? `
@@ -215,7 +215,7 @@ export default function ContentEditor({
               type="button"
               onClick={() => setMobilePreview('preview')}
               className={`
-                rounded-sm px-2.5 py-0.5 text-xs font-medium
+                cursor-pointer rounded-sm px-2.5 py-0.5 text-xs font-medium
                 ${
                 mobilePreview === 'preview'
                   ? `

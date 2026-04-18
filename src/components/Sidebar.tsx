@@ -80,7 +80,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             onClick={onClose}
             aria-label="Close menu"
             className="
-              rounded-md p-2 text-gray-500
+              cursor-pointer rounded-md p-2 text-gray-500
               hover:bg-gray-100 hover:text-gray-900
               dark:text-gray-400
               dark:hover:bg-gray-800 dark:hover:text-white
@@ -241,8 +241,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   <button
                     onClick={signOut}
                     className="
-                      block w-full rounded-md px-3 py-2 text-left text-sm
-                      text-gray-700 transition-colors
+                      block w-full cursor-pointer rounded-md px-3 py-2 text-left
+                      text-sm text-gray-700 transition-colors
                       hover:bg-gray-50
                       dark:text-gray-300
                       dark:hover:bg-gray-800/50
@@ -255,8 +255,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 <button
                   onClick={signInWithGoogle}
                   className="
-                    block w-full rounded-md px-3 py-2 text-left text-sm
-                    text-gray-700 transition-colors
+                    block w-full cursor-pointer rounded-md px-3 py-2 text-left
+                    text-sm text-gray-700 transition-colors
                     hover:bg-gray-50
                     dark:text-gray-300
                     dark:hover:bg-gray-800/50

@@ -145,7 +145,7 @@ export default function Header() {
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
             className="
-              ml-auto rounded-md p-2 text-gray-600
+              ml-auto cursor-pointer rounded-md p-2 text-gray-600
               hover:bg-gray-100 hover:text-gray-900
               md:hidden
               dark:text-gray-400
