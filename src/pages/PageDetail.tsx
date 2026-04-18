@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Markdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useGetPageQuery, useDeletePageMutation } from '@/store/api'
 import { useAuth } from '@/lib/AuthContext'
@@ -61,7 +62,7 @@ export default function PageDetail() {
         prose max-w-none
         dark:prose-invert
       ">
-        <Markdown>{page.content}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]}>{page.content}</Markdown>
       </div>
 
       {isAdmin && (

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Markdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useGetPostQuery, useDeletePostMutation } from '@/store/api'
 import { useAuth } from '@/lib/AuthContext'
@@ -67,7 +68,7 @@ export default function PostDetail() {
         prose max-w-none
         dark:prose-invert
       ">
-        <Markdown>{post.content}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]}>{post.content}</Markdown>
       </div>
 
       {isAdmin && (

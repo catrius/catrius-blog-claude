@@ -67,7 +67,10 @@ export default function ContentEditor({
     try {
       const url = await uploadImage(file, accessToken)
       onChange((prev) =>
-        prev.replace(placeholder, `![${alt}](${url})`),
+        prev.replace(
+          placeholder,
+          `<img src="${url}" alt="${alt}" width="100%" />`,
+        ),
       )
     } catch {
       onChange((prev) => prev.replace(placeholder, ''))
@@ -125,6 +128,50 @@ export default function ContentEditor({
         if (file) handleImageFile(file, cursorPos)
       }
       input.click()
+    },
+  }
+
+  const imageSizes = ['100%', '75%', '50%', '25%']
+
+  const imageResizeCommand: ICommand = {
+    name: 'image-resize',
+    keyCommand: 'image-resize',
+    buttonProps: {
+      'aria-label': 'Resize image',
+      title: 'Resize image (place cursor inside an <img> tag)',
+    },
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M13.28 7.78l3.22-3.22v2.69a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.69l-3.22 3.22a.75.75 0 001.06 1.06zM2 17.25v-4.5a.75.75 0 011.5 0v2.69l3.22-3.22a.75.75 0 011.06 1.06L4.56 16.5h2.69a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75z" />
+      </svg>
+    ),
+    execute: (state, api) => {
+      const { text } = state
+      const cursor = state.selection.start
+      const imgRegex = /<img\s[^>]*\/?>/gi
+      let match
+      let found: { start: number; end: number; tag: string } | null = null
+      while ((match = imgRegex.exec(text)) !== null) {
+        const start = match.index
+        const end = start + match[0].length
+        if (start <= cursor && end >= cursor) {
+          found = { start, end, tag: match[0] }
+          break
+        }
+      }
+      if (!found) return
+
+      const widthMatch = found.tag.match(/width="([^"]*)"/)
+      const current = widthMatch?.[1] ?? '100%'
+      const idx = imageSizes.indexOf(current)
+      const next = imageSizes[(idx + 1) % imageSizes.length]
+
+      const newTag = widthMatch
+        ? found.tag.replace(/width="[^"]*"/, `width="${next}"`)
+        : found.tag.replace(/<img/, `<img width="${next}"`)
+
+      api.setSelectionRange({ start: found.start, end: found.end })
+      api.replaceSelection(newTag)
     },
   }
 
@@ -207,7 +254,7 @@ export default function ContentEditor({
           onChange={(val) => onChange(val ?? '')}
           height={700}
           preview={editorPreview}
-          extraCommands={[imageUploadCommand]}
+          extraCommands={[imageUploadCommand, imageResizeCommand]}
         />
       </div>
       <div
@@ -225,7 +272,7 @@ export default function ContentEditor({
           onChange={(val) => onChange(val ?? '')}
           height={700}
           preview={editorPreview}
-          extraCommands={[imageUploadCommand]}
+          extraCommands={[imageUploadCommand, imageResizeCommand]}
         />
       </div>
     </div>
