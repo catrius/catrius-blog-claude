@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import {
   useGetPageByIdQuery,
   useUpdatePageMutation,
@@ -8,7 +8,6 @@ import PostForm from '@/components/admin/PostForm'
 
 export default function AdminPageEdit() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const {
     data: page,
     isLoading,
@@ -27,7 +26,6 @@ export default function AdminPageEdit() {
     setError(null)
     try {
       await updatePage({ id: Number(id), changes: data }).unwrap()
-      navigate('/admin')
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to update page',

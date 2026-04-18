@@ -24,7 +24,7 @@ export default function AdminPostNew() {
         excerpt: data.excerpt ?? '',
         category_id: data.category_id ?? null,
       }).unwrap()
-      navigate('/admin')
+      navigate(`/posts/${data.slug}`)
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to create post',

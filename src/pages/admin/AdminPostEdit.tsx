@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import {
   useGetPostByIdQuery,
   useUpdatePostMutation,
@@ -8,7 +8,6 @@ import PostForm from '@/components/admin/PostForm'
 
 export default function AdminPostEdit() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const {
     data: post,
     isLoading,
@@ -36,7 +35,6 @@ export default function AdminPostEdit() {
           category_id: data.category_id ?? null,
         },
       }).unwrap()
-      navigate('/admin')
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to update post',

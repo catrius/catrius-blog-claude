@@ -18,7 +18,7 @@ export default function AdminPageNew() {
     setError(null)
     try {
       await createPage(data).unwrap()
-      navigate('/admin')
+      navigate(`/pages/${data.slug}`)
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to create page',
