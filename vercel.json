@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/posts/:slug", "destination": "/api/og" },
+    { "source": "/pages/:slug", "destination": "/api/og" },
+    { "source": "/categories/:slug", "destination": "/api/og" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

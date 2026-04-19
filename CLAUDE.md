@@ -38,7 +38,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
-**SEO / Meta tags:** Uses React 19's native `<title>` and `<meta>` tag hoisting (no library needed). Page components render `<title>` and `<meta>` tags inline; React automatically hoists them to `<head>`. `PostDetail` sets title + description (from excerpt) + OG article tags; `PageDetail` sets title + OG title; `Home` sets title when filtered by category, otherwise falls back to "Catri.us". All per-page titles use the `"Page | Catri.us"` suffix pattern. Fallback defaults live in `index.html`.
+**SEO / Meta tags:** Two layers. **Client-side:** React 19's native `<title>` and `<meta>` tag hoisting — page components render tags inline and React hoists them to `<head>`. `PostDetail` sets title + description (from excerpt) + OG article tags; `PageDetail` sets title + OG title; `Home` sets title when filtered by category, otherwise falls back to "Catri.us". All per-page titles use the `"Page | Catri.us"` suffix pattern. Fallback defaults live in `index.html`. **Server-side (for crawlers):** `api/og.ts` is a Vercel serverless function that intercepts `/posts/:slug`, `/pages/:slug`, and `/categories/:slug` requests (via `vercel.json` rewrites), fetches data from Supabase, and injects OG meta tags into `dist/index.html` before serving it. This ensures Facebook, X, and other social crawlers see correct meta tags without executing JavaScript.
 
 **Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard` (hub with counts/links), `/admin/posts` → `AdminPosts`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`, `/admin/pages` → `AdminPages`, `/admin/pages/new` → `AdminPageNew`, `/admin/pages/:id/edit` → `AdminPageEdit`.
 
@@ -103,6 +103,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
+| `og.ts` | Vercel serverless function. Intercepts `/posts/:slug`, `/pages/:slug`, and `/categories/:slug` requests. Fetches data from Supabase, injects OG meta tags into `dist/index.html`, and serves it so social crawlers see correct metadata. |
 | `upload.ts` | Vercel serverless function. Accepts POST with file body + `?filename=` query param. Verifies Supabase auth token (admin-only), uploads to Vercel Blob under `blog/` prefix, returns blob metadata. |
 
 ### Config (root)
