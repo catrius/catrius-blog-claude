@@ -6,8 +6,9 @@ import 'swiper/css'
 import 'swiper/css/free-mode'
 import type { Swiper as SwiperType } from 'swiper'
 import { useGetPagesQuery } from '@/store/api'
-import { useAuth } from '@/lib/AuthContext'
+import { useAuth } from '@/hooks/useAuth'
 import Sidebar from '@/components/Sidebar'
+import ThemeToggle from '@/components/ThemeToggle'
 
 const linkBase = 'text-sm no-underline transition-colors'
 const linkActive = 'font-medium text-gray-900 dark:text-white'
@@ -129,6 +130,14 @@ export default function Header() {
               />
             </svg>
           </button>
+
+          {/* Theme toggle — desktop only */}
+          <div className="
+            hidden
+            md:block
+          ">
+            <ThemeToggle />
+          </div>
 
           {/* Auth controls — desktop only */}
           {!authLoading && (

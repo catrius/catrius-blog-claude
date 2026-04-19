@@ -5,7 +5,8 @@ import {
   useGetCategoriesQuery,
   useGetPostCountsQuery,
 } from '@/store/api'
-import { useAuth } from '@/lib/AuthContext'
+import { useAuth } from '@/hooks/useAuth'
+import ThemeToggle from '@/components/ThemeToggle'
 
 interface SidebarProps {
   open: boolean
@@ -235,6 +236,20 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Theme toggle */}
+          <div className="
+            mt-8 border-t border-gray-200 pt-6
+            dark:border-gray-800
+          ">
+            <h3 className="
+              mb-3 text-xs font-semibold tracking-wider text-gray-400 uppercase
+              dark:text-gray-500
+            ">
+              Theme
+            </h3>
+            <ThemeToggle />
           </div>
 
           {/* Auth controls */}

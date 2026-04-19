@@ -4,7 +4,7 @@ import rehypeRaw from 'rehype-raw'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useGetPageQuery, useDeletePageMutation } from '@/store/api'
 import { SITE_NAME } from '@/constants'
-import { useAuth } from '@/lib/AuthContext'
+import { useAuth } from '@/hooks/useAuth'
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
 
 export default function PageDetail() {

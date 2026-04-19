@@ -36,7 +36,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **React Compiler** is enabled via `@rolldown/plugin-babel` with `reactCompilerPreset()` in `vite.config.ts`. This automatically optimizes memoization — avoid manual `useMemo`/`useCallback` unless there's a specific reason.
 
-**Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
+**Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, `ThemeProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
 **SEO / Meta tags:** Two layers. **Client-side:** React 19's native `<title>` and `<meta>` tag hoisting — page components render tags inline and React hoists them to `<head>`. `PostDetail` sets title + description (from excerpt) + OG article tags; `PageDetail` sets title + OG title; `Home` sets title when filtered by category, otherwise falls back to "Catri.us". All per-page titles use the `"Page | Catri.us"` suffix pattern. Fallback defaults live in `index.html`. **Server-side (for crawlers):** `api/og.ts` is a Vercel serverless function that intercepts `/posts/:slug`, `/pages/:slug`, and `/categories/:slug` requests (via `vercel.json` rewrites), fetches data from Supabase, and injects OG meta tags into `dist/index.html` before serving it. This ensures Facebook, X, and other social crawlers see correct meta tags without executing JavaScript.
 
@@ -44,11 +44,11 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useSearchPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`, `useGetPostByIdQuery`, `useGetAdminPostsQuery`, `useCreatePostMutation`, `useUpdatePostMutation`, `useDeletePostMutation`, `useGetPageByIdQuery`, `useGetAdminPagesQuery`, `useCreatePageMutation`, `useUpdatePageMutation`, `useDeletePageMutation`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
 
-**Auth:** Supabase Google OAuth managed via `AuthContext` (`src/lib/AuthContext.tsx`). `AuthProvider` wraps the app and exposes `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()` via `useAuth()` hook. Admin identity is checked client-side against `VITE_PUBLIC_ADMIN_USER_ID` env var; server-side enforcement uses Supabase RLS policies on the `post` table.
+**Auth:** Supabase Google OAuth managed via `AuthProvider` (`src/lib/AuthContext.tsx`). Provider wraps the app; `useAuth()` hook (`src/hooks/useAuth.ts`) exposes `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()`. Admin identity is checked client-side against `VITE_PUBLIC_ADMIN_USER_ID` env var; server-side enforcement uses Supabase RLS policies on the `post` table.
 
 **Supabase:** Full-stack backend via `@supabase/supabase-js`. Client initialized in `src/lib/supabase.ts` (typed with generated `Database` type). Requires `VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `VITE_PUBLIC_ADMIN_USER_ID` env vars (see `.env.example`). Schema has `post`, `category`, and `page` tables; types are generated via `npm run update-database` into `src/types/database.ts`. The `post` table has a generated `fts` tsvector column (weighted: title A, excerpt B, content C) with a GIN index for full-text search. Google OAuth is enabled for admin login; RLS policies on `post` restrict mutations to the admin user.
 
-**Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). `src/index.css` contains only Tailwind imports — all styling is done with Tailwind utility classes.
+**Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` plugin for prose styling (used in `PostDetail` for rendered Markdown). Dark mode uses class-based strategy (`@custom-variant dark` in `index.css`) with a `ThemeContext` (`src/lib/ThemeContext.tsx`) managing light/dark/system preference persisted to `localStorage`. A FOUC-prevention inline script in `index.html` applies the `dark` class before React hydrates. The `ThemeToggle` component appears in the Header (desktop) and Sidebar (mobile). All styling is done with Tailwind utility classes.
 
 **Image uploads:** Admin post and page editors support image uploads via Vercel Blob. Images can be added via the toolbar camera button, clipboard paste, or drag-and-drop. The upload is handled by a Vercel serverless function (`api/upload.ts`) that verifies the Supabase auth token and streams the file to Blob storage. Requires `BLOB_READ_WRITE_TOKEN` env var (provided automatically by Vercel Blob store integration).
 
@@ -62,9 +62,9 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
-| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, `<AuthProvider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
+| `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, `<AuthProvider>`, `<ThemeProvider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
 | `App.tsx` | Router shell. Defines public routes (`/`, `/search`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts`, `/admin/posts/new`, `/admin/posts/:id/edit`, `/admin/pages`, `/admin/pages/new`, `/admin/pages/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
-| `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
+| `index.css` | Tailwind CSS imports, typography plugin, and class-based dark mode custom variant. |
 | `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. Sets `<title>` to category name when filtered, otherwise "Catri.us". |
 | `pages/Search.tsx` | Full-text search page. Uses `useSearchPostsQuery` with debounced `?q=` URL param. Renders search input + `PostList` with infinite scroll. PostgreSQL websearch syntax via Supabase `.textSearch()` on the `fts` tsvector column. |
 | `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. Sets `<title>`, description (from excerpt), and OG article tags. Shows Edit/Delete buttons when admin is logged in (hybrid admin controls). |
@@ -78,9 +78,10 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `pages/admin/AdminPageEdit.tsx` | Edit page. Fetches page by ID via `useGetPageByIdQuery`, renders `PostForm` with `variant="page"`, calls `useUpdatePageMutation`. |
 | `pages/PostList.tsx` | Presentational component. Renders a responsive grid of post cards with infinite scroll (IntersectionObserver sentinel). |
 | `components/NavBar.tsx` | Category filter bar (desktop only, `hidden md:block`). Horizontal Swiper of pill buttons with post counts. On mobile, categories are in the Sidebar instead. |
-| `components/Header.tsx` | Site header with logo, page-link Swiper (desktop), search icon button (desktop), auth controls (Sign in/Admin/Sign out), and hamburger menu button (mobile). Manages Sidebar open/close state. |
+| `components/Header.tsx` | Site header with logo, page-link Swiper (desktop), search icon button (desktop), theme toggle (desktop), auth controls (Sign in/Admin/Sign out), and hamburger menu button (mobile). Manages Sidebar open/close state. |
 | `components/Footer.tsx` | Site footer with copyright and social links (GitHub, X, Bluesky, Discord). |
-| `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains search link, page links, category navigation, and auth controls. Hidden on `md+` screens. |
+| `components/Sidebar.tsx` | Full-screen mobile sidebar (slides from right). Contains search link, page links, category navigation, theme toggle, and auth controls. Hidden on `md+` screens. |
+| `components/ThemeToggle.tsx` | Three-way theme toggle (light/dark/system) with sun, moon, and monitor icons. Used in Header and Sidebar. |
 | `components/AdminRoute.tsx` | Route guard for admin pages. Checks `useAuth()`, renders `<Outlet />` if admin, redirects to `/` otherwise. |
 | `components/admin/ContentEditor.tsx` | Markdown content editor with image upload support. Wraps `@uiw/react-md-editor` with dark/light mode, mobile edit/preview toggle, and image upload (toolbar button, paste, drag-and-drop → Vercel Blob). |
 | `components/admin/PostForm.tsx` | Shared post/page create/edit form. Accepts `variant` prop (`'post'` default, `'page'`). Post variant shows title, slug, excerpt, category, and `ContentEditor`. Page variant omits excerpt and category. |
@@ -91,7 +92,10 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `env.d.ts` | Vite env type declarations for `VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `VITE_PUBLIC_ADMIN_USER_ID`. |
 | `constants.ts` | Shared constants. Exports `SITE_NAME` (`'Catri.us'`). |
 | `lib/supabase.ts` | Supabase typed client singleton. Validates env vars at import time. |
-| `lib/AuthContext.tsx` | Auth context and provider for Supabase Google OAuth. Exposes `useAuth()` hook with `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()`. |
+| `lib/AuthContext.tsx` | Auth provider component for Supabase Google OAuth. Wraps children in `AuthContext`. |
+| `lib/ThemeContext.tsx` | Theme provider component. Manages light/dark/system preference, persists to `localStorage`, toggles `.dark` class on `<html>`. |
+| `hooks/useAuth.ts` | `useAuth()` hook and `AuthContext` creation. Exposes `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()`. |
+| `hooks/useTheme.ts` | `useTheme()` hook and `ThemeContext` creation. Exposes `theme` and `setTheme()`. |
 
 ### Public (`public/`)
 
@@ -128,6 +132,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 ## ESLint
 
 Flat config format (ESLint v9). Extends: JS recommended, typescript-eslint recommended, react-hooks, react-refresh, `eslint-plugin-better-tailwindcss` recommended (stylistic + correctness rules: class ordering, line wrapping, canonical classes, duplicate/deprecated class removal, unknown/conflicting class detection). Uses typescript-eslint parser with `project: ['./tsconfig.app.json', './tsconfig.node.json']` for type-aware linting. Entry point set to `src/index.css` for TW v4 config resolution. Only lints `**/*.{ts,tsx}`.
+
+**Do not use `// eslint-disable` comments.** Fix the underlying code to satisfy the rule instead. `// eslint-disable` should only be used as an absolute last resort when no code change can resolve the warning.
 
 ## Self-Maintenance
 

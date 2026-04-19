@@ -1,17 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import type { Session, User } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
+import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
-
-interface AuthContextType {
-  session: Session | null
-  user: User | null
-  isAdmin: boolean
-  isLoading: boolean
-  signInWithGoogle: () => Promise<void>
-  signOut: () => Promise<void>
-}
-
-const AuthContext = createContext<AuthContextType | null>(null)
+import { AuthContext } from '@/hooks/useAuth'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
@@ -51,13 +41,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext>
   )
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
 }

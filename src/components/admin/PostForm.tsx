@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useGetCategoriesQuery } from '@/store/api'
-import { useAuth } from '@/lib/AuthContext'
+import { useAuth } from '@/hooks/useAuth'
 import type { Tables } from '@/types/database'
 import ContentEditor from '@/components/admin/ContentEditor'
 
