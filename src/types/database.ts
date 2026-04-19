@@ -69,6 +69,7 @@ export type Database = {
           id: number
           reading_time_minutes: number | null
           slug: string
+          tags: string[]
           title: string
         }
         Insert: {
@@ -80,6 +81,7 @@ export type Database = {
           id?: number
           reading_time_minutes?: number | null
           slug: string
+          tags?: string[]
           title: string
         }
         Update: {
@@ -91,6 +93,7 @@ export type Database = {
           id?: number
           reading_time_minutes?: number | null
           slug?: string
+          tags?: string[]
           title?: string
         }
         Relationships: [

@@ -29,6 +29,12 @@ interface SearchPostsArgs {
   limit: number
 }
 
+interface TagPostsArgs {
+  tag: string
+  offset: number
+  limit: number
+}
+
 export const api = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ['Post', 'Category', 'Page'],
@@ -105,6 +111,62 @@ export const api = createApi({
               { type: 'Post', id: 'SEARCH' },
             ]
           : [{ type: 'Post', id: 'SEARCH' }],
+    }),
+
+    getPostsByTag: builder.query<PostsResponse, TagPostsArgs>({
+      queryFn: async ({ tag, offset, limit }) => {
+        const { data, error } = await supabase
+          .from('post')
+          .select('*')
+          .contains('tags', [tag])
+          .order('created_at', { ascending: false })
+          .range(offset, offset + limit - 1)
+
+        if (error) return { error }
+        return { data: { posts: data, hasMore: data.length === limit } }
+      },
+      serializeQueryArgs: ({ queryArgs }) => {
+        return { tag: queryArgs.tag }
+      },
+      merge: (currentCache, newItems) => {
+        const existingIds = new Set(currentCache.posts.map((p) => p.id))
+        const uniqueNewItems = newItems.posts.filter(
+          (p) => !existingIds.has(p.id),
+        )
+        currentCache.posts.push(...uniqueNewItems)
+        currentCache.hasMore = newItems.hasMore
+      },
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg?.offset !== previousArg?.offset
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.posts.map(({ id }) => ({ type: 'Post' as const, id })),
+              { type: 'Post', id: 'LIST' },
+            ]
+          : [{ type: 'Post', id: 'LIST' }],
+    }),
+
+    getAllTags: builder.query<{ tag: string; count: number }[], void>({
+      queryFn: async () => {
+        const { data, error } = await supabase.from('post').select('tags')
+        if (error) return { error }
+
+        const counts = new Map<string, number>()
+        for (const row of data) {
+          for (const tag of row.tags) {
+            counts.set(tag, (counts.get(tag) ?? 0) + 1)
+          }
+        }
+
+        const tags = Array.from(counts.entries())
+          .map(([tag, count]) => ({ tag, count }))
+          .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
+
+        return { data: tags }
+      },
+      providesTags: [{ type: 'Post', id: 'LIST' }],
     }),
 
     getPostCounts: builder.query<
@@ -353,6 +415,8 @@ export const api = createApi({
 
 export const {
   useGetPostsQuery,
+  useGetPostsByTagQuery,
+  useGetAllTagsQuery,
   useSearchPostsQuery,
   useGetPostQuery,
   useGetCategoriesQuery,

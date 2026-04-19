@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router'
 import Home from '@/pages/Home'
 import Search from '@/pages/Search'
+import TagsIndex from '@/pages/TagsIndex'
+import TagPosts from '@/pages/TagPosts'
 import PostDetail from '@/pages/PostDetail'
 import PageDetail from '@/pages/PageDetail'
 import Header from '@/components/Header'
@@ -27,6 +29,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/tags" element={<TagsIndex />} />
+          <Route path="/tags/:tag" element={<TagPosts />} />
           <Route path="/categories/:categorySlug" element={<Home />} />
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/pages/:slug" element={<PageDetail />} />
