@@ -12,6 +12,37 @@ interface SidebarProps {
   onClose: () => void
 }
 
+function SidebarLink({
+  to,
+  isActive,
+  children,
+}: {
+  to: string
+  isActive: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <Link
+      to={to}
+      className={`
+        flex items-center justify-between rounded-md px-3 py-2 text-sm
+        no-underline transition-colors
+        ${isActive ? `
+          bg-gray-100 font-medium text-gray-900
+          dark:bg-gray-800 dark:text-white
+        ` : `
+          text-gray-700
+          hover:bg-gray-50
+          dark:text-gray-300
+          dark:hover:bg-gray-800/50
+        `}
+      `}
+    >
+      {children}
+    </Link>
+  )
+}
+
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const { data: pages = [] } = useGetPagesQuery()
   const { data: categories = [] } = useGetCategoriesQuery()
@@ -108,11 +139,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             <Link
               to="/search"
               className={`
-                flex items-center gap-2 rounded-md px-3 py-2 text-sm
+                flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2 text-sm
                 no-underline transition-colors
+                dark:bg-gray-800
                 ${location.pathname === '/search' ? `
-                  bg-gray-100 font-medium text-gray-900
-                  dark:bg-gray-800 dark:text-white
+                  font-medium text-gray-900
+                  dark:text-white
                 ` : `
                   text-gray-700
                   hover:bg-gray-50
@@ -149,32 +181,16 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 Pages
               </h3>
               <ul className="space-y-1">
-                {pages.map((page) => {
-                  const path = `/pages/${page.slug}`
-                  const isActive = location.pathname === path
-                  return (
-                    <li key={page.id}>
-                      <Link
-                        to={path}
-                        className={`
-                          block rounded-md px-3 py-2 text-sm no-underline
-                          transition-colors
-                          ${isActive ? `
-                            bg-gray-100 font-medium text-gray-900
-                            dark:bg-gray-800 dark:text-white
-                          ` : `
-                            text-gray-700
-                            hover:bg-gray-50
-                            dark:text-gray-300
-                            dark:hover:bg-gray-800/50
-                          `}
-                        `}
-                      >
-                        {page.title}
-                      </Link>
-                    </li>
-                  )
-                })}
+                {pages.map((page) => (
+                  <li key={page.id}>
+                    <SidebarLink
+                      to={`/pages/${page.slug}`}
+                      isActive={location.pathname === `/pages/${page.slug}`}
+                    >
+                      {page.title}
+                    </SidebarLink>
+                  </li>
+                ))}
               </ul>
             </div>
           )}
@@ -189,21 +205,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             </h3>
             <ul className="space-y-1">
               <li>
-                <Link
+                <SidebarLink
                   to="/"
-                  className={`
-                    flex items-center justify-between rounded-md px-3 py-2
-                    text-sm no-underline transition-colors
-                    ${categorySlug === null && location.pathname === '/' ? `
-                      bg-blue-50 font-medium text-blue-700
-                      dark:bg-blue-900/30 dark:text-blue-300
-                    ` : `
-                      text-gray-700
-                      hover:bg-gray-50
-                      dark:text-gray-300
-                      dark:hover:bg-gray-800/50
-                    `}
-                  `}
+                  isActive={categorySlug === null && location.pathname === '/'}
                 >
                   All Posts
                   <span className="
@@ -212,25 +216,13 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   ">
                     {postCounts?.total ?? 0}
                   </span>
-                </Link>
+                </SidebarLink>
               </li>
               {categories.map((category) => (
                 <li key={category.id}>
-                  <Link
+                  <SidebarLink
                     to={`/categories/${category.slug}`}
-                    className={`
-                      flex items-center justify-between rounded-md px-3 py-2
-                      text-sm no-underline transition-colors
-                      ${categorySlug === category.slug ? `
-                        bg-blue-50 font-medium text-blue-700
-                        dark:bg-blue-900/30 dark:text-blue-300
-                      ` : `
-                        text-gray-700
-                        hover:bg-gray-50
-                        dark:text-gray-300
-                        dark:hover:bg-gray-800/50
-                      `}
-                    `}
+                    isActive={categorySlug === category.slug}
                   >
                     {category.name}
                     <span className="
@@ -239,7 +231,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     ">
                       {postCountsByCategory.get(category.id) ?? 0}
                     </span>
-                  </Link>
+                  </SidebarLink>
                 </li>
               ))}
             </ul>
