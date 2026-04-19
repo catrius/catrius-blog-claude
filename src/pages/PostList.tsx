@@ -65,12 +65,20 @@ export default function PostList({
                   className="block text-inherit no-underline"
                 >
                   <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
-                  <time className="
-                    mb-3 block text-sm text-gray-400
+                  <div className="
+                    mb-3 flex items-center gap-2 text-sm text-gray-400
                     dark:text-gray-500
                   ">
-                    {new Date(post.created_at).toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
-                  </time>
+                    <time>
+                      {new Date(post.created_at).toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
+                    </time>
+                    {post.reading_time_minutes != null && (
+                      <>
+                        <span>&middot;</span>
+                        <span>{post.reading_time_minutes} min read</span>
+                      </>
+                    )}
+                  </div>
                   <p className="
                     text-gray-500
                     dark:text-gray-400

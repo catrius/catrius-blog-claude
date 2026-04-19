@@ -67,6 +67,7 @@ export type Database = {
           excerpt: string
           fts: unknown
           id: number
+          reading_time_minutes: number | null
           slug: string
           title: string
         }
@@ -77,6 +78,7 @@ export type Database = {
           excerpt: string
           fts?: unknown
           id?: number
+          reading_time_minutes?: number | null
           slug: string
           title: string
         }
@@ -87,6 +89,7 @@ export type Database = {
           excerpt?: string
           fts?: unknown
           id?: number
+          reading_time_minutes?: number | null
           slug?: string
           title?: string
         }

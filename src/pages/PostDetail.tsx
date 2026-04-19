@@ -64,12 +64,18 @@ export default function PostDetail() {
         </div>
       )}
       <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
-      <time className="
-        mb-6 block text-sm text-gray-400
+      <div className="
+        mb-6 flex items-center gap-2 text-sm text-gray-400
         dark:text-gray-500
       ">
-        {new Date(post.created_at).toLocaleDateString()}
-      </time>
+        <time>{new Date(post.created_at).toLocaleDateString()}</time>
+        {post.reading_time_minutes != null && (
+          <>
+            <span>&middot;</span>
+            <span>{post.reading_time_minutes} min read</span>
+          </>
+        )}
+      </div>
       <div className="
         prose max-w-none
         dark:prose-invert

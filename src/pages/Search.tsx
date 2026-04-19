@@ -107,6 +107,12 @@ function SearchResult({ post, query, categoryName }: {
           dark:text-gray-500
         ">
           <time>{date}</time>
+          {post.reading_time_minutes != null && (
+            <>
+              <span>&middot;</span>
+              <span>{post.reading_time_minutes} min read</span>
+            </>
+          )}
           {categoryName && (
             <>
               <span>&middot;</span>
