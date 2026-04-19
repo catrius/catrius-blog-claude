@@ -65,6 +65,7 @@ export type Database = {
           content: string
           created_at: string
           excerpt: string
+          fts: unknown
           id: number
           slug: string
           title: string
@@ -74,6 +75,7 @@ export type Database = {
           content: string
           created_at?: string
           excerpt: string
+          fts?: unknown
           id?: number
           slug: string
           title: string
@@ -83,6 +85,7 @@ export type Database = {
           content?: string
           created_at?: string
           excerpt?: string
+          fts?: unknown
           id?: number
           slug?: string
           title?: string

@@ -23,6 +23,12 @@ interface PostsQueryArgs {
   categoryId?: number | null
 }
 
+interface SearchPostsArgs {
+  query: string
+  offset: number
+  limit: number
+}
+
 export const api = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ['Post', 'Category', 'Page'],
@@ -64,6 +70,41 @@ export const api = createApi({
               { type: 'Post', id: 'LIST' },
             ]
           : [{ type: 'Post', id: 'LIST' }],
+    }),
+
+    searchPosts: builder.query<PostsResponse, SearchPostsArgs>({
+      queryFn: async ({ query, offset, limit }) => {
+        const { data, error } = await supabase
+          .from('post')
+          .select('*')
+          .textSearch('fts', query, { type: 'websearch' })
+          .order('created_at', { ascending: false })
+          .range(offset, offset + limit - 1)
+
+        if (error) return { error }
+        return { data: { posts: data, hasMore: data.length === limit } }
+      },
+      serializeQueryArgs: ({ queryArgs }) => {
+        return { query: queryArgs.query }
+      },
+      merge: (currentCache, newItems) => {
+        const existingIds = new Set(currentCache.posts.map((p) => p.id))
+        const uniqueNewItems = newItems.posts.filter(
+          (p) => !existingIds.has(p.id),
+        )
+        currentCache.posts.push(...uniqueNewItems)
+        currentCache.hasMore = newItems.hasMore
+      },
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg?.offset !== previousArg?.offset
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.posts.map(({ id }) => ({ type: 'Post' as const, id })),
+              { type: 'Post', id: 'SEARCH' },
+            ]
+          : [{ type: 'Post', id: 'SEARCH' }],
     }),
 
     getPostCounts: builder.query<
@@ -312,6 +353,7 @@ export const api = createApi({
 
 export const {
   useGetPostsQuery,
+  useSearchPostsQuery,
   useGetPostQuery,
   useGetCategoriesQuery,
   useGetPostCountsQuery,

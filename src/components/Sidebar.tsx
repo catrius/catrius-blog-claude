@@ -103,6 +103,41 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-4 pb-6">
+          {/* Search */}
+          <div className="mb-8">
+            <Link
+              to="/search"
+              className={`
+                flex items-center gap-2 rounded-md px-3 py-2 text-sm
+                no-underline transition-colors
+                ${location.pathname === '/search' ? `
+                  bg-gray-100 font-medium text-gray-900
+                  dark:bg-gray-800 dark:text-white
+                ` : `
+                  text-gray-700
+                  hover:bg-gray-50
+                  dark:text-gray-300
+                  dark:hover:bg-gray-800/50
+                `}
+              `}
+            >
+              <svg
+                className="size-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+              Search
+            </Link>
+          </div>
+
           {/* Pages */}
           {pages.length > 0 && (
             <div className="mb-8">

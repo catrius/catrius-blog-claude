@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router'
 import Home from '@/pages/Home'
+import Search from '@/pages/Search'
 import PostDetail from '@/pages/PostDetail'
 import PageDetail from '@/pages/PageDetail'
 import Header from '@/components/Header'
@@ -22,6 +23,7 @@ function App() {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/categories/:categorySlug" element={<Home />} />
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/pages/:slug" element={<PageDetail />} />

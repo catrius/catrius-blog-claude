@@ -10,6 +10,31 @@ interface PostListProps {
   hasMore: boolean
   isFetching: boolean
   onLoadMore: () => void
+  highlightQuery?: string
+}
+
+function Highlight({ text, query }: { text: string; query?: string }) {
+  if (!query) return <>{text}</>
+  const words = query.split(/\s+/).filter(Boolean)
+  if (words.length === 0) return <>{text}</>
+  const pattern = new RegExp(`(${words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
+  const parts = text.split(pattern)
+  return (
+    <>
+      {parts.map((part, i) =>
+        pattern.test(part) ? (
+          <mark key={i} className="
+            rounded-sm bg-yellow-200/70 text-inherit
+            dark:bg-yellow-500/30
+          ">
+            {part}
+          </mark>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  )
 }
 
 export default function PostList({
@@ -18,6 +43,7 @@ export default function PostList({
   hasMore,
   isFetching,
   onLoadMore,
+  highlightQuery,
 }: PostListProps) {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -64,7 +90,7 @@ export default function PostList({
                   to={`/posts/${post.slug}`}
                   className="block text-inherit no-underline"
                 >
-                  <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
+                  <h2 className="mb-2 text-xl font-semibold"><Highlight text={post.title} query={highlightQuery} /></h2>
                   <time className="
                     mb-3 block text-sm text-gray-400
                     dark:text-gray-500
@@ -75,7 +101,7 @@ export default function PostList({
                     text-gray-500
                     dark:text-gray-400
                   ">
-                    {post.excerpt}
+                    <Highlight text={post.excerpt} query={highlightQuery} />
                   </p>
                 </Link>
               </li>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode } from 'swiper/modules'
 import 'swiper/css'
@@ -20,6 +20,7 @@ export default function Header() {
   const { data: pages = [] } = useGetPagesQuery()
   const { user, isAdmin, isLoading: authLoading, signInWithGoogle, signOut } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -93,6 +94,41 @@ export default function Header() {
               })}
             </Swiper>
           </nav>
+
+          {/* Search — desktop only */}
+          <button
+            onClick={() => navigate('/search')}
+            aria-label="Search posts"
+            className={`
+              hidden cursor-pointer rounded-md p-1.5 transition-colors
+              md:block
+              ${location.pathname === '/search'
+                ? `
+                  text-gray-900
+                  dark:text-white
+                `
+                : `
+                  text-gray-500
+                  hover:text-gray-900
+                  dark:text-gray-400
+                  dark:hover:text-white
+                `}
+            `}
+          >
+            <svg
+              className="size-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </button>
 
           {/* Auth controls — desktop only */}
           {!authLoading && (
