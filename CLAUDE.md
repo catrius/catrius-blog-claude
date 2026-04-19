@@ -38,6 +38,8 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 **Entry flow:** `index.html` → `src/main.tsx` (creates React root in StrictMode, wrapped in Redux `Provider`, `AuthProvider`, and `BrowserRouter`) → `src/App.tsx` (router shell) → page components.
 
+**SEO / Meta tags:** Uses React 19's native `<title>` and `<meta>` tag hoisting (no library needed). Page components render `<title>` and `<meta>` tags inline; React automatically hoists them to `<head>`. `PostDetail` sets title + description (from excerpt) + OG article tags; `PageDetail` sets title + OG title; `Home` sets title when filtered by category, otherwise falls back to "Catri.us". All per-page titles use the `"Page | Catri.us"` suffix pattern. Fallback defaults live in `index.html`.
+
 **Routing:** Client-side routing via `react-router` v7. Routes defined in `App.tsx`: `/` → `Home`, `/categories/:categorySlug` → `Home` (filtered), `/posts/:slug` → `PostDetail`, `/pages/:slug` → `PageDetail`. Admin routes (lazy-loaded, guarded by `AdminRoute`): `/admin` → `AdminDashboard` (hub with counts/links), `/admin/posts` → `AdminPosts`, `/admin/posts/new` → `AdminPostNew`, `/admin/posts/:id/edit` → `AdminPostEdit`, `/admin/pages` → `AdminPages`, `/admin/pages/new` → `AdminPageNew`, `/admin/pages/:id/edit` → `AdminPageEdit`.
 
 **State management:** RTK Query (`@reduxjs/toolkit/query`) handles all Supabase data fetching and caching. API slice defined in `src/store/api.ts`, store in `src/store/store.ts`. Page components consume auto-generated hooks (`useGetPostsQuery`, `useGetPostQuery`, `useGetCategoriesQuery`, `useGetPostCountsQuery`, `useGetPagesQuery`, `useGetPageQuery`, `useGetPostByIdQuery`, `useGetAdminPostsQuery`, `useCreatePostMutation`, `useUpdatePostMutation`, `useDeletePostMutation`, `useGetPageByIdQuery`, `useGetAdminPagesQuery`, `useCreatePageMutation`, `useUpdatePageMutation`, `useDeletePageMutation`). Local `useState` is used only for UI state (e.g., category filter selection, sidebar toggle).
@@ -63,9 +65,9 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `main.tsx` | Entry point. Mounts `<App />` inside `<StrictMode>`, Redux `<Provider>`, `<AuthProvider>`, and `<BrowserRouter>` on `#root`. Imports global styles. |
 | `App.tsx` | Router shell. Defines public routes (`/`, `/categories/:categorySlug`, `/posts/:slug`, `/pages/:slug`) and lazy-loaded admin routes (`/admin`, `/admin/posts`, `/admin/posts/new`, `/admin/posts/:id/edit`, `/admin/pages`, `/admin/pages/new`, `/admin/pages/:id/edit`) guarded by `AdminRoute`. Wrapped in shared `Header`/`Footer` layout. |
 | `index.css` | Tailwind CSS imports only (`@import "tailwindcss"` and `@plugin "@tailwindcss/typography"`). |
-| `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. |
-| `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. Shows Edit/Delete buttons when admin is logged in (hybrid admin controls). |
-| `pages/PageDetail.tsx` | Static page view. Uses `useGetPageQuery` hook, renders Markdown content with prose styling. |
+| `pages/Home.tsx` | Home page. Uses `useGetPostsQuery`, `useGetCategoriesQuery`, and `useGetPostCountsQuery` hooks, renders `NavBar` + `PostList`. Supports filtering by category via URL param. Infinite scroll via offset pagination. Sets `<title>` to category name when filtered, otherwise "Catri.us". |
+| `pages/PostDetail.tsx` | Single post page. Uses `useGetPostQuery` hook, renders Markdown content via `react-markdown` with prose styling. Sets `<title>`, description (from excerpt), and OG article tags. Shows Edit/Delete buttons when admin is logged in (hybrid admin controls). |
+| `pages/PageDetail.tsx` | Static page view. Uses `useGetPageQuery` hook, renders Markdown content with prose styling. Sets `<title>` and OG title. |
 | `pages/admin/AdminDashboard.tsx` | Admin hub page. Shows post/page counts with links to `/admin/posts` and `/admin/pages`. Uses `useGetAdminPostsQuery` and `useGetAdminPagesQuery` for counts. |
 | `pages/admin/AdminPosts.tsx` | Admin post list table with New/Edit/Delete actions. Uses `useGetAdminPostsQuery`, `useGetCategoriesQuery`, and `useDeletePostMutation`. |
 | `pages/admin/AdminPages.tsx` | Admin page list table with New/Edit/Delete actions. Uses `useGetAdminPagesQuery` and `useDeletePageMutation`. |
@@ -86,6 +88,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `store/store.ts` | Redux store. Configures store with RTK Query reducer and middleware. |
 | `types/database.ts` | Auto-generated Supabase database types (via `npm run update-database`). Defines `post`, `category`, and `page` table types and helper generics (`Tables`, `TablesInsert`, `TablesUpdate`). |
 | `env.d.ts` | Vite env type declarations for `VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `VITE_PUBLIC_ADMIN_USER_ID`. |
+| `constants.ts` | Shared constants. Exports `SITE_NAME` (`'Catri.us'`). |
 | `lib/supabase.ts` | Supabase typed client singleton. Validates env vars at import time. |
 | `lib/AuthContext.tsx` | Auth context and provider for Supabase Google OAuth. Exposes `useAuth()` hook with `session`, `user`, `isAdmin`, `isLoading`, `signInWithGoogle()`, `signOut()`. |
 

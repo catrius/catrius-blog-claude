@@ -6,6 +6,7 @@ import {
   useGetCategoriesQuery,
   PAGE_SIZE,
 } from '@/store/api'
+import { SITE_NAME } from '@/constants'
 import NavBar from '@/components/NavBar'
 import PostList from '@/pages/PostList'
 
@@ -60,6 +61,11 @@ export default function Home() {
 
   return (
     <div>
+      {selectedCategory ? (
+        <title>{`${selectedCategory.name} | ${SITE_NAME}`}</title>
+      ) : (
+        <title>{SITE_NAME}</title>
+      )}
       {/* Hidden on mobile — categories are in the sidebar */}
       <NavBar
         categories={categories}

@@ -3,6 +3,7 @@ import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useGetPageQuery, useDeletePageMutation } from '@/store/api'
+import { SITE_NAME } from '@/constants'
 import { useAuth } from '@/lib/AuthContext'
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
 
@@ -31,6 +32,8 @@ export default function PageDetail() {
 
   return (
     <article>
+      <title>{`${page.title} | ${SITE_NAME}`}</title>
+      <meta property="og:title" content={page.title} />
       {isAdmin && (
         <div className="mb-4 flex gap-2">
           <Link

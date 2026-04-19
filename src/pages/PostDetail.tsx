@@ -3,6 +3,7 @@ import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useGetPostQuery, useDeletePostMutation } from '@/store/api'
+import { SITE_NAME } from '@/constants'
 import { useAuth } from '@/lib/AuthContext'
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
 
@@ -31,6 +32,11 @@ export default function PostDetail() {
 
   return (
     <article>
+      <title>{`${post.title} | ${SITE_NAME}`}</title>
+      <meta name="description" content={post.excerpt} />
+      <meta property="og:title" content={post.title} />
+      <meta property="og:description" content={post.excerpt} />
+      <meta property="og:type" content="article" />
       {isAdmin && (
         <div className="mb-4 flex gap-2">
           <Link
