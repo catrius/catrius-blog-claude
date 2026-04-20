@@ -2,62 +2,79 @@ import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
+import { join } from 'node:path';
+import type { ServerResponse } from 'node:http';
 
-function apiUpload(): Plugin {
+function vercelApiDev(): Plugin {
   return {
-    name: 'api-upload',
+    name: 'vercel-api-dev',
     configureServer(server) {
       const env = loadEnv('development', process.cwd(), '');
 
-      server.middlewares.use('/api/upload', async (req, res) => {
-        if (req.method !== 'POST') {
-          res.statusCode = 405;
-          res.end(JSON.stringify({ error: 'Method not allowed' }));
-          return;
+      // Make .env vars available as process.env.* for API handlers
+      for (const [key, value] of Object.entries(env)) {
+        process.env[key] ??= value;
+      }
+
+      server.middlewares.use(async (req, res, next) => {
+        const parsed = new URL(req.url ?? '/', 'http://localhost');
+
+        if (!parsed.pathname.startsWith('/api/')) {
+          return next();
         }
 
-        const token = req.headers.authorization?.replace('Bearer ', '');
-        if (!token) {
-          res.statusCode = 401;
-          res.end(JSON.stringify({ error: 'Missing authorization token' }));
-          return;
+        const handlerName = parsed.pathname.slice('/api/'.length);
+        const handlerPath = join(process.cwd(), 'api', `${handlerName}.ts`);
+
+        let mod: Record<string, unknown>;
+        try {
+          mod = await server.ssrLoadModule(handlerPath);
+        } catch {
+          return next();
         }
 
-        const { createClient } = await import('@supabase/supabase-js');
-        const supabase = createClient(env.VITE_PUBLIC_SUPABASE_URL, env.VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
-        const {
-          data: { user },
-        } = await supabase.auth.getUser(token);
-
-        if (!user || user.id !== env.VITE_PUBLIC_ADMIN_USER_ID) {
-          res.statusCode = 401;
-          res.end(JSON.stringify({ error: 'Unauthorized' }));
-          return;
+        const handler = mod.default;
+        if (typeof handler !== 'function') {
+          return next();
         }
 
-        const url = new URL(req.url ?? '/', 'http://localhost');
-        const filename = url.searchParams.get('filename');
-        if (!filename) {
-          res.statusCode = 400;
-          res.end(JSON.stringify({ error: 'Missing filename query parameter' }));
-          return;
+        // Build query object from URL search params (VercelRequest.query)
+        const query: Record<string, string> = {};
+        for (const [key, value] of parsed.searchParams.entries()) {
+          query[key] = value;
         }
+        Object.assign(req, { query });
 
-        const chunks: Buffer[] = [];
-        for await (const chunk of req) {
-          chunks.push(Buffer.from(chunk as ArrayBuffer));
+        // Add VercelResponse chainable helpers
+        const vRes = res as ServerResponse & {
+          status(code: number): typeof vRes;
+          json(data: unknown): typeof vRes;
+          send(data: unknown): typeof vRes;
+        };
+        vRes.status = (code: number) => {
+          res.statusCode = code;
+          return vRes;
+        };
+        vRes.json = (data: unknown) => {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(data));
+          return vRes;
+        };
+        vRes.send = (data: unknown) => {
+          res.end(typeof data === 'string' || Buffer.isBuffer(data) ? data : String(data));
+          return vRes;
+        };
+
+        try {
+          await handler(req, vRes);
+        } catch (err) {
+          console.error(`[vercel-api-dev] Error in /api/${handlerName}:`, err);
+          if (!res.headersSent) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Internal server error' }));
+          }
         }
-        const body = Buffer.concat(chunks);
-
-        const { put } = await import('@vercel/blob');
-        const blob = await put(`blog/${filename}`, body, {
-          access: 'public',
-          addRandomSuffix: true,
-          token: env.BLOB_READ_WRITE_TOKEN,
-        });
-
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(blob));
       });
     },
   };
@@ -68,5 +85,5 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
-  plugins: [tailwindcss(), react(), babel({ presets: [reactCompilerPreset()] }), apiUpload()],
+  plugins: [tailwindcss(), react(), babel({ presets: [reactCompilerPreset()] }), vercelApiDev()],
 });

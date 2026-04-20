@@ -184,6 +184,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_tags: {
+        Args: { p_content: string; p_excerpt: string; p_title: string }
+        Returns: string[]
+      }
       increment_post_view: { Args: { p_slug: string }; Returns: undefined }
       related_posts: {
         Args: { max_results?: number; p_id: number; p_tags: string[] }

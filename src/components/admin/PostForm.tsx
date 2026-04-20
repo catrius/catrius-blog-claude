@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGetCategoriesQuery } from '@/store/api';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
 import type { Tables } from '@/types/database';
 import ContentEditor from '@/components/admin/ContentEditor';
 import CoverImageSuggest from '@/components/admin/CoverImageSuggest';
@@ -15,6 +16,7 @@ interface PostFormProps {
     content: string;
     category_id?: number | null;
     cover_image?: string | null;
+    tags?: string[];
   }) => Promise<void>;
   isSubmitting: boolean;
 }
@@ -34,18 +36,33 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
   const { session } = useAuth();
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [slug, setSlug] = useState(initialData?.slug ?? '');
-  const [slugManual, setSlugManual] = useState(initialData ? slugify(initialData.title) !== initialData.slug : false);
   const postData = isPost ? (initialData as Tables<'post'> | undefined) : undefined;
   const [excerpt, setExcerpt] = useState(postData?.excerpt ?? '');
   const [content, setContent] = useState(initialData?.content ?? '');
   const [categoryId, setCategoryId] = useState<number | null>(postData?.category_id ?? null);
   const [coverImage, setCoverImage] = useState<string | null>(postData?.cover_image ?? null);
   const [coverUploading, setCoverUploading] = useState(false);
+  const [tagsInput, setTagsInput] = useState(postData?.tags.join(', ') ?? '');
+  const [generatingTags, setGeneratingTags] = useState(false);
 
   function handleTitleChange(value: string) {
     setTitle(value);
-    if (!slugManual) {
-      setSlug(slugify(value));
+  }
+
+  async function handleGenerateTags() {
+    setGeneratingTags(true);
+    try {
+      const { data, error } = await supabase.rpc('generate_tags', {
+        p_title: title,
+        p_excerpt: excerpt,
+        p_content: content,
+      });
+      if (error) throw error;
+      setTagsInput((data as string[]).join(', '));
+    } catch {
+      alert('Failed to generate tags.');
+    } finally {
+      setGeneratingTags(false);
     }
   }
 
@@ -71,11 +88,15 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const parsedTags = tagsInput
+      .split(',')
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean);
     await onSubmit({
       title,
       slug,
       content,
-      ...(isPost && { excerpt, category_id: categoryId, cover_image: coverImage }),
+      ...(isPost && { excerpt, category_id: categoryId, cover_image: coverImage, tags: parsedTags }),
     });
   }
 
@@ -86,6 +107,15 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
     dark:border-gray-700 dark:bg-gray-900 dark:text-white
     dark:placeholder-gray-500
     dark:focus:border-blue-400 dark:focus:ring-blue-400
+  `;
+
+  const generateBtnClass = `
+    shrink-0 cursor-pointer rounded-md border border-gray-300 bg-white px-3
+    py-2 text-sm text-gray-700
+    hover:bg-gray-50
+    disabled:cursor-not-allowed disabled:opacity-40
+    dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300
+    dark:hover:bg-gray-700
   `;
 
   return (
@@ -173,7 +203,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
           )}
           <div className="mt-2">
             <CoverImageSuggest
-              query={title}
+              query={tagsInput || title}
               accessToken={session?.access_token}
               onSelect={setCoverImage}
             />
@@ -204,44 +234,6 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
 
       <div>
         <label
-          htmlFor="auto-slug"
-          className="
-            mb-1 block text-sm font-medium text-gray-700
-            dark:text-gray-300
-          "
-        >
-          Slugify
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            id="auto-slug"
-            type="checkbox"
-            checked={!slugManual}
-            onChange={(e) => {
-              const auto = e.target.checked;
-              setSlugManual(!auto);
-              if (auto) {
-                setSlug(slugify(title));
-              }
-            }}
-            className="
-              rounded-sm border-gray-300
-              dark:border-gray-600
-            "
-          />
-          <span
-            className="
-              text-sm text-gray-600
-              dark:text-gray-400
-            "
-          >
-            Generate slug from title
-          </span>
-        </label>
-      </div>
-
-      <div>
-        <label
           htmlFor="slug"
           className="
             mb-1 block text-sm font-medium text-gray-700
@@ -250,28 +242,25 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
         >
           Slug
         </label>
-        <input
-          id="slug"
-          type="text"
-          required
-          value={slug}
-          onChange={(e) => {
-            setSlug(e.target.value);
-            setSlugManual(true);
-          }}
-          className={`
-            ${inputClass}
-            ${
-              !slugManual
-                ? `
-                  bg-gray-50 text-gray-500
-                  dark:bg-gray-800 dark:text-gray-400
-                `
-                : ''
-            }
-          `}
-          placeholder={isPost ? 'post-slug' : 'page-slug'}
-        />
+        <div className="flex gap-2">
+          <input
+            id="slug"
+            type="text"
+            required
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            className={inputClass}
+            placeholder={isPost ? 'post-slug' : 'page-slug'}
+          />
+          <button
+            type="button"
+            onClick={() => setSlug(slugify(title))}
+            disabled={!title.trim()}
+            className={generateBtnClass}
+          >
+            Generate
+          </button>
+        </div>
       </div>
 
       {isPost && (
@@ -321,6 +310,38 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {isPost && (
+        <div>
+          <label
+            htmlFor="tags"
+            className="
+              mb-1 block text-sm font-medium text-gray-700
+              dark:text-gray-300
+            "
+          >
+            Tags
+          </label>
+          <div className="flex gap-2">
+            <input
+              id="tags"
+              type="text"
+              value={tagsInput}
+              onChange={(e) => setTagsInput(e.target.value)}
+              className={inputClass}
+              placeholder="react, typescript, web-dev"
+            />
+            <button
+              type="button"
+              onClick={handleGenerateTags}
+              disabled={generatingTags || !title.trim()}
+              className={generateBtnClass}
+            >
+              {generatingTags ? 'Generating…' : 'Generate'}
+            </button>
+          </div>
         </div>
       )}
 

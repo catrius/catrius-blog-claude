@@ -131,6 +131,12 @@ export default function AdminPosts() {
                   <option value="year">This year</option>
                 </select>
               </th>
+              <th
+                className="
+                  hidden pb-2
+                  lg:table-cell
+                "
+              />
               <th className="pb-2" />
             </tr>
             <tr
@@ -167,6 +173,15 @@ export default function AdminPosts() {
               </th>
               <th
                 className="
+                  hidden pt-2 pr-4 pb-3 font-medium text-gray-500
+                  lg:table-cell
+                  dark:text-gray-400
+                "
+              >
+                Tags
+              </th>
+              <th
+                className="
                   pt-2 pb-3 text-right font-medium text-gray-500
                   dark:text-gray-400
                 "
@@ -179,7 +194,7 @@ export default function AdminPosts() {
             {filteredPosts.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="
                     py-6 text-center text-gray-500
                     dark:text-gray-400
@@ -229,6 +244,27 @@ export default function AdminPosts() {
                     "
                   >
                     {new Date(post.created_at).toLocaleDateString()}
+                  </td>
+                  <td
+                    className="
+                      hidden py-3 pr-4
+                      lg:table-cell
+                    "
+                  >
+                    <div className="flex flex-wrap gap-1">
+                      {post.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="
+                            rounded-full bg-gray-100 px-2 py-0.5 text-xs
+                            text-gray-600
+                            dark:bg-gray-800 dark:text-gray-400
+                          "
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </td>
                   <td className="py-3 text-right">
                     <div className="flex justify-end gap-2">

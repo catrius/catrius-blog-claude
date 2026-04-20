@@ -16,6 +16,7 @@ export default function AdminPostEdit() {
     excerpt?: string;
     content: string;
     category_id?: number | null;
+    tags?: string[];
   }) {
     setIsSubmitting(true);
     setError(null);
@@ -26,6 +27,7 @@ export default function AdminPostEdit() {
           ...data,
           excerpt: data.excerpt ?? '',
           category_id: data.category_id ?? null,
+          tags: data.tags?.length ? data.tags : undefined,
         },
       }).unwrap();
     } catch (err) {

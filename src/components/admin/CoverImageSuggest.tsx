@@ -19,17 +19,14 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
-  async function handleSearch(q?: string) {
-    const finalQuery = q ?? (searchQuery || query);
-    if (!finalQuery.trim() || !accessToken) return;
+  async function handleSuggest() {
+    if (!query.trim() || !accessToken) return;
 
     setLoading(true);
     setImages([]);
     try {
-      const res = await fetch(`/api/unsplash?q=${encodeURIComponent(finalQuery.trim())}`, {
+      const res = await fetch(`/api/unsplash?q=${encodeURIComponent(query.trim())}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (!res.ok) throw new Error('Search failed');
@@ -53,7 +50,7 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
       if (!res.ok) throw new Error('Upload failed');
       const blob = (await res.json()) as { url: string };
       onSelect(blob.url);
-      setOpen(false);
+      setImages([]);
     } catch {
       alert('Failed to save image.');
     } finally {
@@ -61,18 +58,12 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
     }
   }
 
-  function handleOpen() {
-    setOpen(true);
-    setSearchQuery(query);
-    handleSearch(query);
-  }
-
-  if (!open) {
-    return (
+  return (
+    <div>
       <button
         type="button"
-        onClick={handleOpen}
-        disabled={!query.trim()}
+        onClick={handleSuggest}
+        disabled={!query.trim() || loading}
         className="
           cursor-pointer rounded-md border border-dashed border-gray-300 px-3
           py-1.5 text-sm text-gray-600
@@ -82,94 +73,16 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
           dark:hover:border-blue-400 dark:hover:text-blue-400
         "
       >
-        Suggest Cover Image
+        {loading ? 'Searching…' : 'Suggest Cover Image'}
       </button>
-    );
-  }
-
-  return (
-    <div
-      className="
-        rounded-lg border border-gray-200 bg-gray-50 p-4
-        dark:border-gray-700 dark:bg-gray-800/50
-      "
-    >
-      <div className="mb-3 flex items-center gap-2">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleSearch();
-            }
-          }}
-          placeholder="Search Unsplash…"
-          className="
-            flex-1 rounded-md border border-gray-300 bg-white px-3 py-1.5
-            text-sm text-gray-900
-            focus:border-blue-500 focus:ring-1 focus:ring-blue-500
-            focus:outline-none
-            dark:border-gray-600 dark:bg-gray-900 dark:text-white
-          "
-        />
-        <button
-          type="button"
-          onClick={() => handleSearch()}
-          disabled={loading}
-          className="
-            cursor-pointer rounded-md bg-blue-600 px-3 py-1.5 text-sm
-            font-medium text-white
-            hover:bg-blue-700
-            disabled:opacity-50
-            dark:bg-blue-500
-            dark:hover:bg-blue-600
-          "
-        >
-          {loading ? 'Searching…' : 'Search'}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(false);
-            setImages([]);
-          }}
-          className="
-            cursor-pointer rounded-md px-2 py-1.5 text-sm text-gray-500
-            hover:text-gray-700
-            dark:text-gray-400
-            dark:hover:text-gray-200
-          "
-        >
-          Cancel
-        </button>
-      </div>
-
-      {loading && images.length === 0 && (
-        <p
-          className="
-            py-8 text-center text-sm text-gray-500
-            dark:text-gray-400
-          "
-        >
-          Searching Unsplash…
-        </p>
-      )}
-
-      {!loading && images.length === 0 && (
-        <p
-          className="
-            py-8 text-center text-sm text-gray-500
-            dark:text-gray-400
-          "
-        >
-          No results found. Try a different search.
-        </p>
-      )}
 
       {images.length > 0 && (
-        <>
+        <div
+          className="
+            mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4
+            dark:border-gray-700 dark:bg-gray-800/50
+          "
+        >
           <div
             className="
               grid grid-cols-2 gap-2
@@ -235,7 +148,7 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
               Unsplash
             </a>
           </p>
-        </>
+        </div>
       )}
     </div>
   );

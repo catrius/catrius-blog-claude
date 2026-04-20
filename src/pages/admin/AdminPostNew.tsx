@@ -15,6 +15,7 @@ export default function AdminPostNew() {
     excerpt?: string;
     content: string;
     category_id?: number | null;
+    tags?: string[];
   }) {
     setIsSubmitting(true);
     setError(null);
@@ -23,6 +24,7 @@ export default function AdminPostNew() {
         ...data,
         excerpt: data.excerpt ?? '',
         category_id: data.category_id ?? null,
+        tags: data.tags?.length ? data.tags : undefined,
       }).unwrap();
       navigate(`/posts/${data.slug}`);
     } catch (err) {
