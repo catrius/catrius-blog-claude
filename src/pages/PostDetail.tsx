@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import rehypeSlug from 'rehype-slug';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useGetPostQuery, useGetRelatedPostsQuery, useDeletePostMutation, useRecordPostViewMutation } from '@/store/api';
 import { SITE_NAME } from '@/constants';
@@ -9,6 +10,8 @@ import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import CommentSection from '@/components/comments/CommentSection';
 import LikeButton from '@/components/LikeButton';
 import ReadingProgress from '@/components/ReadingProgress';
+import TableOfContents from '@/components/TableOfContents';
+import { extractHeadings } from '@/lib/extractHeadings';
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -128,13 +131,14 @@ export default function PostDetail() {
           ))}
         </div>
       )}
+      <TableOfContents headings={extractHeadings(post.content)} />
       <div
         className="
           prose max-w-none
           dark:prose-invert
         "
       >
-        <Markdown rehypePlugins={[rehypeRaw]}>{post.content}</Markdown>
+        <Markdown rehypePlugins={[rehypeSlug, rehypeRaw]}>{post.content}</Markdown>
       </div>
 
       <div className="mt-8 flex justify-end">
