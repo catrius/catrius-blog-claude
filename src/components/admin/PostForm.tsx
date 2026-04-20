@@ -3,6 +3,7 @@ import { useGetCategoriesQuery } from '@/store/api';
 import { useAuth } from '@/hooks/useAuth';
 import type { Tables } from '@/types/database';
 import ContentEditor from '@/components/admin/ContentEditor';
+import CoverImageSuggest from '@/components/admin/CoverImageSuggest';
 
 interface PostFormProps {
   variant?: 'post' | 'page';
@@ -89,6 +90,97 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {isPost && (
+        <div>
+          <label
+            htmlFor="cover-image"
+            className="
+              mb-1 block text-sm font-medium text-gray-700
+              dark:text-gray-300
+            "
+          >
+            Cover Image
+          </label>
+          {coverImage && (
+            <div className="mb-2 space-y-3">
+              <div>
+                <p
+                  className="
+                    mb-1 text-xs text-gray-500
+                    dark:text-gray-400
+                  "
+                >
+                  Post list card (2:1)
+                </p>
+                <img
+                  src={coverImage}
+                  alt="Cover preview – post list"
+                  className="aspect-2/1 max-w-xs rounded-md object-cover"
+                />
+              </div>
+              <div>
+                <p
+                  className="
+                    mb-1 text-xs text-gray-500
+                    dark:text-gray-400
+                  "
+                >
+                  Post detail (3:1)
+                </p>
+                <div className="relative">
+                  <img
+                    src={coverImage}
+                    alt="Cover preview – post detail"
+                    className="aspect-3/1 w-full rounded-md object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setCoverImage(null)}
+                    className="
+                      absolute top-1 right-1 cursor-pointer rounded-full
+                      bg-black/60 p-1 text-white
+                      hover:bg-black/80
+                    "
+                  >
+                    <svg className="size-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          <input
+            id="cover-image"
+            type="file"
+            accept="image/*"
+            onChange={handleCoverUpload}
+            disabled={coverUploading}
+            className="
+              block w-full text-sm text-gray-500
+              file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3
+              file:py-1.5 file:text-sm file:font-medium file:text-blue-700
+              hover:file:bg-blue-100
+              dark:text-gray-400
+              dark:file:bg-blue-900/30 dark:file:text-blue-300
+            "
+          />
+          {coverUploading && (
+            <p className="
+              mt-1 text-sm text-blue-600
+              dark:text-blue-400
+            ">Uploading…</p>
+          )}
+          <div className="mt-2">
+            <CoverImageSuggest
+              query={title}
+              accessToken={session?.access_token}
+              onSelect={setCoverImage}
+            />
+          </div>
+        </div>
+      )}
+
       <div>
         <label
           htmlFor="title"
@@ -229,61 +321,6 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
               </option>
             ))}
           </select>
-        </div>
-      )}
-
-      {isPost && (
-        <div>
-          <label
-            htmlFor="cover-image"
-            className="
-              mb-1 block text-sm font-medium text-gray-700
-              dark:text-gray-300
-            "
-          >
-            Cover Image
-          </label>
-          {coverImage && (
-            <div className="relative mb-2">
-              <img src={coverImage} alt="Cover preview" className="
-                h-32 w-full rounded-md object-cover
-              " />
-              <button
-                type="button"
-                onClick={() => setCoverImage(null)}
-                className="
-                  absolute top-1 right-1 cursor-pointer rounded-full bg-black/60
-                  p-1 text-white
-                  hover:bg-black/80
-                "
-              >
-                <svg className="size-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          )}
-          <input
-            id="cover-image"
-            type="file"
-            accept="image/*"
-            onChange={handleCoverUpload}
-            disabled={coverUploading}
-            className="
-              block w-full text-sm text-gray-500
-              file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3
-              file:py-1.5 file:text-sm file:font-medium file:text-blue-700
-              hover:file:bg-blue-100
-              dark:text-gray-400
-              dark:file:bg-blue-900/30 dark:file:text-blue-300
-            "
-          />
-          {coverUploading && (
-            <p className="
-              mt-1 text-sm text-blue-600
-              dark:text-blue-400
-            ">Uploading…</p>
-          )}
         </div>
       )}
 
