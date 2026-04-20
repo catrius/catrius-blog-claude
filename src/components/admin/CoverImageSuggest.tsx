@@ -19,19 +19,36 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState<string | null>(null);
+  const [maxPage, setMaxPage] = useState(20);
+
+  async function fetchImages(q: string, page: number): Promise<UnsplashImage[]> {
+    const res = await fetch(
+      `/api/unsplash?q=${encodeURIComponent(q)}&page=${page}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    if (!res.ok) throw new Error('Search failed');
+    const data = (await res.json()) as { images: UnsplashImage[] };
+    return data.images;
+  }
 
   async function handleSuggest() {
     if (!query.trim() || !accessToken) return;
 
+    const trimmedQuery = query.trim();
+    const randomPage = Math.floor(Math.random() * maxPage) + 1;
+
     setLoading(true);
-    setImages([]);
     try {
-      const res = await fetch(`/api/unsplash?q=${encodeURIComponent(query.trim())}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      if (!res.ok) throw new Error('Search failed');
-      const data = (await res.json()) as { images: UnsplashImage[] };
-      setImages(data.images);
+      let results = await fetchImages(trimmedQuery, randomPage);
+
+      if (results.length === 0 && randomPage > 1) {
+        const smallerMax = Math.max(1, randomPage - 1);
+        setMaxPage(smallerMax);
+        const fallbackPage = Math.floor(Math.random() * smallerMax) + 1;
+        results = await fetchImages(trimmedQuery, fallbackPage);
+      }
+
+      setImages(results);
     } catch {
       alert('Failed to search Unsplash.');
     } finally {
@@ -76,13 +93,42 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
         {loading ? 'Searching…' : 'Suggest Cover Image'}
       </button>
 
-      {images.length > 0 && (
+      {(images.length > 0 || loading) && (
         <div
           className="
-            mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4
+            relative mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4
             dark:border-slate-700 dark:bg-slate-800/50
           "
         >
+          {loading && (
+            <div
+              className="
+                absolute inset-0 z-10 flex items-center justify-center
+                rounded-lg bg-white/70 dark:bg-slate-900/70
+              "
+            >
+              <svg
+                className="size-8 animate-spin text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+            </div>
+          )}
           <div
             className="
               grid grid-cols-2 gap-2

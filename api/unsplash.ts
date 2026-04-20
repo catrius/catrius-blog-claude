@@ -28,6 +28,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing q query parameter' });
   }
 
+  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
+
   const accessKey = process.env.UNSPLASH_ACCESS_KEY;
   if (!accessKey) {
     return res.status(500).json({ error: 'UNSPLASH_ACCESS_KEY not configured' });
@@ -35,6 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const url = new URL('https://api.unsplash.com/search/photos');
   url.searchParams.set('query', query);
+  url.searchParams.set('page', String(page));
   url.searchParams.set('per_page', '12');
   url.searchParams.set('orientation', 'landscape');
 
