@@ -103,7 +103,11 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
-| `favicon.svg` | Browser favicon. |
+| `favicon.ico` | Browser favicon (multi-size ICO: 16, 32, 48px). |
+| `icon-192.png` | PWA icon 192×192. |
+| `icon-512.png` | PWA icon 512×512. |
+| `apple-touch-icon.png` | Apple touch icon 180×180. |
+| `manifest.json` | Web app manifest for PWA support. |
 | `icons.svg` | SVG sprite sheet. Icons: `documentation-icon`, `social-icon`, `github-icon`, `discord-icon`, `x-icon`, `bluesky-icon`. Referenced via `<use href="#id">`. |
 
 ### API (`api/`)
