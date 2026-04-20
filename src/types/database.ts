@@ -111,7 +111,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      related_posts: {
+        Args: { max_results?: number; p_id: number; p_tags: string[] }
+        Returns: {
+          category_id: number | null
+          content: string
+          created_at: string
+          excerpt: string
+          fts: unknown
+          id: number
+          reading_time_minutes: number | null
+          slug: string
+          tags: string[]
+          title: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "post"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       [_ in never]: never

@@ -2,7 +2,11 @@ import { useState } from 'react'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import { Link, useNavigate, useParams } from 'react-router'
-import { useGetPostQuery, useDeletePostMutation } from '@/store/api'
+import {
+  useGetPostQuery,
+  useGetRelatedPostsQuery,
+  useDeletePostMutation,
+} from '@/store/api'
 import { SITE_NAME } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
@@ -14,6 +18,10 @@ export default function PostDetail() {
   const { data: post, isLoading, error } = useGetPostQuery(slug!)
   const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const { data: relatedPosts } = useGetRelatedPostsQuery(
+    { postId: post?.id ?? 0, tags: post?.tags ?? [] },
+    { skip: !post || post.tags.length === 0 },
+  )
 
   async function handleDelete() {
     if (!post) return
@@ -101,6 +109,53 @@ export default function PostDetail() {
       ">
         <Markdown rehypePlugins={[rehypeRaw]}>{post.content}</Markdown>
       </div>
+
+      {relatedPosts && relatedPosts.length > 0 && (
+        <section className="
+          mt-12 border-t border-gray-200 pt-8
+          dark:border-gray-700
+        ">
+          <h2 className="mb-4 text-xl font-bold">Related Posts</h2>
+          <div className="
+            grid gap-4
+            sm:grid-cols-2
+            lg:grid-cols-3
+          ">
+            {relatedPosts.map((related) => (
+              <Link
+                key={related.id}
+                to={`/posts/${related.slug}`}
+                className="
+                  block rounded-lg border border-gray-200 p-4 no-underline
+                  transition-colors
+                  hover:border-blue-300 hover:bg-blue-50/50
+                  dark:border-gray-700
+                  dark:hover:border-blue-700 dark:hover:bg-blue-900/20
+                "
+              >
+                <h3 className="
+                  mb-1 text-base font-semibold text-gray-900
+                  dark:text-gray-100
+                ">
+                  {related.title}
+                </h3>
+                <p className="
+                  line-clamp-2 text-sm text-gray-500
+                  dark:text-gray-400
+                ">
+                  {related.excerpt}
+                </p>
+                <time className="
+                  mt-2 block text-xs text-gray-400
+                  dark:text-gray-500
+                ">
+                  {new Date(related.created_at).toLocaleDateString()}
+                </time>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {isAdmin && (
         <DeleteConfirmDialog

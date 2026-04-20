@@ -35,6 +35,12 @@ interface TagPostsArgs {
   limit: number
 }
 
+interface RelatedPostsArgs {
+  postId: number
+  tags: string[]
+  maxResults?: number
+}
+
 export const api = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ['Post', 'Category', 'Page'],
@@ -253,6 +259,23 @@ export const api = createApi({
         result ? [{ type: 'Page', id: result.id }] : [],
     }),
 
+    getRelatedPosts: builder.query<Post[], RelatedPostsArgs>({
+      queryFn: async ({ postId, tags, maxResults = 3 }) => {
+        const { data, error } = await supabase.rpc('related_posts', {
+          p_id: postId,
+          p_tags: tags,
+          max_results: maxResults,
+        })
+
+        if (error) return { error }
+        return { data: data as Post[] }
+      },
+      providesTags: (result) =>
+        result
+          ? result.map(({ id }) => ({ type: 'Post' as const, id }))
+          : [],
+    }),
+
     getPostById: builder.query<Post, number>({
       queryFn: async (id) => {
         const { data, error } = await supabase
@@ -419,6 +442,7 @@ export const {
   useGetAllTagsQuery,
   useSearchPostsQuery,
   useGetPostQuery,
+  useGetRelatedPostsQuery,
   useGetCategoriesQuery,
   useGetPostCountsQuery,
   useGetPagesQuery,
