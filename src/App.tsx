@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import Home from '@/pages/Home'
 import Search from '@/pages/Search'
 import TagsIndex from '@/pages/TagsIndex'
@@ -95,6 +97,8 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <Analytics />
+      <SpeedInsights />
     </div>
   )
 }

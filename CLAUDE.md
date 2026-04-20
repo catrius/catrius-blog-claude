@@ -131,7 +131,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |
 | `eslint.config.js` | ESLint v9 flat config. Extends JS recommended, typescript-eslint, react-hooks, react-refresh, better-tailwindcss recommended. Uses typescript-eslint parser with project-aware type checking. Lints `*.{ts,tsx}`, ignores `dist/`. |
 | `.env.example` | Template for required env vars (`VITE_PUBLIC_SUPABASE_URL`, `VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `VITE_PUBLIC_ADMIN_USER_ID`, `BLOB_READ_WRITE_TOKEN`). Copy to `.env.local`. |
-| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `@uiw/react-md-editor`, `swiper`, `@tailwindcss/typography`, `tailwindcss`, `@vercel/blob`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
+| `package.json` | Private ESM package. Runtime deps: `react`, `react-dom` (^19.2.4), `@reduxjs/toolkit`, `react-redux`, `@supabase/supabase-js`, `react-router`, `react-markdown`, `@uiw/react-md-editor`, `swiper`, `@tailwindcss/typography`, `tailwindcss`, `@vercel/blob`, `@vercel/analytics`, `@vercel/speed-insights`. Key devDeps: `vite` 8, `typescript` ~6.0, `husky` 9, `babel-plugin-react-compiler` 1.0, `eslint-plugin-better-tailwindcss` 4.4, `supabase` CLI. |
 
 ## TypeScript
 
