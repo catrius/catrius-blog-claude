@@ -111,6 +111,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 | File | Purpose |
 |---|---|
 | `og.ts` | Vercel serverless function. Intercepts `/posts/:slug`, `/pages/:slug`, and `/categories/:slug` requests. Fetches data from Supabase, injects OG meta tags into `dist/index.html`, and serves it so social crawlers see correct metadata. |
+| `sitemap.ts` | Vercel serverless function. Serves `/sitemap.xml`. Fetches all posts, pages, and categories from Supabase and generates a standard XML sitemap for search engine indexing. Cached for 1 hour via `s-maxage`. |
 | `upload.ts` | Vercel serverless function. Accepts POST with file body + `?filename=` query param. Verifies Supabase auth token (admin-only), uploads to Vercel Blob under `blog/` prefix, returns blob metadata. |
 
 ### Config (root)
