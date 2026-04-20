@@ -39,7 +39,7 @@ export default function Header() {
       ">
         <div className="mx-auto flex max-w-7xl items-center gap-6 p-4">
           <Link to="/" className="
-            shrink-0 text-xl font-bold tracking-tight text-gray-900 no-underline
+            shrink-0 text-2xl font-bold tracking-tight text-gray-900 no-underline
             dark:text-white
           ">
             Catrius Blog
