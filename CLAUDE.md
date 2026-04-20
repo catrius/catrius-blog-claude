@@ -125,7 +125,7 @@ This is a React 19 + TypeScript + Vite 8 single-page application, scaffolded fro
 
 | File | Purpose |
 |---|---|
-| `vite.config.ts` | Vite config. Plugins: `vite-tsconfig-paths`, `@tailwindcss/vite`, `@vitejs/plugin-react`, `@rolldown/plugin-babel` with `reactCompilerPreset()`. |
+| `vite.config.ts` | Vite config. Uses native `resolve.tsconfigPaths: true`. Plugins: `@tailwindcss/vite`, `@vitejs/plugin-react`, `@rolldown/plugin-babel` with `reactCompilerPreset()`. |
 | `tsconfig.json` | Root TS config. Composite references to `tsconfig.app.json` and `tsconfig.node.json`. |
 | `tsconfig.app.json` | App TS config. Target ES2023, react-jsx, bundler resolution, strict checks, `verbatimModuleSyntax`. Path alias `@/*` → `src/*`. Includes `src/`. |
 | `tsconfig.node.json` | Build-tool TS config. Same strict settings, includes only `vite.config.ts`. |

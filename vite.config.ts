@@ -2,7 +2,6 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 function apiUpload(): Plugin {
   return {
@@ -69,8 +68,10 @@ function apiUpload(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true,
+  },
   plugins: [
-    tsconfigPaths(),
     tailwindcss(),
     react(),
     babel({ presets: [reactCompilerPreset()] }),
