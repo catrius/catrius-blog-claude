@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import { useGetCategoriesQuery } from '@/store/api'
-import { useAuth } from '@/hooks/useAuth'
-import type { Tables } from '@/types/database'
-import ContentEditor from '@/components/admin/ContentEditor'
+import { useState } from 'react';
+import { useGetCategoriesQuery } from '@/store/api';
+import { useAuth } from '@/hooks/useAuth';
+import type { Tables } from '@/types/database';
+import ContentEditor from '@/components/admin/ContentEditor';
 
 interface PostFormProps {
-  variant?: 'post' | 'page'
-  initialData?: Tables<'post'> | Tables<'page'>
+  variant?: 'post' | 'page';
+  initialData?: Tables<'post'> | Tables<'page'>;
   onSubmit: (data: {
-    title: string
-    slug: string
-    excerpt?: string
-    content: string
-    category_id?: number | null
-  }) => Promise<void>
-  isSubmitting: boolean
+    title: string;
+    slug: string;
+    excerpt?: string;
+    content: string;
+    category_id?: number | null;
+  }) => Promise<void>;
+  isSubmitting: boolean;
 }
 
 function slugify(text: string) {
@@ -23,45 +23,36 @@ function slugify(text: string) {
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
+    .replace(/-+/g, '-');
 }
 
-export default function PostForm({
-  variant = 'post',
-  initialData,
-  onSubmit,
-  isSubmitting,
-}: PostFormProps) {
-  const isPost = variant === 'post'
-  const { data: categories = [] } = useGetCategoriesQuery(undefined, { skip: !isPost })
-  const { session } = useAuth()
-  const [title, setTitle] = useState(initialData?.title ?? '')
-  const [slug, setSlug] = useState(initialData?.slug ?? '')
-  const [slugManual, setSlugManual] = useState(
-    initialData ? slugify(initialData.title) !== initialData.slug : false,
-  )
-  const postData = isPost ? (initialData as Tables<'post'> | undefined) : undefined
-  const [excerpt, setExcerpt] = useState(postData?.excerpt ?? '')
-  const [content, setContent] = useState(initialData?.content ?? '')
-  const [categoryId, setCategoryId] = useState<number | null>(
-    postData?.category_id ?? null,
-  )
+export default function PostForm({ variant = 'post', initialData, onSubmit, isSubmitting }: PostFormProps) {
+  const isPost = variant === 'post';
+  const { data: categories = [] } = useGetCategoriesQuery(undefined, { skip: !isPost });
+  const { session } = useAuth();
+  const [title, setTitle] = useState(initialData?.title ?? '');
+  const [slug, setSlug] = useState(initialData?.slug ?? '');
+  const [slugManual, setSlugManual] = useState(initialData ? slugify(initialData.title) !== initialData.slug : false);
+  const postData = isPost ? (initialData as Tables<'post'> | undefined) : undefined;
+  const [excerpt, setExcerpt] = useState(postData?.excerpt ?? '');
+  const [content, setContent] = useState(initialData?.content ?? '');
+  const [categoryId, setCategoryId] = useState<number | null>(postData?.category_id ?? null);
 
   function handleTitleChange(value: string) {
-    setTitle(value)
+    setTitle(value);
     if (!slugManual) {
-      setSlug(slugify(value))
+      setSlug(slugify(value));
     }
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
     await onSubmit({
       title,
       slug,
       content,
       ...(isPost && { excerpt, category_id: categoryId }),
-    })
+    });
   }
 
   const inputClass = `
@@ -71,7 +62,7 @@ export default function PostForm({
     dark:border-gray-700 dark:bg-gray-900 dark:text-white
     dark:placeholder-gray-500
     dark:focus:border-blue-400 dark:focus:ring-blue-400
-  `
+  `;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -96,7 +87,6 @@ export default function PostForm({
         />
       </div>
 
-
       <div>
         <label
           htmlFor="auto-slug"
@@ -113,10 +103,10 @@ export default function PostForm({
             type="checkbox"
             checked={!slugManual}
             onChange={(e) => {
-              const auto = e.target.checked
-              setSlugManual(!auto)
+              const auto = e.target.checked;
+              setSlugManual(!auto);
               if (auto) {
-                setSlug(slugify(title))
+                setSlug(slugify(title));
               }
             }}
             className="
@@ -124,10 +114,12 @@ export default function PostForm({
               dark:border-gray-600
             "
           />
-          <span className="
+          <span
+            className="
             text-sm text-gray-600
             dark:text-gray-400
-          ">
+          "
+          >
             Generate slug from title
           </span>
         </label>
@@ -149,15 +141,19 @@ export default function PostForm({
           required
           value={slug}
           onChange={(e) => {
-            setSlug(e.target.value)
-            setSlugManual(true)
+            setSlug(e.target.value);
+            setSlugManual(true);
           }}
           className={`
             ${inputClass}
-            ${!slugManual ? `
+            ${
+              !slugManual
+                ? `
               bg-gray-50 text-gray-500
               dark:bg-gray-800 dark:text-gray-400
-            ` : ''}
+            `
+                : ''
+            }
           `}
           placeholder={isPost ? 'post-slug' : 'page-slug'}
         />
@@ -200,9 +196,7 @@ export default function PostForm({
           <select
             id="category"
             value={categoryId ?? ''}
-            onChange={(e) =>
-              setCategoryId(e.target.value ? Number(e.target.value) : null)
-            }
+            onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : null)}
             className={inputClass}
           >
             <option value="">No category</option>
@@ -215,11 +209,7 @@ export default function PostForm({
         </div>
       )}
 
-      <ContentEditor
-        value={content}
-        onChange={setContent}
-        accessToken={session?.access_token}
-      />
+      <ContentEditor value={content} onChange={setContent} accessToken={session?.access_token} />
 
       <div className="flex items-center gap-3">
         <button
@@ -242,5 +232,5 @@ export default function PostForm({
         </button>
       </div>
     </form>
-  )
+  );
 }

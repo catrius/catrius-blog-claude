@@ -1,12 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 interface DeleteConfirmDialogProps {
-  open: boolean
-  itemTitle: string
-  itemType?: string
-  onConfirm: () => void
-  onCancel: () => void
-  isDeleting: boolean
+  open: boolean;
+  itemTitle: string;
+  itemType?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  isDeleting: boolean;
 }
 
 export default function DeleteConfirmDialog({
@@ -17,18 +17,18 @@ export default function DeleteConfirmDialog({
   onCancel,
   isDeleting,
 }: DeleteConfirmDialogProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
     if (open && !dialog.open) {
-      dialog.showModal()
+      dialog.showModal();
     } else if (!open && dialog.open) {
-      dialog.close()
+      dialog.close();
     }
-  }, [open])
+  }, [open]);
 
   return (
     <dialog
@@ -40,18 +40,21 @@ export default function DeleteConfirmDialog({
         dark:bg-gray-900
       "
     >
-      <h2 className="
+      <h2
+        className="
         mb-2 text-lg font-semibold text-gray-900
         dark:text-white
-      ">
+      "
+      >
         Delete {itemType}
       </h2>
-      <p className="
+      <p
+        className="
         mb-6 text-sm text-gray-600
         dark:text-gray-400
-      ">
-        Are you sure you want to delete &ldquo;{itemTitle}&rdquo;? This action
-        cannot be undone.
+      "
+      >
+        Are you sure you want to delete &ldquo;{itemTitle}&rdquo;? This action cannot be undone.
       </p>
       <div className="flex justify-end gap-3">
         <button
@@ -83,5 +86,5 @@ export default function DeleteConfirmDialog({
         </button>
       </div>
     </dialog>
-  )
+  );
 }

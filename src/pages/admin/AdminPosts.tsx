@@ -1,50 +1,44 @@
-import { useState } from 'react'
-import { Link } from 'react-router'
-import {
-  useGetAdminPostsQuery,
-  useGetCategoriesQuery,
-  useDeletePostMutation,
-} from '@/store/api'
-import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
+import { useState } from 'react';
+import { Link } from 'react-router';
+import { useGetAdminPostsQuery, useGetCategoriesQuery, useDeletePostMutation } from '@/store/api';
+import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 
 export default function AdminPosts() {
-  const { data: posts = [], isLoading } = useGetAdminPostsQuery()
-  const { data: categories = [] } = useGetCategoriesQuery()
-  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation()
+  const { data: posts = [], isLoading } = useGetAdminPostsQuery();
+  const { data: categories = [] } = useGetCategoriesQuery();
+  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation();
   const [deletingPost, setDeletingPost] = useState<{
-    id: number
-    title: string
-  } | null>(null)
-  const [search, setSearch] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('')
-  const [dateFilter, setDateFilter] = useState('')
+    id: number;
+    title: string;
+  } | null>(null);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
 
-  const categoryMap = new Map(categories.map((c) => [c.id, c.name]))
+  const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
 
   const filteredPosts = posts.filter((p) => {
-    if (search && !p.title.toLowerCase().includes(search.toLowerCase()))
-      return false
-    if (categoryFilter && String(p.category_id) !== categoryFilter) return false
+    if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
+    if (categoryFilter && String(p.category_id) !== categoryFilter) return false;
     if (dateFilter) {
-      const created = new Date(p.created_at)
-      const now = new Date()
-      const daysAgo = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
-      if (dateFilter === '7' && daysAgo > 7) return false
-      if (dateFilter === '30' && daysAgo > 30) return false
-      if (dateFilter === '90' && daysAgo > 90) return false
-      if (dateFilter === 'year' && created.getFullYear() !== now.getFullYear())
-        return false
+      const created = new Date(p.created_at);
+      const now = new Date();
+      const daysAgo = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24);
+      if (dateFilter === '7' && daysAgo > 7) return false;
+      if (dateFilter === '30' && daysAgo > 30) return false;
+      if (dateFilter === '90' && daysAgo > 90) return false;
+      if (dateFilter === 'year' && created.getFullYear() !== now.getFullYear()) return false;
     }
-    return true
-  })
+    return true;
+  });
 
   async function handleDelete() {
-    if (!deletingPost) return
-    await deletePost(deletingPost.id)
-    setDeletingPost(null)
+    if (!deletingPost) return;
+    await deletePost(deletingPost.id);
+    setDeletingPost(null);
   }
 
-  if (isLoading) return null
+  if (isLoading) return null;
 
   return (
     <div className="mx-auto">
@@ -86,10 +80,12 @@ export default function AdminPosts() {
                   "
                 />
               </th>
-              <th className="
+              <th
+                className="
                 hidden pr-4 pb-2
                 sm:table-cell
-              ">
+              "
+              >
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
@@ -110,10 +106,12 @@ export default function AdminPosts() {
                   ))}
                 </select>
               </th>
-              <th className="
+              <th
+                className="
                 hidden pr-4 pb-2
                 md:table-cell
-              ">
+              "
+              >
                 <select
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
@@ -135,34 +133,44 @@ export default function AdminPosts() {
               </th>
               <th className="pb-2" />
             </tr>
-            <tr className="
+            <tr
+              className="
               border-b border-gray-200
               dark:border-gray-800
-            ">
-              <th className="
+            "
+            >
+              <th
+                className="
                 pt-2 pr-4 pb-3 font-medium text-gray-500
                 dark:text-gray-400
-              ">
+              "
+              >
                 Title
               </th>
-              <th className="
+              <th
+                className="
                 hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                 sm:table-cell
                 dark:text-gray-400
-              ">
+              "
+              >
                 Category
               </th>
-              <th className="
+              <th
+                className="
                 hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                 md:table-cell
                 dark:text-gray-400
-              ">
+              "
+              >
                 Date
               </th>
-              <th className="
+              <th
+                className="
                 pt-2 pb-3 text-right font-medium text-gray-500
                 dark:text-gray-400
-              ">
+              "
+              >
                 Actions
               </th>
             </tr>
@@ -170,10 +178,13 @@ export default function AdminPosts() {
           <tbody>
             {filteredPosts.length === 0 ? (
               <tr>
-                <td colSpan={4} className="
+                <td
+                  colSpan={4}
+                  className="
                   py-6 text-center text-gray-500
                   dark:text-gray-400
-                ">
+                "
+                >
                   {search || categoryFilter || dateFilter
                     ? 'No posts match your filters.'
                     : 'No posts yet. Create your first post!'}
@@ -201,20 +212,22 @@ export default function AdminPosts() {
                       {post.title}
                     </Link>
                   </td>
-                  <td className="
+                  <td
+                    className="
                     hidden py-3 pr-4 text-gray-500
                     sm:table-cell
                     dark:text-gray-400
-                  ">
-                    {post.category_id
-                      ? categoryMap.get(post.category_id) ?? '—'
-                      : '—'}
+                  "
+                  >
+                    {post.category_id ? (categoryMap.get(post.category_id) ?? '—') : '—'}
                   </td>
-                  <td className="
+                  <td
+                    className="
                     hidden py-3 pr-4 text-gray-500
                     md:table-cell
                     dark:text-gray-400
-                  ">
+                  "
+                  >
                     {new Date(post.created_at).toLocaleDateString()}
                   </td>
                   <td className="py-3 text-right">
@@ -232,9 +245,7 @@ export default function AdminPosts() {
                         Preview
                       </Link>
                       <button
-                        onClick={() =>
-                          setDeletingPost({ id: post.id, title: post.title })
-                        }
+                        onClick={() => setDeletingPost({ id: post.id, title: post.title })}
                         className="
                           cursor-pointer rounded-sm px-2 py-1 text-xs
                           text-red-600
@@ -262,5 +273,5 @@ export default function AdminPosts() {
         isDeleting={isDeleting}
       />
     </div>
-  )
+  );
 }

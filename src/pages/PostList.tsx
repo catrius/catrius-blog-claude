@@ -1,43 +1,37 @@
-import { useEffect, useRef } from 'react'
-import { Link } from 'react-router'
-import type { Tables } from '@/types/database'
-import LikeButton from '@/components/LikeButton'
+import { useEffect, useRef } from 'react';
+import { Link } from 'react-router';
+import type { Tables } from '@/types/database';
+import LikeButton from '@/components/LikeButton';
 
-type Post = Tables<'post'>
+type Post = Tables<'post'>;
 
 interface PostListProps {
-  posts: Post[]
-  title: string
-  hasMore: boolean
-  isFetching: boolean
-  onLoadMore: () => void
+  posts: Post[];
+  title: string;
+  hasMore: boolean;
+  isFetching: boolean;
+  onLoadMore: () => void;
 }
 
-export default function PostList({
-  posts,
-  title,
-  hasMore,
-  isFetching,
-  onLoadMore,
-}: PostListProps) {
-  const sentinelRef = useRef<HTMLDivElement>(null)
+export default function PostList({ posts, title, hasMore, isFetching, onLoadMore }: PostListProps) {
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const sentinel = sentinelRef.current
-    if (!sentinel) return
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !isFetching) {
-          onLoadMore()
+          onLoadMore();
         }
       },
       { rootMargin: '200px' },
-    )
+    );
 
-    observer.observe(sentinel)
-    return () => observer.disconnect()
-  }, [hasMore, isFetching, onLoadMore])
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, isFetching, onLoadMore]);
 
   return (
     <main className="min-w-0 flex-1">
@@ -46,12 +40,14 @@ export default function PostList({
         <p>No posts yet.</p>
       ) : (
         <>
-          <ul className="
+          <ul
+            className="
             grid grid-cols-1 gap-6
             sm:grid-cols-2
             lg:grid-cols-3
             xl:grid-cols-4
-          ">
+          "
+          >
             {posts.map((post) => (
               <li
                 key={post.id}
@@ -62,17 +58,22 @@ export default function PostList({
                   dark:border-gray-700
                 "
               >
-                <Link
-                  to={`/posts/${post.slug}`}
-                  className="block text-inherit no-underline"
-                >
+                <Link to={`/posts/${post.slug}`} className="block text-inherit no-underline">
                   <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
-                  <div className="
+                  <div
+                    className="
                     mb-3 flex items-center gap-2 text-sm text-gray-400
                     dark:text-gray-500
-                  ">
+                  "
+                  >
                     <time>
-                      {new Date(post.created_at).toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
+                      {new Date(post.created_at).toLocaleString(undefined, {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                      })}
                     </time>
                     {post.reading_time_minutes != null && (
                       <>
@@ -81,10 +82,12 @@ export default function PostList({
                       </>
                     )}
                   </div>
-                  <p className="
+                  <p
+                    className="
                     text-gray-500
                     dark:text-gray-400
-                  ">
+                  "
+                  >
                     {post.excerpt}
                   </p>
                 </Link>
@@ -107,7 +110,7 @@ export default function PostList({
                     ))}
                   </div>
                 )}
-                <div className="mt-auto flex justify-end pt-3">
+                <div className="mt-auto flex justify-end pt-4">
                   <LikeButton postId={post.id} />
                 </div>
               </li>
@@ -117,5 +120,5 @@ export default function PostList({
         </>
       )}
     </main>
-  )
+  );
 }

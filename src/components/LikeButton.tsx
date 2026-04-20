@@ -1,33 +1,33 @@
-import { useAuth } from '@/hooks/useAuth'
-import { useGetLikeStatusQuery, useToggleLikeMutation } from '@/store/api'
+import { useAuth } from '@/hooks/useAuth';
+import { useGetLikeStatusQuery, useToggleLikeMutation } from '@/store/api';
 
 interface LikeButtonProps {
-  postId: number
+  postId: number;
 }
 
 export default function LikeButton({ postId }: LikeButtonProps) {
-  const { user, signInWithGoogle } = useAuth()
+  const { user, signInWithGoogle } = useAuth();
   const { data: likeStatus } = useGetLikeStatusQuery({
     postId,
     userId: user?.id ?? null,
-  })
-  const [toggleLike, { isLoading }] = useToggleLikeMutation()
+  });
+  const [toggleLike, { isLoading }] = useToggleLikeMutation();
 
   async function handleClick() {
     if (!user) {
-      signInWithGoogle()
-      return
+      signInWithGoogle();
+      return;
     }
-    if (!likeStatus || isLoading) return
+    if (!likeStatus || isLoading) return;
     await toggleLike({
       postId,
       userId: user.id,
       liked: likeStatus.likedByUser,
-    })
+    });
   }
 
-  const count = likeStatus?.count ?? 0
-  const liked = likeStatus?.likedByUser ?? false
+  const count = likeStatus?.count ?? 0;
+  const liked = likeStatus?.likedByUser ?? false;
 
   return (
     <button
@@ -37,20 +37,22 @@ export default function LikeButton({ postId }: LikeButtonProps) {
       className={`
         inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3
         py-1.5 text-sm transition-colors
-        ${liked
-          ? `
+        ${
+          liked
+            ? `
             border-red-200 bg-red-50 text-red-600
             hover:bg-red-100
             dark:border-red-800 dark:bg-red-950/50 dark:text-red-400
             dark:hover:bg-red-950
           `
-          : `
+            : `
             border-gray-200 bg-white text-gray-500
             hover:border-red-200 hover:bg-red-50 hover:text-red-500
             dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400
             dark:hover:border-red-800 dark:hover:bg-red-950/50
             dark:hover:text-red-400
-          `}
+          `
+        }
       `}
     >
       <svg
@@ -68,5 +70,5 @@ export default function LikeButton({ postId }: LikeButtonProps) {
       </svg>
       <span>{count}</span>
     </button>
-  )
+  );
 }

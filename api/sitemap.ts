@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js'
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { createClient } from '@supabase/supabase-js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const SITE_URL = 'https://catri.us'
+const SITE_URL = 'https://catri.us';
 
-const supabase = createClient(
-  process.env.VITE_PUBLIC_SUPABASE_URL!,
-  process.env.VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-)
+const supabase = createClient(process.env.VITE_PUBLIC_SUPABASE_URL!, process.env.VITE_PUBLIC_SUPABASE_PUBLISHABLE_KEY!);
 
 function escapeXml(str: string): string {
   return str
@@ -14,11 +11,11 @@ function escapeXml(str: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
+    .replace(/'/g, '&apos;');
 }
 
 function formatDate(dateStr: string): string {
-  return dateStr.split('T')[0]
+  return dateStr.split('T')[0];
 }
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
@@ -26,11 +23,11 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     supabase.from('post').select('slug, created_at').order('created_at', { ascending: false }),
     supabase.from('page').select('slug, created_at'),
     supabase.from('category').select('slug'),
-  ])
+  ]);
 
-  const posts = postsResult.data ?? []
-  const pages = pagesResult.data ?? []
-  const categories = categoriesResult.data ?? []
+  const posts = postsResult.data ?? [];
+  const pages = pagesResult.data ?? [];
+  const categories = categoriesResult.data ?? [];
 
   const urls = [
     `  <url>
@@ -71,14 +68,14 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     <priority>0.6</priority>
   </url>`,
     ),
-  ]
+  ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.join('\n')}
-</urlset>`
+</urlset>`;
 
-  res.setHeader('Content-Type', 'application/xml; charset=utf-8')
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
-  return res.status(200).send(xml)
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+  return res.status(200).send(xml);
 }

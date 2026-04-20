@@ -1,41 +1,39 @@
-import { useState } from 'react'
-import { Link } from 'react-router'
-import { useGetAdminPagesQuery, useDeletePageMutation } from '@/store/api'
-import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
+import { useState } from 'react';
+import { Link } from 'react-router';
+import { useGetAdminPagesQuery, useDeletePageMutation } from '@/store/api';
+import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 
 export default function AdminPages() {
-  const { data: pages = [], isLoading } = useGetAdminPagesQuery()
-  const [deletePage, { isLoading: isDeletingPage }] = useDeletePageMutation()
+  const { data: pages = [], isLoading } = useGetAdminPagesQuery();
+  const [deletePage, { isLoading: isDeletingPage }] = useDeletePageMutation();
   const [deletingPage, setDeletingPage] = useState<{
-    id: number
-    title: string
-  } | null>(null)
-  const [search, setSearch] = useState('')
-  const [dateFilter, setDateFilter] = useState('')
+    id: number;
+    title: string;
+  } | null>(null);
+  const [search, setSearch] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
 
   const filteredPages = pages.filter((p) => {
-    if (search && !p.title.toLowerCase().includes(search.toLowerCase()))
-      return false
+    if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
     if (dateFilter) {
-      const created = new Date(p.created_at)
-      const now = new Date()
-      const daysAgo = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
-      if (dateFilter === '7' && daysAgo > 7) return false
-      if (dateFilter === '30' && daysAgo > 30) return false
-      if (dateFilter === '90' && daysAgo > 90) return false
-      if (dateFilter === 'year' && created.getFullYear() !== now.getFullYear())
-        return false
+      const created = new Date(p.created_at);
+      const now = new Date();
+      const daysAgo = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24);
+      if (dateFilter === '7' && daysAgo > 7) return false;
+      if (dateFilter === '30' && daysAgo > 30) return false;
+      if (dateFilter === '90' && daysAgo > 90) return false;
+      if (dateFilter === 'year' && created.getFullYear() !== now.getFullYear()) return false;
     }
-    return true
-  })
+    return true;
+  });
 
   async function handleDeletePage() {
-    if (!deletingPage) return
-    await deletePage(deletingPage.id)
-    setDeletingPage(null)
+    if (!deletingPage) return;
+    await deletePage(deletingPage.id);
+    setDeletingPage(null);
   }
 
-  if (isLoading) return null
+  if (isLoading) return null;
 
   return (
     <div className="mx-auto">
@@ -77,10 +75,12 @@ export default function AdminPages() {
                   "
                 />
               </th>
-              <th className="
+              <th
+                className="
                 hidden pr-4 pb-2
                 md:table-cell
-              ">
+              "
+              >
                 <select
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
@@ -102,27 +102,35 @@ export default function AdminPages() {
               </th>
               <th className="pb-2" />
             </tr>
-            <tr className="
+            <tr
+              className="
               border-b border-gray-200
               dark:border-gray-800
-            ">
-              <th className="
+            "
+            >
+              <th
+                className="
                 pt-2 pr-4 pb-3 font-medium text-gray-500
                 dark:text-gray-400
-              ">
+              "
+              >
                 Title
               </th>
-              <th className="
+              <th
+                className="
                 hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                 md:table-cell
                 dark:text-gray-400
-              ">
+              "
+              >
                 Date
               </th>
-              <th className="
+              <th
+                className="
                 pt-2 pb-3 text-right font-medium text-gray-500
                 dark:text-gray-400
-              ">
+              "
+              >
                 Actions
               </th>
             </tr>
@@ -130,13 +138,14 @@ export default function AdminPages() {
           <tbody>
             {filteredPages.length === 0 ? (
               <tr>
-                <td colSpan={3} className="
+                <td
+                  colSpan={3}
+                  className="
                   py-6 text-center text-gray-500
                   dark:text-gray-400
-                ">
-                  {search || dateFilter
-                    ? 'No pages match your filters.'
-                    : 'No pages yet. Create your first page!'}
+                "
+                >
+                  {search || dateFilter ? 'No pages match your filters.' : 'No pages yet. Create your first page!'}
                 </td>
               </tr>
             ) : (
@@ -161,11 +170,13 @@ export default function AdminPages() {
                       {page.title}
                     </Link>
                   </td>
-                  <td className="
+                  <td
+                    className="
                     hidden py-3 pr-4 text-gray-500
                     md:table-cell
                     dark:text-gray-400
-                  ">
+                  "
+                  >
                     {new Date(page.created_at).toLocaleDateString()}
                   </td>
                   <td className="py-3 text-right">
@@ -183,9 +194,7 @@ export default function AdminPages() {
                         Preview
                       </Link>
                       <button
-                        onClick={() =>
-                          setDeletingPage({ id: page.id, title: page.title })
-                        }
+                        onClick={() => setDeletingPage({ id: page.id, title: page.title })}
                         className="
                           cursor-pointer rounded-sm px-2 py-1 text-xs
                           text-red-600
@@ -214,5 +223,5 @@ export default function AdminPages() {
         isDeleting={isDeletingPage}
       />
     </div>
-  )
+  );
 }

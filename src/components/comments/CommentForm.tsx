@@ -1,19 +1,19 @@
-import { useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
-import { useCreateCommentMutation } from '@/store/api'
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useCreateCommentMutation } from '@/store/api';
 
 interface CommentFormProps {
-  postId: number
+  postId: number;
 }
 
 export default function CommentForm({ postId }: CommentFormProps) {
-  const { user, signInWithGoogle } = useAuth()
-  const [body, setBody] = useState('')
-  const [createComment, { isLoading }] = useCreateCommentMutation()
+  const { user, signInWithGoogle } = useAuth();
+  const [body, setBody] = useState('');
+  const [createComment, { isLoading }] = useCreateCommentMutation();
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!user || !body.trim()) return
+    e.preventDefault();
+    if (!user || !body.trim()) return;
 
     await createComment({
       post_id: postId,
@@ -21,20 +21,24 @@ export default function CommentForm({ postId }: CommentFormProps) {
       user_name: user.user_metadata.full_name ?? user.email ?? 'Anonymous',
       user_avatar: user.user_metadata.avatar_url ?? null,
       body: body.trim(),
-    })
-    setBody('')
+    });
+    setBody('');
   }
 
   if (!user) {
     return (
-      <div className="
+      <div
+        className="
         rounded-lg border border-gray-200 p-4 text-center
         dark:border-gray-700
-      ">
-        <p className="
+      "
+      >
+        <p
+          className="
           mb-3 text-sm text-gray-600
           dark:text-gray-400
-        ">
+        "
+        >
           Sign in to leave a comment.
         </p>
         <button
@@ -50,7 +54,7 @@ export default function CommentForm({ postId }: CommentFormProps) {
           Sign in with Google
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -64,18 +68,22 @@ export default function CommentForm({ postId }: CommentFormProps) {
             className="size-6 rounded-full"
           />
         ) : (
-          <div className="
+          <div
+            className="
             flex size-6 items-center justify-center rounded-full bg-gray-200
             text-xs font-medium text-gray-600
             dark:bg-gray-700 dark:text-gray-300
-          ">
+          "
+          >
             {(user.user_metadata.full_name ?? user.email ?? '?').charAt(0).toUpperCase()}
           </div>
         )}
-        <span className="
+        <span
+          className="
           text-sm font-medium text-gray-700
           dark:text-gray-300
-        ">
+        "
+        >
           {user.user_metadata.full_name ?? user.email}
         </span>
       </div>
@@ -84,8 +92,8 @@ export default function CommentForm({ postId }: CommentFormProps) {
         onChange={(e) => setBody(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && e.metaKey) {
-            e.preventDefault()
-            e.currentTarget.form?.requestSubmit()
+            e.preventDefault();
+            e.currentTarget.form?.requestSubmit();
           }
         }}
         placeholder="Write a comment..."
@@ -103,10 +111,12 @@ export default function CommentForm({ postId }: CommentFormProps) {
         "
       />
       <div className="mt-2 flex items-center justify-between">
-        <span className="
+        <span
+          className="
           text-xs text-gray-400
           dark:text-gray-500
-        ">
+        "
+        >
           {body.length}/2000
         </span>
         <button
@@ -125,5 +135,5 @@ export default function CommentForm({ postId }: CommentFormProps) {
         </button>
       </div>
     </form>
-  )
+  );
 }

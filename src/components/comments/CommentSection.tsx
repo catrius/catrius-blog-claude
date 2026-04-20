@@ -1,41 +1,45 @@
-import { useGetCommentsQuery } from '@/store/api'
-import CommentItem from './CommentItem'
-import CommentForm from './CommentForm'
+import { useGetCommentsQuery } from '@/store/api';
+import CommentItem from './CommentItem';
+import CommentForm from './CommentForm';
 
 interface CommentSectionProps {
-  postId: number
+  postId: number;
 }
 
 export default function CommentSection({ postId }: CommentSectionProps) {
-  const { data: comments, isLoading, error } = useGetCommentsQuery(postId)
+  const { data: comments, isLoading, error } = useGetCommentsQuery(postId);
 
   return (
-    <section className="
+    <section
+      className="
       mt-12 border-t border-gray-200 pt-8
       dark:border-gray-700
-    ">
+    "
+    >
       <h2 className="mb-4 text-xl font-bold">
         Comments{comments && comments.length > 0 ? ` (${comments.length})` : ''}
       </h2>
 
       {isLoading && (
-        <p className="
+        <p
+          className="
           text-sm text-gray-400
           dark:text-gray-500
-        ">
+        "
+        >
           Loading comments...
         </p>
       )}
 
-      {error != null && (
-        <p className="text-sm text-red-500">Failed to load comments.</p>
-      )}
+      {error != null && <p className="text-sm text-red-500">Failed to load comments.</p>}
 
       {comments && comments.length === 0 && (
-        <p className="
+        <p
+          className="
           text-sm text-gray-500
           dark:text-gray-400
-        ">
+        "
+        >
           No comments yet. Be the first to share your thoughts!
         </p>
       )}
@@ -50,5 +54,5 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
       <CommentForm postId={postId} />
     </section>
-  )
+  );
 }

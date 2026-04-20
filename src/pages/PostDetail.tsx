@@ -1,43 +1,39 @@
-import { useState } from 'react'
-import Markdown from 'react-markdown'
-import rehypeRaw from 'rehype-raw'
-import { Link, useNavigate, useParams } from 'react-router'
-import {
-  useGetPostQuery,
-  useGetRelatedPostsQuery,
-  useDeletePostMutation,
-} from '@/store/api'
-import { SITE_NAME } from '@/constants'
-import { useAuth } from '@/hooks/useAuth'
-import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
-import CommentSection from '@/components/comments/CommentSection'
-import LikeButton from '@/components/LikeButton'
+import { useState } from 'react';
+import Markdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import { Link, useNavigate, useParams } from 'react-router';
+import { useGetPostQuery, useGetRelatedPostsQuery, useDeletePostMutation } from '@/store/api';
+import { SITE_NAME } from '@/constants';
+import { useAuth } from '@/hooks/useAuth';
+import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
+import CommentSection from '@/components/comments/CommentSection';
+import LikeButton from '@/components/LikeButton';
 
 export default function PostDetail() {
-  const { slug } = useParams<{ slug: string }>()
-  const navigate = useNavigate()
-  const { isAdmin } = useAuth()
-  const { data: post, isLoading, error } = useGetPostQuery(slug!)
-  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation()
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth();
+  const { data: post, isLoading, error } = useGetPostQuery(slug!);
+  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { data: relatedPosts } = useGetRelatedPostsQuery(
     { postId: post?.id ?? 0, tags: post?.tags ?? [] },
     { skip: !post || post.tags.length === 0 },
-  )
+  );
 
   async function handleDelete() {
-    if (!post) return
-    await deletePost(post.id)
-    setShowDeleteDialog(false)
-    navigate('/')
+    if (!post) return;
+    await deletePost(post.id);
+    setShowDeleteDialog(false);
+    navigate('/');
   }
 
   if (isLoading) {
-    return null
+    return null;
   }
 
   if (error || !post) {
-    return <p className="text-red-500">Post not found.</p>
+    return <p className="text-red-500">Post not found.</p>;
   }
 
   return (
@@ -74,10 +70,12 @@ export default function PostDetail() {
         </div>
       )}
       <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
-      <div className="
+      <div
+        className="
         mb-6 flex items-center gap-2 text-sm text-gray-400
         dark:text-gray-500
-      ">
+      "
+      >
         <time>{new Date(post.created_at).toLocaleDateString()}</time>
         {post.reading_time_minutes != null && (
           <>
@@ -107,10 +105,12 @@ export default function PostDetail() {
           ))}
         </div>
       )}
-      <div className="
+      <div
+        className="
         prose max-w-none
         dark:prose-invert
-      ">
+      "
+      >
         <Markdown rehypePlugins={[rehypeRaw]}>{post.content}</Markdown>
       </div>
 
@@ -119,16 +119,20 @@ export default function PostDetail() {
       </div>
 
       {relatedPosts && relatedPosts.length > 0 && (
-        <section className="
+        <section
+          className="
           mt-12 border-t border-gray-200 pt-8
           dark:border-gray-700
-        ">
+        "
+        >
           <h2 className="mb-4 text-xl font-bold">Related Posts</h2>
-          <div className="
+          <div
+            className="
             grid gap-4
             sm:grid-cols-2
             lg:grid-cols-3
-          ">
+          "
+          >
             {relatedPosts.map((related) => (
               <Link
                 key={related.id}
@@ -141,22 +145,28 @@ export default function PostDetail() {
                   dark:hover:border-blue-700 dark:hover:bg-blue-900/20
                 "
               >
-                <h3 className="
+                <h3
+                  className="
                   mb-1 text-base font-semibold text-gray-900
                   dark:text-gray-100
-                ">
+                "
+                >
                   {related.title}
                 </h3>
-                <p className="
+                <p
+                  className="
                   line-clamp-2 text-sm text-gray-500
                   dark:text-gray-400
-                ">
+                "
+                >
                   {related.excerpt}
                 </p>
-                <time className="
+                <time
+                  className="
                   mt-2 block text-xs text-gray-400
                   dark:text-gray-500
-                ">
+                "
+                >
                   {new Date(related.created_at).toLocaleDateString()}
                 </time>
               </Link>
@@ -177,5 +187,5 @@ export default function PostDetail() {
         />
       )}
     </article>
-  )
+  );
 }

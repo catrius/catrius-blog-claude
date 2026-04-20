@@ -1,16 +1,16 @@
-import { Link } from 'react-router'
-import { useGetAllTagsQuery } from '@/store/api'
-import { SITE_NAME } from '@/constants'
+import { Link } from 'react-router';
+import { useGetAllTagsQuery } from '@/store/api';
+import { SITE_NAME } from '@/constants';
 
 export default function TagsIndex() {
-  const { data: tags = [], isLoading, error } = useGetAllTagsQuery()
+  const { data: tags = [], isLoading, error } = useGetAllTagsQuery();
 
   if (isLoading) {
-    return null
+    return null;
   }
 
   if (error) {
-    return <p className="text-red-500">Error loading tags.</p>
+    return <p className="text-red-500">Error loading tags.</p>;
   }
 
   return (
@@ -18,10 +18,12 @@ export default function TagsIndex() {
       <title>{`Tags | ${SITE_NAME}`}</title>
       <h1 className="mb-6 text-3xl font-bold">Tags</h1>
       {tags.length === 0 ? (
-        <p className="
+        <p
+          className="
           text-gray-500
           dark:text-gray-400
-        ">
+        "
+        >
           No tags yet.
         </p>
       ) : (
@@ -40,10 +42,12 @@ export default function TagsIndex() {
               "
             >
               {tag}
-              <span className="
+              <span
+                className="
                 text-xs text-gray-400
                 dark:text-gray-500
-              ">
+              "
+              >
                 {count}
               </span>
             </Link>
@@ -51,5 +55,5 @@ export default function TagsIndex() {
         </div>
       )}
     </div>
-  )
+  );
 }

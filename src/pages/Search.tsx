@@ -1,62 +1,56 @@
-import { useState, useEffect, useRef } from 'react'
-import { useSearchParams, Link } from 'react-router'
-import { useSearchPostsQuery, useGetCategoriesQuery, PAGE_SIZE } from '@/store/api'
-import { SITE_NAME } from '@/constants'
-import type { Tables } from '@/types/database'
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams, Link } from 'react-router';
+import { useSearchPostsQuery, useGetCategoriesQuery, PAGE_SIZE } from '@/store/api';
+import { SITE_NAME } from '@/constants';
+import type { Tables } from '@/types/database';
 
-type Post = Tables<'post'>
+type Post = Tables<'post'>;
 
 function stripMarkdown(text: string): string {
   return text
-    .replace(/!\[.*?\]\(.*?\)/g, '')       // images
+    .replace(/!\[.*?\]\(.*?\)/g, '') // images
     .replace(/\[([^\]]*)\]\(.*?\)/g, '$1') // links → text
-    .replace(/#{1,6}\s+/g, '')             // headings
+    .replace(/#{1,6}\s+/g, '') // headings
     .replace(/(\*{1,3}|_{1,3})(.*?)\1/g, '$2') // bold/italic
-    .replace(/`{1,3}[^`]*`{1,3}/g, '')    // inline/block code
-    .replace(/^[>\-*+]\s+/gm, '')          // blockquotes, lists
-    .replace(/\n{2,}/g, ' ')               // collapse newlines
+    .replace(/`{1,3}[^`]*`{1,3}/g, '') // inline/block code
+    .replace(/^[>\-*+]\s+/gm, '') // blockquotes, lists
+    .replace(/\n{2,}/g, ' ') // collapse newlines
     .replace(/\n/g, ' ')
-    .trim()
+    .trim();
 }
 
 function getSnippet(content: string, query: string, maxLen = 200): string {
-  const plain = stripMarkdown(content)
-  const words = query.split(/\s+/).filter(Boolean)
-  const pattern = new RegExp(
-    words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
-    'i',
-  )
-  const match = pattern.exec(plain)
-  if (!match) return plain.slice(0, maxLen) + (plain.length > maxLen ? '...' : '')
+  const plain = stripMarkdown(content);
+  const words = query.split(/\s+/).filter(Boolean);
+  const pattern = new RegExp(words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'i');
+  const match = pattern.exec(plain);
+  if (!match) return plain.slice(0, maxLen) + (plain.length > maxLen ? '...' : '');
 
-  const center = match.index + Math.floor(match[0].length / 2)
-  const half = Math.floor(maxLen / 2)
-  let start = Math.max(0, center - half)
-  let end = Math.min(plain.length, center + half)
+  const center = match.index + Math.floor(match[0].length / 2);
+  const half = Math.floor(maxLen / 2);
+  let start = Math.max(0, center - half);
+  let end = Math.min(plain.length, center + half);
 
   // Snap to word boundaries
   if (start > 0) {
-    const spaceAfter = plain.indexOf(' ', start)
-    if (spaceAfter !== -1 && spaceAfter < start + 20) start = spaceAfter + 1
+    const spaceAfter = plain.indexOf(' ', start);
+    if (spaceAfter !== -1 && spaceAfter < start + 20) start = spaceAfter + 1;
   }
   if (end < plain.length) {
-    const spaceBefore = plain.lastIndexOf(' ', end)
-    if (spaceBefore > end - 20) end = spaceBefore
+    const spaceBefore = plain.lastIndexOf(' ', end);
+    if (spaceBefore > end - 20) end = spaceBefore;
   }
 
-  const prefix = start > 0 ? '...' : ''
-  const suffix = end < plain.length ? '...' : ''
-  return prefix + plain.slice(start, end) + suffix
+  const prefix = start > 0 ? '...' : '';
+  const suffix = end < plain.length ? '...' : '';
+  return prefix + plain.slice(start, end) + suffix;
 }
 
 function Highlight({ text, query }: { text: string; query: string }) {
-  const words = query.split(/\s+/).filter(Boolean)
-  if (words.length === 0) return <>{text}</>
-  const pattern = new RegExp(
-    `(${words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`,
-    'gi',
-  )
-  const parts = text.split(pattern)
+  const words = query.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return <>{text}</>;
+  const pattern = new RegExp(`(${words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+  const parts = text.split(pattern);
   return (
     <>
       {parts.map((part, i) =>
@@ -75,37 +69,40 @@ function Highlight({ text, query }: { text: string; query: string }) {
         ),
       )}
     </>
-  )
+  );
 }
 
-function SearchResult({ post, query, categoryName }: {
-  post: Post
-  query: string
-  categoryName: string | null
-}) {
-  const snippet = getSnippet(post.content, query)
+function SearchResult({ post, query, categoryName }: { post: Post; query: string; categoryName: string | null }) {
+  const snippet = getSnippet(post.content, query);
   const date = new Date(post.created_at).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  })
+  });
 
   return (
-    <li className="
+    <li
+      className="
       rounded-lg border border-gray-200 p-5 transition-colors
       hover:border-blue-500
       dark:border-gray-700
-    ">
-      <Link to={`/posts/${post.slug}`} className="
+    "
+    >
+      <Link
+        to={`/posts/${post.slug}`}
+        className="
         block text-inherit no-underline
-      ">
+      "
+      >
         <h2 className="text-lg font-semibold">
           <Highlight text={post.title} query={query} />
         </h2>
-        <div className="
+        <div
+          className="
           mt-1 flex items-center gap-2 text-sm text-gray-400
           dark:text-gray-500
-        ">
+        "
+        >
           <time>{date}</time>
           {post.reading_time_minutes != null && (
             <>
@@ -120,10 +117,12 @@ function SearchResult({ post, query, categoryName }: {
             </>
           )}
         </div>
-        <p className="
+        <p
+          className="
           mt-2 text-sm/relaxed text-gray-500
           dark:text-gray-400
-        ">
+        "
+        >
           <Highlight text={snippet} query={query} />
         </p>
       </Link>
@@ -147,72 +146,65 @@ function SearchResult({ post, query, categoryName }: {
         </div>
       )}
     </li>
-  )
+  );
 }
 
 export default function Search() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const query = searchParams.get('q') ?? ''
-  const [inputValue, setInputValue] = useState(query)
-  const [offset, setOffset] = useState(0)
-  const [prevQuery, setPrevQuery] = useState(query)
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
-  const sentinelRef = useRef<HTMLDivElement>(null)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('q') ?? '';
+  const [inputValue, setInputValue] = useState(query);
+  const [offset, setOffset] = useState(0);
+  const [prevQuery, setPrevQuery] = useState(query);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   if (query !== prevQuery) {
-    setPrevQuery(query)
-    setOffset(0)
+    setPrevQuery(query);
+    setOffset(0);
   }
 
   // Sync input when URL changes externally (e.g. back/forward)
   useEffect(() => {
-    setInputValue(query)
-  }, [query])
+    setInputValue(query);
+  }, [query]);
 
   function handleInputChange(value: string) {
-    setInputValue(value)
-    if (debounceRef.current) clearTimeout(debounceRef.current)
+    setInputValue(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       if (value.trim()) {
-        setSearchParams({ q: value.trim() }, { replace: true })
+        setSearchParams({ q: value.trim() }, { replace: true });
       } else {
-        setSearchParams({}, { replace: true })
+        setSearchParams({}, { replace: true });
       }
-    }, 1000)
+    }, 1000);
   }
 
-  const { data: categories = [] } = useGetCategoriesQuery()
-  const categoryMap = new Map(categories.map((c) => [c.id, c.name]))
+  const { data: categories = [] } = useGetCategoriesQuery();
+  const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
 
-  const {
-    data,
-    isFetching,
-    error,
-  } = useSearchPostsQuery(
-    { query, offset, limit: PAGE_SIZE },
-    { skip: !query },
-  )
+  const { data, isFetching, error } = useSearchPostsQuery({ query, offset, limit: PAGE_SIZE }, { skip: !query });
 
-  const hasMore = data?.hasMore ?? false
+  const hasMore = data?.hasMore ?? false;
 
   useEffect(() => {
-    const sentinel = sentinelRef.current
-    if (!sentinel) return
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !isFetching && data) {
-          setOffset(data.posts.length)
+          setOffset(data.posts.length);
         }
       },
       { rootMargin: '200px' },
-    )
+    );
 
-    observer.observe(sentinel)
-    return () => observer.disconnect()
-  }, [hasMore, isFetching, data])
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, isFetching, data]);
 
-  const posts = data?.posts ?? []
+  const posts = data?.posts ?? [];
 
   return (
     <div>
@@ -256,26 +248,33 @@ export default function Search() {
       {error ? (
         <p className="text-red-500">Error searching posts.</p>
       ) : !query ? (
-        <p className="
+        <p
+          className="
           text-gray-500
           dark:text-gray-400
-        ">
+        "
+        >
           Enter a search term to find posts.
         </p>
       ) : posts.length === 0 && !isFetching ? (
-        <p className="
+        <p
+          className="
           text-gray-500
           dark:text-gray-400
-        ">
+        "
+        >
           No results for &ldquo;{query}&rdquo;.
         </p>
       ) : (
         <>
-          <p className="
+          <p
+            className="
             mb-6 text-sm text-gray-500
             dark:text-gray-400
-          ">
-            {posts.length}{hasMore ? '+' : ''} results for &ldquo;{query}&rdquo;
+          "
+          >
+            {posts.length}
+            {hasMore ? '+' : ''} results for &ldquo;{query}&rdquo;
           </p>
           <ul className="space-y-6">
             {posts.map((post) => (
@@ -283,21 +282,23 @@ export default function Search() {
                 key={post.id}
                 post={post}
                 query={query}
-                categoryName={post.category_id ? categoryMap.get(post.category_id) ?? null : null}
+                categoryName={post.category_id ? (categoryMap.get(post.category_id) ?? null) : null}
               />
             ))}
           </ul>
           <div ref={sentinelRef} className="h-1" />
           {isFetching && (
-            <p className="
+            <p
+              className="
               mt-4 text-center text-sm text-gray-400
               dark:text-gray-500
-            ">
+            "
+            >
               Loading...
             </p>
           )}
         </>
       )}
     </div>
-  )
+  );
 }

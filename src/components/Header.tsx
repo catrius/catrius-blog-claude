@@ -1,54 +1,60 @@
-import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { FreeMode } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/free-mode'
-import type { Swiper as SwiperType } from 'swiper'
-import { useGetPagesQuery } from '@/store/api'
-import { useAuth } from '@/hooks/useAuth'
-import Sidebar from '@/components/Sidebar'
-import ThemeToggle from '@/components/ThemeToggle'
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { FreeMode } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import type { Swiper as SwiperType } from 'swiper';
+import { useGetPagesQuery } from '@/store/api';
+import { useAuth } from '@/hooks/useAuth';
+import Sidebar from '@/components/Sidebar';
+import ThemeToggle from '@/components/ThemeToggle';
 
-const linkBase = 'text-sm no-underline transition-colors'
-const linkActive = 'font-medium text-gray-900 dark:text-white'
-const linkInactive = 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+const linkBase = 'text-sm no-underline transition-colors';
+const linkActive = 'font-medium text-gray-900 dark:text-white';
+const linkInactive = 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white';
 
-const fadeBase =
-  'pointer-events-none absolute top-0 z-10 h-full w-6 transition-opacity duration-200'
+const fadeBase = 'pointer-events-none absolute top-0 z-10 h-full w-6 transition-opacity duration-200';
 
 export default function Header() {
-  const { data: pages = [] } = useGetPagesQuery()
-  const { user, isAdmin, isLoading: authLoading, signInWithGoogle, signOut } = useAuth()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [isBeginning, setIsBeginning] = useState(true)
-  const [isEnd, setIsEnd] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { data: pages = [] } = useGetPagesQuery();
+  const { user, isAdmin, isLoading: authLoading, signInWithGoogle, signOut } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   function handleProgress(swiper: SwiperType) {
-    setIsBeginning(swiper.isBeginning)
-    setIsEnd(swiper.isEnd)
+    setIsBeginning(swiper.isBeginning);
+    setIsEnd(swiper.isEnd);
   }
 
   return (
     <>
-      <header className="
+      <header
+        className="
         border-b border-gray-200
         dark:border-gray-800
-      ">
+      "
+      >
         <div className="mx-auto flex max-w-7xl items-center gap-6 p-4">
-          <Link to="/" className="
+          <Link
+            to="/"
+            className="
             shrink-0 text-2xl font-bold tracking-tight text-gray-900
             no-underline
             dark:text-white
-          ">
+          "
+          >
             Catrius Blog
           </Link>
-          <nav className="
+          <nav
+            className="
             relative ml-auto hidden min-w-0
             md:block
-          ">
+          "
+          >
             <div
               className={`
                 ${fadeBase}
@@ -78,8 +84,8 @@ export default function Header() {
               onSliderMove={handleProgress}
             >
               {pages.map((page) => {
-                const path = `/pages/${page.slug}`
-                const isActive = location.pathname === path
+                const path = `/pages/${page.slug}`;
+                const isActive = location.pathname === path;
                 return (
                   <SwiperSlide key={page.id} className="w-auto!">
                     <Link
@@ -92,20 +98,20 @@ export default function Header() {
                       {page.title}
                     </Link>
                   </SwiperSlide>
-                )
+                );
               })}
             </Swiper>
           </nav>
 
-
-
           {/* Auth controls — desktop only */}
           {!authLoading && (
-            <div className="
+            <div
+              className="
               hidden items-center gap-3 border-l border-gray-200 pl-6
               md:flex
               dark:border-gray-800
-            ">
+            "
+            >
               {user ? (
                 <>
                   {isAdmin && (
@@ -153,17 +159,19 @@ export default function Header() {
               className={`
                 hidden rounded-md p-1.5 transition-colors
                 md:block
-                ${location.pathname === '/likes'
-                  ? `
+                ${
+                  location.pathname === '/likes'
+                    ? `
                     text-red-500
                     dark:text-red-400
                   `
-                  : `
+                    : `
                     text-gray-500
                     hover:text-red-500
                     dark:text-gray-400
                     dark:hover:text-red-400
-                  `}
+                  `
+                }
               `}
             >
               <svg
@@ -189,26 +197,22 @@ export default function Header() {
             className={`
               hidden cursor-pointer rounded-md p-1.5 transition-colors
               md:block
-              ${location.pathname === '/search'
-                ? `
+              ${
+                location.pathname === '/search'
+                  ? `
                   text-gray-900
                   dark:text-white
                 `
-                : `
+                  : `
                   text-gray-500
                   hover:text-gray-900
                   dark:text-gray-400
                   dark:hover:text-white
-                `}
+                `
+              }
             `}
           >
-            <svg
-              className="size-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
+            <svg className="size-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -218,10 +222,12 @@ export default function Header() {
           </button>
 
           {/* Theme toggle — desktop only */}
-          <div className="
+          <div
+            className="
             hidden
             md:block
-          ">
+          "
+          >
             <ThemeToggle />
           </div>
 
@@ -237,18 +243,8 @@ export default function Header() {
               dark:hover:bg-gray-800 dark:hover:text-white
             "
           >
-            <svg
-              className="size-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
+            <svg className="size-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
         </div>
@@ -256,5 +252,5 @@ export default function Header() {
 
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>
-  )
+  );
 }
