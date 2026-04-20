@@ -27,7 +27,7 @@ export default defineConfig([
       globals: globals.browser,
       parser: tsParser,
       parserOptions: {
-        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        projectService: true,
         ecmaFeatures: {
           jsx: true,
         },
@@ -38,9 +38,7 @@ export default defineConfig([
         entryPoint: 'src/index.css',
       },
       'import-x/resolver': {
-        typescript: {
-          project: ['./tsconfig.app.json', './tsconfig.node.json'],
-        },
+        typescript: true,
       },
     },
   },
