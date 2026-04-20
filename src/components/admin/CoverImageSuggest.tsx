@@ -69,7 +69,7 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
           py-1.5 text-sm text-gray-600
           hover:border-blue-400 hover:text-blue-600
           disabled:cursor-not-allowed disabled:opacity-40
-          dark:border-gray-600 dark:text-gray-400
+          dark:border-slate-600 dark:text-slate-400
           dark:hover:border-blue-400 dark:hover:text-blue-400
         "
       >
@@ -80,7 +80,7 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
         <div
           className="
             mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4
-            dark:border-gray-700 dark:bg-gray-800/50
+            dark:border-slate-700 dark:bg-slate-800/50
           "
         >
           <div
@@ -135,7 +135,7 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
           <p
             className="
               mt-2 text-xs text-gray-400
-              dark:text-gray-500
+              dark:text-slate-500
             "
           >
             Photos from{' '}

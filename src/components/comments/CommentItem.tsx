@@ -18,7 +18,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
       className="
         border-b border-gray-200 py-4
         last:border-b-0
-        dark:border-gray-700
+        dark:border-slate-700
       "
     >
       <div className="mb-2 flex items-center gap-3">
@@ -34,7 +34,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
             className="
               flex size-8 shrink-0 items-center justify-center rounded-full
               bg-gray-200 text-sm font-medium text-gray-600
-              dark:bg-gray-700 dark:text-gray-300
+              dark:bg-slate-700 dark:text-slate-300
             "
           >
             {comment.user_name.charAt(0).toUpperCase()}
@@ -44,7 +44,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
           <span
             className="
               text-sm font-medium text-gray-900
-              dark:text-gray-100
+              dark:text-slate-100
             "
           >
             {comment.user_name}
@@ -52,7 +52,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
           <time
             className="
               text-xs text-gray-400
-              dark:text-gray-500
+              dark:text-slate-500
             "
           >
             {new Date(comment.created_at).toLocaleDateString()}
@@ -77,7 +77,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
       <p
         className="
           text-sm whitespace-pre-wrap text-gray-700
-          dark:text-gray-300
+          dark:text-slate-300
         "
       >
         {comment.body}

@@ -124,7 +124,7 @@ function App() {
     <div
       className="
         flex min-h-screen flex-col bg-white
-        dark:bg-gray-950 dark:text-gray-100
+        dark:bg-slate-900 dark:text-slate-100
       "
     >
       <Header />

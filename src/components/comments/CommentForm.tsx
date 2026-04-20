@@ -30,13 +30,13 @@ export default function CommentForm({ postId }: CommentFormProps) {
       <div
         className="
           rounded-lg border border-gray-200 p-4 text-center
-          dark:border-gray-700
+          dark:border-slate-700
         "
       >
         <p
           className="
             mb-3 text-sm text-gray-600
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           Sign in to leave a comment.
@@ -72,7 +72,7 @@ export default function CommentForm({ postId }: CommentFormProps) {
             className="
               flex size-6 items-center justify-center rounded-full bg-gray-200
               text-xs font-medium text-gray-600
-              dark:bg-gray-700 dark:text-gray-300
+              dark:bg-slate-700 dark:text-slate-300
             "
           >
             {(user.user_metadata.full_name ?? user.email ?? '?').charAt(0).toUpperCase()}
@@ -81,7 +81,7 @@ export default function CommentForm({ postId }: CommentFormProps) {
         <span
           className="
             text-sm font-medium text-gray-700
-            dark:text-gray-300
+            dark:text-slate-300
           "
         >
           {user.user_metadata.full_name ?? user.email}
@@ -105,8 +105,8 @@ export default function CommentForm({ postId }: CommentFormProps) {
           placeholder:text-gray-400
           focus:border-blue-300 focus:ring-1 focus:ring-blue-300
           focus:outline-none
-          dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-          dark:placeholder:text-gray-500
+          dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100
+          dark:placeholder:text-slate-500
           dark:focus:border-blue-600 dark:focus:ring-blue-600
         "
       />
@@ -114,7 +114,7 @@ export default function CommentForm({ postId }: CommentFormProps) {
         <span
           className="
             text-xs text-gray-400
-            dark:text-gray-500
+            dark:text-slate-500
           "
         >
           {body.length}/2000

@@ -28,7 +28,7 @@ const categoryColors = [
 ];
 
 const pillBase = 'inline-block whitespace-nowrap rounded-full px-4 py-1.5 text-sm no-underline transition-colors';
-const pillInactive = 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800';
+const pillInactive = 'text-gray-700 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-800';
 
 const fadeBase = 'pointer-events-none absolute top-0 z-10 h-full w-8 transition-opacity duration-200';
 
@@ -57,7 +57,7 @@ export default function NavBar({
         className={`
           ${fadeBase}
           left-0 bg-linear-to-r from-white
-          dark:from-gray-950
+          dark:from-slate-900
           ${isBeginning ? `opacity-0` : `opacity-100`}
         `}
       />
@@ -65,7 +65,7 @@ export default function NavBar({
         className={`
           ${fadeBase}
           right-0 bg-linear-to-l from-white
-          dark:from-gray-950
+          dark:from-slate-900
           ${isEnd ? `opacity-0` : `opacity-100`}
         `}
       />
@@ -89,7 +89,7 @@ export default function NavBar({
               ${pillBase}
               ${selectedCategorySlug === null ? `
                 bg-gray-900 font-medium text-white
-                dark:bg-white dark:text-gray-900
+                dark:bg-white dark:text-slate-900
               ` : pillInactive}
             `}
           >
@@ -99,10 +99,10 @@ export default function NavBar({
                 ml-1.5
                 ${selectedCategorySlug === null ? `
                   text-gray-300
-                  dark:text-gray-600
+                  dark:text-slate-600
                 ` : `
                   text-gray-400
-                  dark:text-gray-500
+                  dark:text-slate-500
                 `}
               `}
             >
@@ -123,7 +123,7 @@ export default function NavBar({
                   font-medium
                   ${isActive ? color.active : `
                     text-gray-700
-                    dark:text-gray-300
+                    dark:text-slate-300
                     ${color.hover}
                   `}
                 `}
@@ -134,7 +134,7 @@ export default function NavBar({
                     ml-1.5
                     ${isActive ? 'opacity-70' : `
                       text-gray-400
-                      dark:text-gray-500
+                      dark:text-slate-500
                     `}
                   `}
                 >

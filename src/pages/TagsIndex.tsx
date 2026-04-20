@@ -16,12 +16,12 @@ export default function TagsIndex() {
   return (
     <div>
       <title>{`Tags | ${SITE_NAME}`}</title>
-      <h1 className="mb-6 text-3xl font-bold">Tags</h1>
+      <h1 className="mb-6 font-heading text-3xl font-bold">Tags</h1>
       {tags.length === 0 ? (
         <p
           className="
             text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           No tags yet.
@@ -37,7 +37,7 @@ export default function TagsIndex() {
                 border-gray-200 px-3 py-1.5 text-sm text-gray-700 no-underline
                 transition-colors
                 hover:border-blue-500 hover:text-blue-600
-                dark:border-gray-700 dark:text-gray-300
+                dark:border-slate-700 dark:text-slate-300
                 dark:hover:border-blue-400 dark:hover:text-blue-400
               "
             >
@@ -45,7 +45,7 @@ export default function TagsIndex() {
               <span
                 className="
                   text-xs text-gray-400
-                  dark:text-gray-500
+                  dark:text-slate-500
                 "
               >
                 {count}

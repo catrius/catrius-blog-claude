@@ -85,20 +85,20 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
       className="
         rounded-lg border border-gray-200 p-5 transition-colors
         hover:border-blue-500
-        dark:border-gray-700
+        dark:border-slate-700
       "
     >
       <Link
         to={`/posts/${post.slug}`}
         className="block text-inherit no-underline"
       >
-        <h2 className="text-lg font-semibold">
+        <h2 className="font-heading text-lg font-semibold">
           <Highlight text={post.title} query={query} />
         </h2>
         <div
           className="
             mt-1 flex items-center gap-2 text-sm text-gray-400
-            dark:text-gray-500
+            dark:text-slate-500
           "
         >
           <time>{date}</time>
@@ -118,7 +118,7 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
         <p
           className="
             mt-2 text-sm/relaxed text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           <Highlight text={snippet} query={query} />
@@ -134,7 +134,7 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
                 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600
                 no-underline transition-colors
                 hover:bg-blue-100 hover:text-blue-600
-                dark:bg-gray-800 dark:text-gray-400
+                dark:bg-slate-800 dark:text-slate-400
                 dark:hover:bg-blue-900/30 dark:hover:text-blue-400
               "
             >
@@ -212,7 +212,7 @@ export default function Search() {
           <svg
             className="
               absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-400
-              dark:text-gray-500
+              dark:text-slate-500
             "
             fill="none"
             viewBox="0 0 24 24"
@@ -235,8 +235,8 @@ export default function Search() {
               w-full rounded-lg border border-gray-200 bg-white py-3 pr-4 pl-10
               text-gray-900 placeholder-gray-400 transition-colors outline-none
               focus:border-blue-500
-              dark:border-gray-700 dark:bg-gray-900 dark:text-white
-              dark:placeholder-gray-500
+              dark:border-slate-700 dark:bg-slate-800 dark:text-white
+              dark:placeholder-slate-500
               dark:focus:border-blue-500
             "
           />
@@ -249,7 +249,7 @@ export default function Search() {
         <p
           className="
             text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           Enter a search term to find posts.
@@ -258,7 +258,7 @@ export default function Search() {
         <p
           className="
             text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           No results for &ldquo;{query}&rdquo;.
@@ -268,7 +268,7 @@ export default function Search() {
           <p
             className="
               mb-6 text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-slate-400
             "
           >
             {posts.length}
@@ -289,7 +289,7 @@ export default function Search() {
             <p
               className="
                 mt-4 text-center text-sm text-gray-400
-                dark:text-gray-500
+                dark:text-slate-500
               "
             >
               Loading...

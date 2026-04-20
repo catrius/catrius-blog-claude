@@ -104,8 +104,8 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
     w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
     text-gray-900 placeholder-gray-400
     focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none
-    dark:border-gray-700 dark:bg-gray-900 dark:text-white
-    dark:placeholder-gray-500
+    dark:border-slate-700 dark:bg-slate-800 dark:text-white
+    dark:placeholder-slate-500
     dark:focus:border-blue-400 dark:focus:ring-blue-400
   `;
 
@@ -114,8 +114,8 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
     py-2 text-sm text-gray-700
     hover:bg-gray-50
     disabled:cursor-not-allowed disabled:opacity-40
-    dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300
-    dark:hover:bg-gray-700
+    dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300
+    dark:hover:bg-slate-700
   `;
 
   return (
@@ -126,7 +126,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
             htmlFor="cover-image"
             className="
               mb-1 block text-sm font-medium text-gray-700
-              dark:text-gray-300
+              dark:text-slate-300
             "
           >
             Cover Image
@@ -137,7 +137,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
                 <p
                   className="
                     mb-1 text-xs text-gray-500
-                    dark:text-gray-400
+                    dark:text-slate-400
                   "
                 >
                   Post list card (2:1)
@@ -152,7 +152,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
                 <p
                   className="
                     mb-1 text-xs text-gray-500
-                    dark:text-gray-400
+                    dark:text-slate-400
                   "
                 >
                   Post detail (3:1)
@@ -191,7 +191,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
               file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3
               file:py-1.5 file:text-sm file:font-medium file:text-blue-700
               hover:file:bg-blue-100
-              dark:text-gray-400
+              dark:text-slate-400
               dark:file:bg-blue-900/30 dark:file:text-blue-300
             "
           />
@@ -216,7 +216,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
           htmlFor="title"
           className="
             mb-1 block text-sm font-medium text-gray-700
-            dark:text-gray-300
+            dark:text-slate-300
           "
         >
           Title
@@ -237,7 +237,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
           htmlFor="slug"
           className="
             mb-1 block text-sm font-medium text-gray-700
-            dark:text-gray-300
+            dark:text-slate-300
           "
         >
           Slug
@@ -269,7 +269,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
             htmlFor="excerpt"
             className="
               mb-1 block text-sm font-medium text-gray-700
-              dark:text-gray-300
+              dark:text-slate-300
             "
           >
             Excerpt
@@ -292,7 +292,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
             htmlFor="category"
             className="
               mb-1 block text-sm font-medium text-gray-700
-              dark:text-gray-300
+              dark:text-slate-300
             "
           >
             Category
@@ -319,7 +319,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
             htmlFor="tags"
             className="
               mb-1 block text-sm font-medium text-gray-700
-              dark:text-gray-300
+              dark:text-slate-300
             "
           >
             Tags

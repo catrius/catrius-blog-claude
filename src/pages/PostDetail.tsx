@@ -89,11 +89,11 @@ export default function PostDetail() {
           </button>
         </div>
       )}
-      <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+      <h1 className="mb-2 font-heading text-3xl font-bold">{post.title}</h1>
       <div
         className="
           mb-6 flex items-center gap-2 text-sm text-gray-400
-          dark:text-gray-500
+          dark:text-slate-500
         "
       >
         <time>{new Date(post.created_at).toLocaleDateString()}</time>
@@ -119,7 +119,7 @@ export default function PostDetail() {
                 rounded-full bg-gray-100 px-2.5 py-0.5 text-sm text-gray-600
                 no-underline transition-colors
                 hover:bg-blue-100 hover:text-blue-600
-                dark:bg-gray-800 dark:text-gray-400
+                dark:bg-slate-800 dark:text-slate-400
                 dark:hover:bg-blue-900/30 dark:hover:text-blue-400
               "
             >
@@ -145,10 +145,10 @@ export default function PostDetail() {
         <section
           className="
             mt-12 border-t border-gray-200 pt-8
-            dark:border-gray-700
+            dark:border-slate-700
           "
         >
-          <h2 className="mb-4 text-xl font-bold">Related Posts</h2>
+          <h2 className="mb-4 font-heading text-xl font-bold">Related Posts</h2>
           <div
             className="
               grid gap-4
@@ -165,14 +165,14 @@ export default function PostDetail() {
                   block rounded-lg border border-gray-200 p-4 no-underline
                   transition-colors
                   hover:border-blue-300 hover:bg-blue-50/50
-                  dark:border-gray-700
+                  dark:border-slate-700
                   dark:hover:border-blue-700 dark:hover:bg-blue-900/20
                 "
               >
                 <h3
                   className="
-                    mb-1 text-base font-semibold text-gray-900
-                    dark:text-gray-100
+                    mb-1 font-heading text-base font-semibold text-gray-900
+                    dark:text-slate-100
                   "
                 >
                   {related.title}
@@ -180,7 +180,7 @@ export default function PostDetail() {
                 <p
                   className="
                     line-clamp-2 text-sm text-gray-500
-                    dark:text-gray-400
+                    dark:text-slate-400
                   "
                 >
                   {related.excerpt}
@@ -188,7 +188,7 @@ export default function PostDetail() {
                 <time
                   className="
                     mt-2 block text-xs text-gray-400
-                    dark:text-gray-500
+                    dark:text-slate-500
                   "
                 >
                   {new Date(related.created_at).toLocaleDateString()}

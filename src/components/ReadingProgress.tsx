@@ -44,7 +44,7 @@ export default function ReadingProgress({ targetRef }: ReadingProgressProps) {
     <div
       className="
         fixed inset-x-0 top-0 z-50 h-1 bg-gray-200/50
-        dark:bg-gray-800/50
+        dark:bg-slate-800/50
       "
     >
       <div

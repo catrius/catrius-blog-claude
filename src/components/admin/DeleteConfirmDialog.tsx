@@ -37,7 +37,7 @@ export default function DeleteConfirmDialog({
       className="
         m-auto w-full max-w-md rounded-lg bg-white p-6 shadow-xl
         backdrop:bg-black/50
-        dark:bg-gray-900
+        dark:bg-slate-800
       "
     >
       <h2
@@ -51,7 +51,7 @@ export default function DeleteConfirmDialog({
       <p
         className="
           mb-6 text-sm text-gray-600
-          dark:text-gray-400
+          dark:text-slate-400
         "
       >
         Are you sure you want to delete &ldquo;{itemTitle}&rdquo;? This action cannot be undone.
@@ -64,8 +64,8 @@ export default function DeleteConfirmDialog({
             cursor-pointer rounded-md px-4 py-2 text-sm font-medium
             text-gray-700
             hover:bg-gray-100
-            dark:text-gray-300
-            dark:hover:bg-gray-800
+            dark:text-slate-300
+            dark:hover:bg-slate-800
           "
         >
           Cancel

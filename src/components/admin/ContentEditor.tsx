@@ -172,7 +172,7 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
         <label
           className="
             text-sm font-medium text-gray-700
-            dark:text-gray-300
+            dark:text-slate-300
           "
         >
           Content
@@ -181,7 +181,7 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
           <div
             className="
               flex gap-1 rounded-md border border-gray-300 p-0.5
-              dark:border-gray-600
+              dark:border-slate-600
             "
           >
             <button
@@ -197,7 +197,7 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
                     `
                     : `
                       text-gray-600
-                      dark:text-gray-400
+                      dark:text-slate-400
                     `
                 }
               `}
@@ -217,7 +217,7 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
                     `
                     : `
                       text-gray-600
-                      dark:text-gray-400
+                      dark:text-slate-400
                     `
                 }
               `}

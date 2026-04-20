@@ -21,7 +21,7 @@ export default function AdminDashboard() {
           className="
             rounded-lg border border-gray-200 p-6 no-underline transition
             hover:border-blue-300 hover:bg-blue-50/50
-            dark:border-gray-800
+            dark:border-slate-800
             dark:hover:border-blue-700 dark:hover:bg-blue-900/20
           "
         >
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
           <p
             className="
               mt-2 text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-slate-400
             "
           >
             Manage blog posts
@@ -55,7 +55,7 @@ export default function AdminDashboard() {
           className="
             rounded-lg border border-gray-200 p-6 no-underline transition
             hover:border-blue-300 hover:bg-blue-50/50
-            dark:border-gray-800
+            dark:border-slate-800
             dark:hover:border-blue-700 dark:hover:bg-blue-900/20
           "
         >
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
           <p
             className="
               mt-2 text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-slate-400
             "
           >
             Manage static pages

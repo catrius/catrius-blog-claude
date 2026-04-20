@@ -14,7 +14,7 @@ export default function LikedPosts() {
         <svg
           className="
             mx-auto mb-4 size-12 text-gray-300
-            dark:text-gray-600
+            dark:text-slate-600
           "
           viewBox="0 0 24 24"
           fill="none"
@@ -30,7 +30,7 @@ export default function LikedPosts() {
         <p
           className="
             mb-4 text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           Sign in to see posts you&apos;ve liked.
@@ -41,8 +41,8 @@ export default function LikedPosts() {
             cursor-pointer rounded-md bg-gray-900 px-4 py-2 text-sm font-medium
             text-white transition-colors
             hover:bg-gray-800
-            dark:bg-white dark:text-gray-900
-            dark:hover:bg-gray-200
+            dark:bg-white dark:text-slate-900
+            dark:hover:bg-slate-200
           "
         >
           Sign in with Google
@@ -56,12 +56,12 @@ export default function LikedPosts() {
   return (
     <div>
       <title>{`Liked Posts | ${SITE_NAME}`}</title>
-      <h1 className="mb-6 text-2xl font-bold">Liked Posts</h1>
+      <h1 className="mb-6 font-heading text-2xl font-bold">Liked Posts</h1>
       {posts.length === 0 ? (
         <p
           className="
             text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           You haven&apos;t liked any posts yet. Browse posts and tap the heart to save them here.
@@ -82,14 +82,14 @@ export default function LikedPosts() {
                 block rounded-lg border border-gray-200 p-4 no-underline
                 transition-colors
                 hover:border-blue-300 hover:bg-blue-50/50
-                dark:border-gray-700
+                dark:border-slate-700
                 dark:hover:border-blue-700 dark:hover:bg-blue-900/20
               "
             >
               <h2
                 className="
-                  mb-1 text-base font-semibold text-gray-900
-                  dark:text-gray-100
+                  mb-1 font-heading text-base font-semibold text-gray-900
+                  dark:text-slate-100
                 "
               >
                 {post.title}
@@ -97,7 +97,7 @@ export default function LikedPosts() {
               <p
                 className="
                   line-clamp-2 text-sm text-gray-500
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 {post.excerpt}
@@ -105,7 +105,7 @@ export default function LikedPosts() {
               <time
                 className="
                   mt-2 block text-xs text-gray-400
-                  dark:text-gray-500
+                  dark:text-slate-500
                 "
               >
                 {new Date(post.created_at).toLocaleDateString()}

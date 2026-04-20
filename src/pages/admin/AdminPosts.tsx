@@ -74,8 +74,8 @@ export default function AdminPosts() {
                     placeholder:text-gray-400
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     focus:outline-none
-                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
-                    dark:placeholder:text-gray-500
+                    dark:border-slate-700 dark:bg-slate-800 dark:text-white
+                    dark:placeholder:text-slate-500
                     dark:focus:border-blue-400 dark:focus:ring-blue-400
                   "
                 />
@@ -94,7 +94,7 @@ export default function AdminPosts() {
                     font-normal
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     focus:outline-none
-                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
+                    dark:border-slate-700 dark:bg-slate-800 dark:text-white
                     dark:focus:border-blue-400 dark:focus:ring-blue-400
                   "
                 >
@@ -120,7 +120,7 @@ export default function AdminPosts() {
                     font-normal
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     focus:outline-none
-                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
+                    dark:border-slate-700 dark:bg-slate-800 dark:text-white
                     dark:focus:border-blue-400 dark:focus:ring-blue-400
                   "
                 >
@@ -142,13 +142,13 @@ export default function AdminPosts() {
             <tr
               className="
                 border-b border-gray-200
-                dark:border-gray-800
+                dark:border-slate-800
               "
             >
               <th
                 className="
                   pt-2 pr-4 pb-3 font-medium text-gray-500
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Title
@@ -157,7 +157,7 @@ export default function AdminPosts() {
                 className="
                   hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                   sm:table-cell
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Category
@@ -166,7 +166,7 @@ export default function AdminPosts() {
                 className="
                   hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                   md:table-cell
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Date
@@ -175,7 +175,7 @@ export default function AdminPosts() {
                 className="
                   hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                   lg:table-cell
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Tags
@@ -183,7 +183,7 @@ export default function AdminPosts() {
               <th
                 className="
                   pt-2 pb-3 text-right font-medium text-gray-500
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Actions
@@ -197,7 +197,7 @@ export default function AdminPosts() {
                   colSpan={5}
                   className="
                     py-6 text-center text-gray-500
-                    dark:text-gray-400
+                    dark:text-slate-400
                   "
                 >
                   {search || categoryFilter || dateFilter
@@ -211,7 +211,7 @@ export default function AdminPosts() {
                   key={post.id}
                   className="
                     border-b border-gray-100
-                    dark:border-gray-800/50
+                    dark:border-slate-800/50
                   "
                 >
                   <td className="py-3 pr-4">
@@ -231,7 +231,7 @@ export default function AdminPosts() {
                     className="
                       hidden py-3 pr-4 text-gray-500
                       sm:table-cell
-                      dark:text-gray-400
+                      dark:text-slate-400
                     "
                   >
                     {post.category_id ? (categoryMap.get(post.category_id) ?? '—') : '—'}
@@ -240,7 +240,7 @@ export default function AdminPosts() {
                     className="
                       hidden py-3 pr-4 text-gray-500
                       md:table-cell
-                      dark:text-gray-400
+                      dark:text-slate-400
                     "
                   >
                     {new Date(post.created_at).toLocaleDateString()}
@@ -258,7 +258,7 @@ export default function AdminPosts() {
                           className="
                             rounded-full bg-gray-100 px-2 py-0.5 text-xs
                             text-gray-600
-                            dark:bg-gray-800 dark:text-gray-400
+                            dark:bg-slate-800 dark:text-slate-400
                           "
                         >
                           {tag}

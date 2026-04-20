@@ -69,8 +69,8 @@ export default function AdminPages() {
                     placeholder:text-gray-400
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     focus:outline-none
-                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
-                    dark:placeholder:text-gray-500
+                    dark:border-slate-700 dark:bg-slate-800 dark:text-white
+                    dark:placeholder:text-slate-500
                     dark:focus:border-blue-400 dark:focus:ring-blue-400
                   "
                 />
@@ -89,7 +89,7 @@ export default function AdminPages() {
                     font-normal
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     focus:outline-none
-                    dark:border-gray-700 dark:bg-gray-900 dark:text-white
+                    dark:border-slate-700 dark:bg-slate-800 dark:text-white
                     dark:focus:border-blue-400 dark:focus:ring-blue-400
                   "
                 >
@@ -105,13 +105,13 @@ export default function AdminPages() {
             <tr
               className="
                 border-b border-gray-200
-                dark:border-gray-800
+                dark:border-slate-800
               "
             >
               <th
                 className="
                   pt-2 pr-4 pb-3 font-medium text-gray-500
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Title
@@ -120,7 +120,7 @@ export default function AdminPages() {
                 className="
                   hidden pt-2 pr-4 pb-3 font-medium text-gray-500
                   md:table-cell
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Date
@@ -128,7 +128,7 @@ export default function AdminPages() {
               <th
                 className="
                   pt-2 pb-3 text-right font-medium text-gray-500
-                  dark:text-gray-400
+                  dark:text-slate-400
                 "
               >
                 Actions
@@ -142,7 +142,7 @@ export default function AdminPages() {
                   colSpan={3}
                   className="
                     py-6 text-center text-gray-500
-                    dark:text-gray-400
+                    dark:text-slate-400
                   "
                 >
                   {search || dateFilter ? 'No pages match your filters.' : 'No pages yet. Create your first page!'}
@@ -154,7 +154,7 @@ export default function AdminPages() {
                   key={page.id}
                   className="
                     border-b border-gray-100
-                    dark:border-gray-800/50
+                    dark:border-slate-800/50
                   "
                 >
                   <td className="py-3 pr-4">
@@ -174,7 +174,7 @@ export default function AdminPages() {
                     className="
                       hidden py-3 pr-4 text-gray-500
                       md:table-cell
-                      dark:text-gray-400
+                      dark:text-slate-400
                     "
                   >
                     {new Date(page.created_at).toLocaleDateString()}

@@ -18,7 +18,7 @@ function PostMeta({ post }: { post: Post }) {
     <div
       className="
         mb-3 flex items-center gap-2 text-sm text-gray-400
-        dark:text-gray-500
+        dark:text-slate-500
       "
     >
       <time>
@@ -53,7 +53,7 @@ function PostTags({ tags }: { tags: string[] }) {
             rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600
             no-underline transition-colors
             hover:bg-blue-100 hover:text-blue-600
-            dark:bg-gray-800 dark:text-gray-400
+            dark:bg-slate-800 dark:text-slate-400
             dark:hover:bg-blue-900/30 dark:hover:text-blue-400
           "
         >
@@ -69,7 +69,7 @@ function PostStats({ post }: { post: Post }) {
     <div className="mt-auto flex items-center justify-end gap-3 pt-4">
       <span className="
         text-sm text-gray-400
-        dark:text-gray-500
+        dark:text-slate-500
       ">
         {post.view_count} {post.view_count === 1 ? 'view' : 'views'}
       </span>
@@ -86,7 +86,7 @@ function FeaturedCard({ post }: { post: Post }) {
         border-gray-200 transition-all duration-200
         hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg
         sm:flex-row
-        dark:border-gray-700
+        dark:border-slate-700
         dark:hover:shadow-blue-500/10
       "
     >
@@ -114,11 +114,11 @@ function FeaturedCard({ post }: { post: Post }) {
         <Link to={`/posts/${post.slug}`} className="
           block text-inherit no-underline
         ">
-          <h2 className="mb-2 text-2xl font-semibold">{post.title}</h2>
+          <h2 className="mb-2 font-heading text-2xl font-semibold">{post.title}</h2>
           <PostMeta post={post} />
           <p className="
             text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           ">{post.excerpt}</p>
         </Link>
         <PostTags tags={post.tags} />
@@ -135,7 +135,7 @@ function RegularCard({ post }: { post: Post }) {
         flex flex-col overflow-hidden rounded-lg border border-gray-200
         transition-all duration-200
         hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg
-        dark:border-gray-700
+        dark:border-slate-700
         dark:hover:shadow-blue-500/10
       "
     >
@@ -152,11 +152,11 @@ function RegularCard({ post }: { post: Post }) {
         <Link to={`/posts/${post.slug}`} className="
           block text-inherit no-underline
         ">
-          <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
+          <h2 className="mb-2 font-heading text-xl font-semibold">{post.title}</h2>
           <PostMeta post={post} />
           <p className="
             text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           ">{post.excerpt}</p>
         </Link>
         <PostTags tags={post.tags} />
@@ -190,7 +190,7 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
 
   return (
     <div className="min-w-0 flex-1">
-      <h1 className="mb-6 text-3xl font-bold">{title}</h1>
+      <h1 className="mb-6 font-heading text-3xl font-bold">{title}</h1>
       {posts.length === 0 && !isFetching ? (
         <p>No posts yet.</p>
       ) : (

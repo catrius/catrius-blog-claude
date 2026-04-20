@@ -21,13 +21,13 @@ function SidebarLink({ to, isActive, children }: { to: string; isActive: boolean
           isActive
             ? `
               bg-gray-100 font-medium text-gray-900
-              dark:bg-gray-800 dark:text-white
+              dark:bg-slate-800 dark:text-white
             `
             : `
               text-gray-700
               hover:bg-gray-50
-              dark:text-gray-300
-              dark:hover:bg-gray-800/50
+              dark:text-slate-300
+              dark:hover:bg-slate-800/50
             `
         }
       `}
@@ -93,7 +93,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col bg-white
           transition-transform duration-300
           md:hidden
-          dark:bg-gray-950
+          dark:bg-slate-900
           ${open ? `translate-x-0` : `translate-x-full`}
         `}
       >
@@ -105,8 +105,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             className="
               cursor-pointer rounded-md p-2 text-gray-500
               hover:bg-gray-100 hover:text-gray-900
-              dark:text-gray-400
-              dark:hover:bg-gray-800 dark:hover:text-white
+              dark:text-slate-400
+              dark:hover:bg-slate-800 dark:hover:text-white
             "
           >
             <svg className="size-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -124,7 +124,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               className={`
                 flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2 text-sm
                 no-underline transition-colors
-                dark:bg-gray-800
+                dark:bg-slate-800
                 ${
                   location.pathname === '/search'
                     ? `
@@ -134,8 +134,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     : `
                       text-gray-700
                       hover:bg-gray-50
-                      dark:text-gray-300
-                      dark:hover:bg-gray-800/50
+                      dark:text-slate-300
+                      dark:hover:bg-slate-800/50
                     `
                 }
               `}
@@ -158,7 +158,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 className="
                   mb-3 text-xs font-semibold tracking-wider text-gray-400
                   uppercase
-                  dark:text-gray-500
+                  dark:text-slate-500
                 "
               >
                 Pages
@@ -181,7 +181,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               className="
                 mb-3 text-xs font-semibold tracking-wider text-gray-400
                 uppercase
-                dark:text-gray-500
+                dark:text-slate-500
               "
             >
               Categories
@@ -193,7 +193,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   <span
                     className="
                       text-gray-400
-                      dark:text-gray-500
+                      dark:text-slate-500
                     "
                   >
                     {postCounts?.total ?? 0}
@@ -207,7 +207,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     <span
                       className="
                         text-gray-400
-                        dark:text-gray-500
+                        dark:text-slate-500
                       "
                     >
                       {postCountsByCategory.get(category.id) ?? 0}
@@ -246,14 +246,14 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           <div
             className="
               mt-8 border-t border-gray-200 pt-6
-              dark:border-gray-800
+              dark:border-slate-800
             "
           >
             <h3
               className="
                 mb-3 text-xs font-semibold tracking-wider text-gray-400
                 uppercase
-                dark:text-gray-500
+                dark:text-slate-500
               "
             >
               Theme
@@ -266,7 +266,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             <div
               className="
                 mt-8 border-t border-gray-200 pt-6
-                dark:border-gray-800
+                dark:border-slate-800
               "
             >
               {user ? (
@@ -282,13 +282,13 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                           location.pathname.startsWith('/admin')
                             ? `
                               bg-gray-100 font-medium text-gray-900
-                              dark:bg-gray-800 dark:text-white
+                              dark:bg-slate-800 dark:text-white
                             `
                             : `
                               text-gray-700
                               hover:bg-gray-50
-                              dark:text-gray-300
-                              dark:hover:bg-gray-800/50
+                              dark:text-slate-300
+                              dark:hover:bg-slate-800/50
                             `
                         }
                       `}
@@ -302,8 +302,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                       block w-full cursor-pointer rounded-md px-3 py-2 text-left
                       text-sm text-gray-700 transition-colors
                       hover:bg-gray-50
-                      dark:text-gray-300
-                      dark:hover:bg-gray-800/50
+                      dark:text-slate-300
+                      dark:hover:bg-slate-800/50
                     "
                   >
                     Sign out
@@ -316,8 +316,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     block w-full cursor-pointer rounded-md px-3 py-2 text-left
                     text-sm text-gray-700 transition-colors
                     hover:bg-gray-50
-                    dark:text-gray-300
-                    dark:hover:bg-gray-800/50
+                    dark:text-slate-300
+                    dark:hover:bg-slate-800/50
                   "
                 >
                   Sign in

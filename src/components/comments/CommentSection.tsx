@@ -13,10 +13,10 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     <section
       className="
         mt-12 border-t border-gray-200 pt-8
-        dark:border-gray-700
+        dark:border-slate-700
       "
     >
-      <h2 className="mb-4 text-xl font-bold">
+      <h2 className="mb-4 font-heading text-xl font-bold">
         Comments{comments && comments.length > 0 ? ` (${comments.length})` : ''}
       </h2>
 
@@ -24,7 +24,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         <p
           className="
             text-sm text-gray-400
-            dark:text-gray-500
+            dark:text-slate-500
           "
         >
           Loading comments...
@@ -37,7 +37,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         <p
           className="
             text-sm text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           No comments yet. Be the first to share your thoughts!

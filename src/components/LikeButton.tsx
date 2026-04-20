@@ -48,7 +48,7 @@ export default function LikeButton({ postId }: LikeButtonProps) {
             : `
               border-gray-200 bg-white text-gray-500
               hover:border-red-200 hover:bg-red-50 hover:text-red-500
-              dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400
+              dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400
               dark:hover:border-red-800 dark:hover:bg-red-950/50
               dark:hover:text-red-400
             `

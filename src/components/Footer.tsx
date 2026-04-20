@@ -3,7 +3,7 @@ export default function Footer() {
     <footer
       className="
         border-t border-gray-200
-        dark:border-gray-800
+        dark:border-slate-800
       "
     >
       <div
@@ -15,7 +15,7 @@ export default function Footer() {
         <p
           className="
             text-sm text-gray-500
-            dark:text-gray-400
+            dark:text-slate-400
           "
         >
           &copy; {new Date().getFullYear()} Catrius Blog
@@ -27,7 +27,7 @@ export default function Footer() {
             className="
               text-gray-500
               hover:text-gray-900
-              dark:text-gray-400
+              dark:text-slate-400
               dark:hover:text-white
             "
           >
@@ -41,7 +41,7 @@ export default function Footer() {
             className="
               text-gray-500
               hover:text-gray-900
-              dark:text-gray-400
+              dark:text-slate-400
               dark:hover:text-white
             "
           >
@@ -55,7 +55,7 @@ export default function Footer() {
             className="
               text-gray-500
               hover:text-gray-900
-              dark:text-gray-400
+              dark:text-slate-400
               dark:hover:text-white
             "
           >
@@ -69,7 +69,7 @@ export default function Footer() {
             className="
               text-gray-500
               hover:text-gray-900
-              dark:text-gray-400
+              dark:text-slate-400
               dark:hover:text-white
             "
           >

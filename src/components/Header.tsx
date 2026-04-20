@@ -12,7 +12,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 
 const linkBase = 'text-sm no-underline transition-colors';
 const linkActive = 'font-medium text-gray-900 dark:text-white';
-const linkInactive = 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white';
+const linkInactive = 'text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white';
 
 const fadeBase = 'pointer-events-none absolute top-0 z-10 h-full w-6 transition-opacity duration-200';
 
@@ -45,8 +45,8 @@ export default function Header() {
 
             className="
               shrink-0 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600
-              bg-clip-text text-2xl font-bold tracking-tight text-transparent
-              no-underline
+              bg-clip-text font-heading text-2xl font-bold tracking-tight
+              text-transparent no-underline
             "
           >
             Catrius Blog
@@ -61,7 +61,7 @@ export default function Header() {
               className={`
                 ${fadeBase}
                 left-0 bg-linear-to-r from-white
-                dark:from-gray-950
+                dark:from-slate-900
                 ${isBeginning ? `opacity-0` : `opacity-100`}
               `}
             />
@@ -69,7 +69,7 @@ export default function Header() {
               className={`
                 ${fadeBase}
                 right-0 bg-linear-to-l from-white
-                dark:from-gray-950
+                dark:from-slate-900
                 ${isEnd ? `opacity-0` : `opacity-100`}
               `}
             />
@@ -112,7 +112,7 @@ export default function Header() {
               className="
                 hidden items-center gap-3 border-l border-gray-200 pl-6
                 md:flex
-                dark:border-gray-800
+                dark:border-slate-800
               "
             >
               {user ? (
@@ -172,7 +172,7 @@ export default function Header() {
                     : `
                       text-gray-500
                       hover:text-red-500
-                      dark:text-gray-400
+                      dark:text-slate-400
                       dark:hover:text-red-400
                     `
                 }
@@ -210,7 +210,7 @@ export default function Header() {
                   : `
                     text-gray-500
                     hover:text-gray-900
-                    dark:text-gray-400
+                    dark:text-slate-400
                     dark:hover:text-white
                   `
               }
@@ -243,8 +243,8 @@ export default function Header() {
               ml-auto cursor-pointer rounded-md p-2 text-gray-600
               hover:bg-gray-100 hover:text-gray-900
               md:hidden
-              dark:text-gray-400
-              dark:hover:bg-gray-800 dark:hover:text-white
+              dark:text-slate-400
+              dark:hover:bg-slate-800 dark:hover:text-white
             "
           >
             <svg className="size-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
