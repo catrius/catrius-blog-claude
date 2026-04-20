@@ -13,6 +13,7 @@ function SidebarLink({ to, isActive, children }: { to: string; isActive: boolean
   return (
     <Link
       to={to}
+
       className={`
         flex items-center justify-between rounded-md px-3 py-2 text-sm
         no-underline transition-colors
@@ -119,6 +120,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           <div className="mb-8">
             <Link
               to="/search"
+        
               className={`
                 flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2 text-sm
                 no-underline transition-colors
@@ -272,6 +274,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   {isAdmin && (
                     <Link
                       to="/admin"
+                
                       className={`
                         block rounded-md px-3 py-2 text-sm no-underline
                         transition-colors

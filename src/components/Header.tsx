@@ -42,6 +42,7 @@ export default function Header() {
         <div className="mx-auto flex max-w-7xl items-center gap-6 p-4">
           <Link
             to="/"
+
             className="
               shrink-0 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600
               bg-clip-text text-2xl font-bold tracking-tight text-transparent
@@ -91,6 +92,7 @@ export default function Header() {
                   <SwiperSlide key={page.id} className="w-auto!">
                     <Link
                       to={path}
+          
                       className={`
                         ${linkBase}
                         ${isActive ? linkActive : linkInactive}
@@ -156,6 +158,7 @@ export default function Header() {
           {user && (
             <Link
               to="/likes"
+  
               aria-label="Liked posts"
               className={`
                 hidden rounded-md p-1.5 transition-colors

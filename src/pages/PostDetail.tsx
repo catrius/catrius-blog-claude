@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import CommentSection from '@/components/comments/CommentSection';
 import LikeButton from '@/components/LikeButton';
+import ReadingProgress from '@/components/ReadingProgress';
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -22,6 +23,7 @@ export default function PostDetail() {
   );
   const [recordView] = useRecordPostViewMutation();
   const viewRecorded = useRef(false);
+  const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (post && !viewRecorded.current) {
@@ -46,7 +48,8 @@ export default function PostDetail() {
   }
 
   return (
-    <article>
+    <article ref={articleRef}>
+      <ReadingProgress targetRef={articleRef} />
       <title>{`${post.title} | ${SITE_NAME}`}</title>
       <meta name="description" content={post.excerpt} />
       <meta property="og:title" content={post.title} />
@@ -111,6 +114,7 @@ export default function PostDetail() {
             <Link
               key={tag}
               to={`/tags/${encodeURIComponent(tag)}`}
+
               className="
                 rounded-full bg-gray-100 px-2.5 py-0.5 text-sm text-gray-600
                 no-underline transition-colors
@@ -156,6 +160,7 @@ export default function PostDetail() {
               <Link
                 key={related.id}
                 to={`/posts/${related.slug}`}
+  
                 className="
                   block rounded-lg border border-gray-200 p-4 no-underline
                   transition-colors

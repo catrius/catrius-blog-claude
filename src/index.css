@@ -4,6 +4,7 @@
 
 html {
   color-scheme: light;
+  overflow-y: scroll;
 }
 html.dark {
   color-scheme: dark;

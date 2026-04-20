@@ -84,6 +84,7 @@ export default function NavBar({
         <SwiperSlide className="w-auto!">
           <Link
             to="/"
+
             className={`
               ${pillBase}
               ${selectedCategorySlug === null ? `
@@ -116,6 +117,7 @@ export default function NavBar({
             <SwiperSlide key={category.id} className="w-auto!">
               <Link
                 to={`/categories/${category.slug}`}
+    
                 className={`
                   ${pillBase}
                   font-medium

@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router';
+import { Routes, Route, useLocation } from 'react-router';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Home from '@/pages/Home';
@@ -21,17 +22,31 @@ const AdminPages = lazy(() => import('@/pages/admin/AdminPages'));
 const AdminPageNew = lazy(() => import('@/pages/admin/AdminPageNew'));
 const AdminPageEdit = lazy(() => import('@/pages/admin/AdminPageEdit'));
 
-function App() {
+const pageVariants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
+
+const pageTransition = {
+  duration: 0.2,
+  ease: 'easeInOut' as const,
+};
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
   return (
-    <div
-      className="
-        flex min-h-screen flex-col bg-white
-        dark:bg-gray-950 dark:text-gray-100
-      "
-    >
-      <Header />
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
-        <Routes>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+      >
+        <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/tags" element={<TagsIndex />} />
@@ -99,6 +114,22 @@ function App() {
             />
           </Route>
         </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  return (
+    <div
+      className="
+        flex min-h-screen flex-col bg-white
+        dark:bg-gray-950 dark:text-gray-100
+      "
+    >
+      <Header />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
+        <AnimatedRoutes />
       </main>
       <Footer />
       <Analytics />
