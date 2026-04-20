@@ -82,9 +82,9 @@ export default function AdminPosts() {
               </th>
               <th
                 className="
-                hidden pr-4 pb-2
-                sm:table-cell
-              "
+                  hidden pr-4 pb-2
+                  sm:table-cell
+                "
               >
                 <select
                   value={categoryFilter}
@@ -108,9 +108,9 @@ export default function AdminPosts() {
               </th>
               <th
                 className="
-                hidden pr-4 pb-2
-                md:table-cell
-              "
+                  hidden pr-4 pb-2
+                  md:table-cell
+                "
               >
                 <select
                   value={dateFilter}
@@ -135,41 +135,41 @@ export default function AdminPosts() {
             </tr>
             <tr
               className="
-              border-b border-gray-200
-              dark:border-gray-800
-            "
+                border-b border-gray-200
+                dark:border-gray-800
+              "
             >
               <th
                 className="
-                pt-2 pr-4 pb-3 font-medium text-gray-500
-                dark:text-gray-400
-              "
+                  pt-2 pr-4 pb-3 font-medium text-gray-500
+                  dark:text-gray-400
+                "
               >
                 Title
               </th>
               <th
                 className="
-                hidden pt-2 pr-4 pb-3 font-medium text-gray-500
-                sm:table-cell
-                dark:text-gray-400
-              "
+                  hidden pt-2 pr-4 pb-3 font-medium text-gray-500
+                  sm:table-cell
+                  dark:text-gray-400
+                "
               >
                 Category
               </th>
               <th
                 className="
-                hidden pt-2 pr-4 pb-3 font-medium text-gray-500
-                md:table-cell
-                dark:text-gray-400
-              "
+                  hidden pt-2 pr-4 pb-3 font-medium text-gray-500
+                  md:table-cell
+                  dark:text-gray-400
+                "
               >
                 Date
               </th>
               <th
                 className="
-                pt-2 pb-3 text-right font-medium text-gray-500
-                dark:text-gray-400
-              "
+                  pt-2 pb-3 text-right font-medium text-gray-500
+                  dark:text-gray-400
+                "
               >
                 Actions
               </th>
@@ -181,9 +181,9 @@ export default function AdminPosts() {
                 <td
                   colSpan={4}
                   className="
-                  py-6 text-center text-gray-500
-                  dark:text-gray-400
-                "
+                    py-6 text-center text-gray-500
+                    dark:text-gray-400
+                  "
                 >
                   {search || categoryFilter || dateFilter
                     ? 'No posts match your filters.'
@@ -214,19 +214,19 @@ export default function AdminPosts() {
                   </td>
                   <td
                     className="
-                    hidden py-3 pr-4 text-gray-500
-                    sm:table-cell
-                    dark:text-gray-400
-                  "
+                      hidden py-3 pr-4 text-gray-500
+                      sm:table-cell
+                      dark:text-gray-400
+                    "
                   >
                     {post.category_id ? (categoryMap.get(post.category_id) ?? '—') : '—'}
                   </td>
                   <td
                     className="
-                    hidden py-3 pr-4 text-gray-500
-                    md:table-cell
-                    dark:text-gray-400
-                  "
+                      hidden py-3 pr-4 text-gray-500
+                      md:table-cell
+                      dark:text-gray-400
+                    "
                   >
                     {new Date(post.created_at).toLocaleDateString()}
                   </td>

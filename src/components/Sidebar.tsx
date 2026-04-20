@@ -19,15 +19,15 @@ function SidebarLink({ to, isActive, children }: { to: string; isActive: boolean
         ${
           isActive
             ? `
-          bg-gray-100 font-medium text-gray-900
-          dark:bg-gray-800 dark:text-white
-        `
+              bg-gray-100 font-medium text-gray-900
+              dark:bg-gray-800 dark:text-white
+            `
             : `
-          text-gray-700
-          hover:bg-gray-50
-          dark:text-gray-300
-          dark:hover:bg-gray-800/50
-        `
+              text-gray-700
+              hover:bg-gray-50
+              dark:text-gray-300
+              dark:hover:bg-gray-800/50
+            `
         }
       `}
     >
@@ -126,15 +126,15 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 ${
                   location.pathname === '/search'
                     ? `
-                  font-medium text-gray-900
-                  dark:text-white
-                `
+                      font-medium text-gray-900
+                      dark:text-white
+                    `
                     : `
-                  text-gray-700
-                  hover:bg-gray-50
-                  dark:text-gray-300
-                  dark:hover:bg-gray-800/50
-                `
+                      text-gray-700
+                      hover:bg-gray-50
+                      dark:text-gray-300
+                      dark:hover:bg-gray-800/50
+                    `
                 }
               `}
             >
@@ -154,10 +154,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             <div className="mb-8">
               <h3
                 className="
-                mb-3 text-xs font-semibold tracking-wider text-gray-400
-                uppercase
-                dark:text-gray-500
-              "
+                  mb-3 text-xs font-semibold tracking-wider text-gray-400
+                  uppercase
+                  dark:text-gray-500
+                "
               >
                 Pages
               </h3>
@@ -177,9 +177,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           <div>
             <h3
               className="
-              mb-3 text-xs font-semibold tracking-wider text-gray-400 uppercase
-              dark:text-gray-500
-            "
+                mb-3 text-xs font-semibold tracking-wider text-gray-400
+                uppercase
+                dark:text-gray-500
+              "
             >
               Categories
             </h3>
@@ -189,9 +190,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   All Posts
                   <span
                     className="
-                    text-gray-400
-                    dark:text-gray-500
-                  "
+                      text-gray-400
+                      dark:text-gray-500
+                    "
                   >
                     {postCounts?.total ?? 0}
                   </span>
@@ -203,9 +204,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     {category.name}
                     <span
                       className="
-                      text-gray-400
-                      dark:text-gray-500
-                    "
+                        text-gray-400
+                        dark:text-gray-500
+                      "
                     >
                       {postCountsByCategory.get(category.id) ?? 0}
                     </span>
@@ -242,15 +243,16 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           {/* Theme toggle */}
           <div
             className="
-            mt-8 border-t border-gray-200 pt-6
-            dark:border-gray-800
-          "
+              mt-8 border-t border-gray-200 pt-6
+              dark:border-gray-800
+            "
           >
             <h3
               className="
-              mb-3 text-xs font-semibold tracking-wider text-gray-400 uppercase
-              dark:text-gray-500
-            "
+                mb-3 text-xs font-semibold tracking-wider text-gray-400
+                uppercase
+                dark:text-gray-500
+              "
             >
               Theme
             </h3>
@@ -261,9 +263,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           {!authLoading && (
             <div
               className="
-              mt-8 border-t border-gray-200 pt-6
-              dark:border-gray-800
-            "
+                mt-8 border-t border-gray-200 pt-6
+                dark:border-gray-800
+              "
             >
               {user ? (
                 <div className="space-y-1">
@@ -276,15 +278,15 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         ${
                           location.pathname.startsWith('/admin')
                             ? `
-                          bg-gray-100 font-medium text-gray-900
-                          dark:bg-gray-800 dark:text-white
-                        `
+                              bg-gray-100 font-medium text-gray-900
+                              dark:bg-gray-800 dark:text-white
+                            `
                             : `
-                          text-gray-700
-                          hover:bg-gray-50
-                          dark:text-gray-300
-                          dark:hover:bg-gray-800/50
-                        `
+                              text-gray-700
+                              hover:bg-gray-50
+                              dark:text-gray-300
+                              dark:hover:bg-gray-800/50
+                            `
                         }
                       `}
                     >

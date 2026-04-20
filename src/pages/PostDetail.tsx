@@ -81,9 +81,9 @@ export default function PostDetail() {
       <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
       <div
         className="
-        mb-6 flex items-center gap-2 text-sm text-gray-400
-        dark:text-gray-500
-      "
+          mb-6 flex items-center gap-2 text-sm text-gray-400
+          dark:text-gray-500
+        "
       >
         <time>{new Date(post.created_at).toLocaleDateString()}</time>
         {post.reading_time_minutes != null && (
@@ -118,9 +118,9 @@ export default function PostDetail() {
       )}
       <div
         className="
-        prose max-w-none
-        dark:prose-invert
-      "
+          prose max-w-none
+          dark:prose-invert
+        "
       >
         <Markdown rehypePlugins={[rehypeRaw]}>{post.content}</Markdown>
       </div>
@@ -132,17 +132,17 @@ export default function PostDetail() {
       {relatedPosts && relatedPosts.length > 0 && (
         <section
           className="
-          mt-12 border-t border-gray-200 pt-8
-          dark:border-gray-700
-        "
+            mt-12 border-t border-gray-200 pt-8
+            dark:border-gray-700
+          "
         >
           <h2 className="mb-4 text-xl font-bold">Related Posts</h2>
           <div
             className="
-            grid gap-4
-            sm:grid-cols-2
-            lg:grid-cols-3
-          "
+              grid gap-4
+              sm:grid-cols-2
+              lg:grid-cols-3
+            "
           >
             {relatedPosts.map((related) => (
               <Link
@@ -158,25 +158,25 @@ export default function PostDetail() {
               >
                 <h3
                   className="
-                  mb-1 text-base font-semibold text-gray-900
-                  dark:text-gray-100
-                "
+                    mb-1 text-base font-semibold text-gray-900
+                    dark:text-gray-100
+                  "
                 >
                   {related.title}
                 </h3>
                 <p
                   className="
-                  line-clamp-2 text-sm text-gray-500
-                  dark:text-gray-400
-                "
+                    line-clamp-2 text-sm text-gray-500
+                    dark:text-gray-400
+                  "
                 >
                   {related.excerpt}
                 </p>
                 <time
                   className="
-                  mt-2 block text-xs text-gray-400
-                  dark:text-gray-500
-                "
+                    mt-2 block text-xs text-gray-400
+                    dark:text-gray-500
+                  "
                 >
                   {new Date(related.created_at).toLocaleDateString()}
                 </time>

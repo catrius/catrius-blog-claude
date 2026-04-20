@@ -77,9 +77,9 @@ export default function AdminPages() {
               </th>
               <th
                 className="
-                hidden pr-4 pb-2
-                md:table-cell
-              "
+                  hidden pr-4 pb-2
+                  md:table-cell
+                "
               >
                 <select
                   value={dateFilter}
@@ -104,32 +104,32 @@ export default function AdminPages() {
             </tr>
             <tr
               className="
-              border-b border-gray-200
-              dark:border-gray-800
-            "
+                border-b border-gray-200
+                dark:border-gray-800
+              "
             >
               <th
                 className="
-                pt-2 pr-4 pb-3 font-medium text-gray-500
-                dark:text-gray-400
-              "
+                  pt-2 pr-4 pb-3 font-medium text-gray-500
+                  dark:text-gray-400
+                "
               >
                 Title
               </th>
               <th
                 className="
-                hidden pt-2 pr-4 pb-3 font-medium text-gray-500
-                md:table-cell
-                dark:text-gray-400
-              "
+                  hidden pt-2 pr-4 pb-3 font-medium text-gray-500
+                  md:table-cell
+                  dark:text-gray-400
+                "
               >
                 Date
               </th>
               <th
                 className="
-                pt-2 pb-3 text-right font-medium text-gray-500
-                dark:text-gray-400
-              "
+                  pt-2 pb-3 text-right font-medium text-gray-500
+                  dark:text-gray-400
+                "
               >
                 Actions
               </th>
@@ -141,9 +141,9 @@ export default function AdminPages() {
                 <td
                   colSpan={3}
                   className="
-                  py-6 text-center text-gray-500
-                  dark:text-gray-400
-                "
+                    py-6 text-center text-gray-500
+                    dark:text-gray-400
+                  "
                 >
                   {search || dateFilter ? 'No pages match your filters.' : 'No pages yet. Create your first page!'}
                 </td>
@@ -172,10 +172,10 @@ export default function AdminPages() {
                   </td>
                   <td
                     className="
-                    hidden py-3 pr-4 text-gray-500
-                    md:table-cell
-                    dark:text-gray-400
-                  "
+                      hidden py-3 pr-4 text-gray-500
+                      md:table-cell
+                      dark:text-gray-400
+                    "
                   >
                     {new Date(page.created_at).toLocaleDateString()}
                   </td>

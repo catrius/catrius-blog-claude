@@ -34,26 +34,26 @@ export default function Header() {
     <>
       <header
         className="
-        border-b border-gray-200
-        dark:border-gray-800
-      "
+          border-b border-gray-200
+          dark:border-gray-800
+        "
       >
         <div className="mx-auto flex max-w-7xl items-center gap-6 p-4">
           <Link
             to="/"
             className="
-            shrink-0 text-2xl font-bold tracking-tight text-gray-900
-            no-underline
-            dark:text-white
-          "
+              shrink-0 text-2xl font-bold tracking-tight text-gray-900
+              no-underline
+              dark:text-white
+            "
           >
             Catrius Blog
           </Link>
           <nav
             className="
-            relative ml-auto hidden min-w-0
-            md:block
-          "
+              relative ml-auto hidden min-w-0
+              md:block
+            "
           >
             <div
               className={`
@@ -107,10 +107,10 @@ export default function Header() {
           {!authLoading && (
             <div
               className="
-              hidden items-center gap-3 border-l border-gray-200 pl-6
-              md:flex
-              dark:border-gray-800
-            "
+                hidden items-center gap-3 border-l border-gray-200 pl-6
+                md:flex
+                dark:border-gray-800
+              "
             >
               {user ? (
                 <>
@@ -162,15 +162,15 @@ export default function Header() {
                 ${
                   location.pathname === '/likes'
                     ? `
-                    text-red-500
-                    dark:text-red-400
-                  `
+                      text-red-500
+                      dark:text-red-400
+                    `
                     : `
-                    text-gray-500
-                    hover:text-red-500
-                    dark:text-gray-400
-                    dark:hover:text-red-400
-                  `
+                      text-gray-500
+                      hover:text-red-500
+                      dark:text-gray-400
+                      dark:hover:text-red-400
+                    `
                 }
               `}
             >
@@ -200,15 +200,15 @@ export default function Header() {
               ${
                 location.pathname === '/search'
                   ? `
-                  text-gray-900
-                  dark:text-white
-                `
+                    text-gray-900
+                    dark:text-white
+                  `
                   : `
-                  text-gray-500
-                  hover:text-gray-900
-                  dark:text-gray-400
-                  dark:hover:text-white
-                `
+                    text-gray-500
+                    hover:text-gray-900
+                    dark:text-gray-400
+                    dark:hover:text-white
+                  `
               }
             `}
           >
@@ -224,9 +224,9 @@ export default function Header() {
           {/* Theme toggle — desktop only */}
           <div
             className="
-            hidden
-            md:block
-          "
+              hidden
+              md:block
+            "
           >
             <ThemeToggle />
           </div>

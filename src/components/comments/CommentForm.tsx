@@ -29,15 +29,15 @@ export default function CommentForm({ postId }: CommentFormProps) {
     return (
       <div
         className="
-        rounded-lg border border-gray-200 p-4 text-center
-        dark:border-gray-700
-      "
+          rounded-lg border border-gray-200 p-4 text-center
+          dark:border-gray-700
+        "
       >
         <p
           className="
-          mb-3 text-sm text-gray-600
-          dark:text-gray-400
-        "
+            mb-3 text-sm text-gray-600
+            dark:text-gray-400
+          "
         >
           Sign in to leave a comment.
         </p>
@@ -70,19 +70,19 @@ export default function CommentForm({ postId }: CommentFormProps) {
         ) : (
           <div
             className="
-            flex size-6 items-center justify-center rounded-full bg-gray-200
-            text-xs font-medium text-gray-600
-            dark:bg-gray-700 dark:text-gray-300
-          "
+              flex size-6 items-center justify-center rounded-full bg-gray-200
+              text-xs font-medium text-gray-600
+              dark:bg-gray-700 dark:text-gray-300
+            "
           >
             {(user.user_metadata.full_name ?? user.email ?? '?').charAt(0).toUpperCase()}
           </div>
         )}
         <span
           className="
-          text-sm font-medium text-gray-700
-          dark:text-gray-300
-        "
+            text-sm font-medium text-gray-700
+            dark:text-gray-300
+          "
         >
           {user.user_metadata.full_name ?? user.email}
         </span>
@@ -113,9 +113,9 @@ export default function CommentForm({ postId }: CommentFormProps) {
       <div className="mt-2 flex items-center justify-between">
         <span
           className="
-          text-xs text-gray-400
-          dark:text-gray-500
-        "
+            text-xs text-gray-400
+            dark:text-gray-500
+          "
         >
           {body.length}/2000
         </span>

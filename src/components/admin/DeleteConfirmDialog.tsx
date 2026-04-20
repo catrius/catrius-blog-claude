@@ -42,17 +42,17 @@ export default function DeleteConfirmDialog({
     >
       <h2
         className="
-        mb-2 text-lg font-semibold text-gray-900
-        dark:text-white
-      "
+          mb-2 text-lg font-semibold text-gray-900
+          dark:text-white
+        "
       >
         Delete {itemType}
       </h2>
       <p
         className="
-        mb-6 text-sm text-gray-600
-        dark:text-gray-400
-      "
+          mb-6 text-sm text-gray-600
+          dark:text-gray-400
+        "
       >
         Are you sure you want to delete &ldquo;{itemTitle}&rdquo;? This action cannot be undone.
       </p>

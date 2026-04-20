@@ -20,9 +20,9 @@ export default function TagsIndex() {
       {tags.length === 0 ? (
         <p
           className="
-          text-gray-500
-          dark:text-gray-400
-        "
+            text-gray-500
+            dark:text-gray-400
+          "
         >
           No tags yet.
         </p>
@@ -44,9 +44,9 @@ export default function TagsIndex() {
               {tag}
               <span
                 className="
-                text-xs text-gray-400
-                dark:text-gray-500
-              "
+                  text-xs text-gray-400
+                  dark:text-gray-500
+                "
               >
                 {count}
               </span>

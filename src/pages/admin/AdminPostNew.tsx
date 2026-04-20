@@ -38,9 +38,9 @@ export default function AdminPostNew() {
       {error && (
         <p
           className="
-          mb-4 rounded-md bg-red-50 p-3 text-sm text-red-600
-          dark:bg-red-900/20 dark:text-red-400
-        "
+            mb-4 rounded-md bg-red-50 p-3 text-sm text-red-600
+            dark:bg-red-900/20 dark:text-red-400
+          "
         >
           {error}
         </p>

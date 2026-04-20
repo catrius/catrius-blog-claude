@@ -39,9 +39,9 @@ export default function NavBar({
   return (
     <nav
       className="
-      relative mb-6 hidden
-      md:block
-    "
+        relative mb-6 hidden
+        md:block
+      "
     >
       <div
         className={`
@@ -82,9 +82,9 @@ export default function NavBar({
             All Posts
             <span
               className="
-              ml-1.5 text-gray-400
-              dark:text-gray-500
-            "
+                ml-1.5 text-gray-400
+                dark:text-gray-500
+              "
             >
               ({totalPostCount})
             </span>
@@ -102,9 +102,9 @@ export default function NavBar({
               {category.name}
               <span
                 className="
-                ml-1.5 text-gray-400
-                dark:text-gray-500
-              "
+                  ml-1.5 text-gray-400
+                  dark:text-gray-500
+                "
               >
                 ({postCountsByCategory.get(category.id) ?? 0})
               </span>

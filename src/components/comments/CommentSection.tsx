@@ -12,9 +12,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   return (
     <section
       className="
-      mt-12 border-t border-gray-200 pt-8
-      dark:border-gray-700
-    "
+        mt-12 border-t border-gray-200 pt-8
+        dark:border-gray-700
+      "
     >
       <h2 className="mb-4 text-xl font-bold">
         Comments{comments && comments.length > 0 ? ` (${comments.length})` : ''}
@@ -23,9 +23,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       {isLoading && (
         <p
           className="
-          text-sm text-gray-400
-          dark:text-gray-500
-        "
+            text-sm text-gray-400
+            dark:text-gray-500
+          "
         >
           Loading comments...
         </p>
@@ -36,9 +36,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       {comments && comments.length === 0 && (
         <p
           className="
-          text-sm text-gray-500
-          dark:text-gray-400
-        "
+            text-sm text-gray-500
+            dark:text-gray-400
+          "
         >
           No comments yet. Be the first to share your thoughts!
         </p>

@@ -40,18 +40,18 @@ export default function LikeButton({ postId }: LikeButtonProps) {
         ${
           liked
             ? `
-            border-red-200 bg-red-50 text-red-600
-            hover:bg-red-100
-            dark:border-red-800 dark:bg-red-950/50 dark:text-red-400
-            dark:hover:bg-red-950
-          `
+              border-red-200 bg-red-50 text-red-600
+              hover:bg-red-100
+              dark:border-red-800 dark:bg-red-950/50 dark:text-red-400
+              dark:hover:bg-red-950
+            `
             : `
-            border-gray-200 bg-white text-gray-500
-            hover:border-red-200 hover:bg-red-50 hover:text-red-500
-            dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400
-            dark:hover:border-red-800 dark:hover:bg-red-950/50
-            dark:hover:text-red-400
-          `
+              border-gray-200 bg-white text-gray-500
+              hover:border-red-200 hover:bg-red-50 hover:text-red-500
+              dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400
+              dark:hover:border-red-800 dark:hover:bg-red-950/50
+              dark:hover:text-red-400
+            `
         }
       `}
     >

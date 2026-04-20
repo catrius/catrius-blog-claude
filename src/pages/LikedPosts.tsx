@@ -29,9 +29,9 @@ export default function LikedPosts() {
         </svg>
         <p
           className="
-          mb-4 text-gray-500
-          dark:text-gray-400
-        "
+            mb-4 text-gray-500
+            dark:text-gray-400
+          "
         >
           Sign in to see posts you&apos;ve liked.
         </p>
@@ -60,19 +60,19 @@ export default function LikedPosts() {
       {posts.length === 0 ? (
         <p
           className="
-          text-gray-500
-          dark:text-gray-400
-        "
+            text-gray-500
+            dark:text-gray-400
+          "
         >
           You haven&apos;t liked any posts yet. Browse posts and tap the heart to save them here.
         </p>
       ) : (
         <div
           className="
-          grid gap-4
-          sm:grid-cols-2
-          lg:grid-cols-3
-        "
+            grid gap-4
+            sm:grid-cols-2
+            lg:grid-cols-3
+          "
         >
           {posts.map((post) => (
             <Link
@@ -88,25 +88,25 @@ export default function LikedPosts() {
             >
               <h2
                 className="
-                mb-1 text-base font-semibold text-gray-900
-                dark:text-gray-100
-              "
+                  mb-1 text-base font-semibold text-gray-900
+                  dark:text-gray-100
+                "
               >
                 {post.title}
               </h2>
               <p
                 className="
-                line-clamp-2 text-sm text-gray-500
-                dark:text-gray-400
-              "
+                  line-clamp-2 text-sm text-gray-500
+                  dark:text-gray-400
+                "
               >
                 {post.excerpt}
               </p>
               <time
                 className="
-                mt-2 block text-xs text-gray-400
-                dark:text-gray-500
-              "
+                  mt-2 block text-xs text-gray-400
+                  dark:text-gray-500
+                "
               >
                 {new Date(post.created_at).toLocaleDateString()}
               </time>

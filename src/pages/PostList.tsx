@@ -42,11 +42,11 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
         <>
           <ul
             className="
-            grid grid-cols-1 gap-6
-            sm:grid-cols-2
-            lg:grid-cols-3
-            xl:grid-cols-4
-          "
+              grid grid-cols-1 gap-6
+              sm:grid-cols-2
+              lg:grid-cols-3
+              xl:grid-cols-4
+            "
           >
             {posts.map((post) => (
               <li
@@ -58,13 +58,15 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
                   dark:border-gray-700
                 "
               >
-                <Link to={`/posts/${post.slug}`} className="block text-inherit no-underline">
+                <Link to={`/posts/${post.slug}`} className="
+                  block text-inherit no-underline
+                ">
                   <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
                   <div
                     className="
-                    mb-3 flex items-center gap-2 text-sm text-gray-400
-                    dark:text-gray-500
-                  "
+                      mb-3 flex items-center gap-2 text-sm text-gray-400
+                      dark:text-gray-500
+                    "
                   >
                     <time>
                       {new Date(post.created_at).toLocaleString(undefined, {
@@ -84,9 +86,9 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
                   </div>
                   <p
                     className="
-                    text-gray-500
-                    dark:text-gray-400
-                  "
+                      text-gray-500
+                      dark:text-gray-400
+                    "
                   >
                     {post.excerpt}
                   </p>
@@ -110,8 +112,13 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
                     ))}
                   </div>
                 )}
-                <div className="mt-auto flex items-center justify-end gap-3 pt-4">
-                  <span className="text-sm text-gray-400 dark:text-gray-500">
+                <div className="
+                  mt-auto flex items-center justify-end gap-3 pt-4
+                ">
+                  <span className="
+                    text-sm text-gray-400
+                    dark:text-gray-500
+                  ">
                     {post.view_count} {post.view_count === 1 ? 'view' : 'views'}
                   </span>
                   <LikeButton postId={post.id} />

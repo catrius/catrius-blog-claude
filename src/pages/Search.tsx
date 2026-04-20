@@ -83,25 +83,23 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
   return (
     <li
       className="
-      rounded-lg border border-gray-200 p-5 transition-colors
-      hover:border-blue-500
-      dark:border-gray-700
-    "
+        rounded-lg border border-gray-200 p-5 transition-colors
+        hover:border-blue-500
+        dark:border-gray-700
+      "
     >
       <Link
         to={`/posts/${post.slug}`}
-        className="
-        block text-inherit no-underline
-      "
+        className="block text-inherit no-underline"
       >
         <h2 className="text-lg font-semibold">
           <Highlight text={post.title} query={query} />
         </h2>
         <div
           className="
-          mt-1 flex items-center gap-2 text-sm text-gray-400
-          dark:text-gray-500
-        "
+            mt-1 flex items-center gap-2 text-sm text-gray-400
+            dark:text-gray-500
+          "
         >
           <time>{date}</time>
           {post.reading_time_minutes != null && (
@@ -119,9 +117,9 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
         </div>
         <p
           className="
-          mt-2 text-sm/relaxed text-gray-500
-          dark:text-gray-400
-        "
+            mt-2 text-sm/relaxed text-gray-500
+            dark:text-gray-400
+          "
         >
           <Highlight text={snippet} query={query} />
         </p>
@@ -250,18 +248,18 @@ export default function Search() {
       ) : !query ? (
         <p
           className="
-          text-gray-500
-          dark:text-gray-400
-        "
+            text-gray-500
+            dark:text-gray-400
+          "
         >
           Enter a search term to find posts.
         </p>
       ) : posts.length === 0 && !isFetching ? (
         <p
           className="
-          text-gray-500
-          dark:text-gray-400
-        "
+            text-gray-500
+            dark:text-gray-400
+          "
         >
           No results for &ldquo;{query}&rdquo;.
         </p>
@@ -269,9 +267,9 @@ export default function Search() {
         <>
           <p
             className="
-            mb-6 text-sm text-gray-500
-            dark:text-gray-400
-          "
+              mb-6 text-sm text-gray-500
+              dark:text-gray-400
+            "
           >
             {posts.length}
             {hasMore ? '+' : ''} results for &ldquo;{query}&rdquo;
@@ -290,9 +288,9 @@ export default function Search() {
           {isFetching && (
             <p
               className="
-              mt-4 text-center text-sm text-gray-400
-              dark:text-gray-500
-            "
+                mt-4 text-center text-sm text-gray-400
+                dark:text-gray-500
+              "
             >
               Loading...
             </p>

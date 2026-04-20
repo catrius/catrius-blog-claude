@@ -171,18 +171,18 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
       <div className="mb-1 flex items-center justify-between">
         <label
           className="
-          text-sm font-medium text-gray-700
-          dark:text-gray-300
-        "
+            text-sm font-medium text-gray-700
+            dark:text-gray-300
+          "
         >
           Content
         </label>
         {isMobile && (
           <div
             className="
-            flex gap-1 rounded-md border border-gray-300 p-0.5
-            dark:border-gray-600
-          "
+              flex gap-1 rounded-md border border-gray-300 p-0.5
+              dark:border-gray-600
+            "
           >
             <button
               type="button"
@@ -192,13 +192,13 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
                 ${
                   mobilePreview === 'edit'
                     ? `
-                    bg-blue-600 text-white
-                    dark:bg-blue-500
-                  `
+                      bg-blue-600 text-white
+                      dark:bg-blue-500
+                    `
                     : `
-                    text-gray-600
-                    dark:text-gray-400
-                  `
+                      text-gray-600
+                      dark:text-gray-400
+                    `
                 }
               `}
             >
@@ -212,13 +212,13 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
                 ${
                   mobilePreview === 'preview'
                     ? `
-                    bg-blue-600 text-white
-                    dark:bg-blue-500
-                  `
+                      bg-blue-600 text-white
+                      dark:bg-blue-500
+                    `
                     : `
-                    text-gray-600
-                    dark:text-gray-400
-                  `
+                      text-gray-600
+                      dark:text-gray-400
+                    `
                 }
               `}
             >
@@ -230,9 +230,9 @@ export default function ContentEditor({ value, onChange, accessToken }: ContentE
       {uploading && (
         <p
           className="
-          mb-1 text-sm text-blue-600
-          dark:text-blue-400
-        "
+            mb-1 text-sm text-blue-600
+            dark:text-blue-400
+          "
         >
           Uploading image…
         </p>

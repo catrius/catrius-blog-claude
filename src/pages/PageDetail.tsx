@@ -63,9 +63,9 @@ export default function PageDetail() {
       <h1 className="mb-6 text-3xl font-bold">{page.title}</h1>
       <div
         className="
-        prose max-w-none
-        dark:prose-invert
-      "
+          prose max-w-none
+          dark:prose-invert
+        "
       >
         <Markdown rehypePlugins={[rehypeRaw]}>{page.content}</Markdown>
       </div>

@@ -116,9 +116,9 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
           />
           <span
             className="
-            text-sm text-gray-600
-            dark:text-gray-400
-          "
+              text-sm text-gray-600
+              dark:text-gray-400
+            "
           >
             Generate slug from title
           </span>
@@ -149,9 +149,9 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
             ${
               !slugManual
                 ? `
-              bg-gray-50 text-gray-500
-              dark:bg-gray-800 dark:text-gray-400
-            `
+                  bg-gray-50 text-gray-500
+                  dark:bg-gray-800 dark:text-gray-400
+                `
                 : ''
             }
           `}
