@@ -442,6 +442,13 @@ export const api = createApi({
       ],
     }),
 
+    recordPostView: builder.mutation<null, string>({
+      queryFn: async (slug) => {
+        await fetch(`/api/view?slug=${encodeURIComponent(slug)}`, { method: 'POST' });
+        return { data: null };
+      },
+    }),
+
     getUserLikedPosts: builder.query<Post[], string>({
       queryFn: async (userId) => {
         const { data: likes, error: likesError } = await supabase
@@ -497,5 +504,6 @@ export const {
   useDeleteCommentMutation,
   useGetLikeStatusQuery,
   useToggleLikeMutation,
+  useRecordPostViewMutation,
   useGetUserLikedPostsQuery,
 } = api;

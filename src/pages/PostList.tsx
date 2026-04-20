@@ -110,7 +110,10 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
                     ))}
                   </div>
                 )}
-                <div className="mt-auto flex justify-end pt-4">
+                <div className="mt-auto flex items-center justify-end gap-3 pt-4">
+                  <span className="text-sm text-gray-400 dark:text-gray-500">
+                    {post.view_count} {post.view_count === 1 ? 'view' : 'views'}
+                  </span>
                   <LikeButton postId={post.id} />
                 </div>
               </li>

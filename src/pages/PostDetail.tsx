@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { Link, useNavigate, useParams } from 'react-router';
-import { useGetPostQuery, useGetRelatedPostsQuery, useDeletePostMutation } from '@/store/api';
+import { useGetPostQuery, useGetRelatedPostsQuery, useDeletePostMutation, useRecordPostViewMutation } from '@/store/api';
 import { SITE_NAME } from '@/constants';
 import { useAuth } from '@/hooks/useAuth';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
@@ -20,6 +20,15 @@ export default function PostDetail() {
     { postId: post?.id ?? 0, tags: post?.tags ?? [] },
     { skip: !post || post.tags.length === 0 },
   );
+  const [recordView] = useRecordPostViewMutation();
+  const viewRecorded = useRef(false);
+
+  useEffect(() => {
+    if (post && !viewRecorded.current) {
+      viewRecorded.current = true;
+      recordView(post.slug);
+    }
+  }, [post, recordView]);
 
   async function handleDelete() {
     if (!post) return;
@@ -83,6 +92,8 @@ export default function PostDetail() {
             <span>{post.reading_time_minutes} min read</span>
           </>
         )}
+        <span>&middot;</span>
+        <span>{post.view_count} {post.view_count === 1 ? 'view' : 'views'}</span>
         <span>&middot;</span>
         <LikeButton postId={post.id} />
       </div>

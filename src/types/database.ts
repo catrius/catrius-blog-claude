@@ -103,6 +103,7 @@ export type Database = {
           slug: string;
           tags: string[];
           title: string;
+          view_count: number;
         };
         Insert: {
           category_id?: number | null;
@@ -115,6 +116,7 @@ export type Database = {
           slug: string;
           tags?: string[];
           title: string;
+          view_count?: number;
         };
         Update: {
           category_id?: number | null;
@@ -127,6 +129,7 @@ export type Database = {
           slug?: string;
           tags?: string[];
           title?: string;
+          view_count?: number;
         };
         Relationships: [
           {
@@ -172,6 +175,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      increment_post_view: {
+        Args: { p_slug: string };
+        Returns: undefined;
+      };
       related_posts: {
         Args: { max_results?: number; p_id: number; p_tags: string[] };
         Returns: {
@@ -185,6 +192,7 @@ export type Database = {
           slug: string;
           tags: string[];
           title: string;
+          view_count: number;
         }[];
         SetofOptions: {
           from: '*';
