@@ -12,6 +12,16 @@ type PageInsert = TablesInsert<'page'>
 type PageUpdate = TablesUpdate<'page'>
 type CommentInsert = TablesInsert<'comment'>
 
+interface LikeStatus {
+  count: number
+  likedByUser: boolean
+}
+
+interface LikeStatusArgs {
+  postId: number
+  userId: string | null
+}
+
 export const PAGE_SIZE = 12
 
 interface PostsResponse {
@@ -45,7 +55,7 @@ interface RelatedPostsArgs {
 
 export const api = createApi({
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['Post', 'Category', 'Page', 'Comment'],
+  tagTypes: ['Post', 'Category', 'Page', 'Comment', 'Like'],
   endpoints: (builder) => ({
     getPosts: builder.query<PostsResponse, PostsQueryArgs>({
       queryFn: async ({ offset, limit, categoryId }) => {
@@ -486,6 +496,92 @@ export const api = createApi({
         { type: 'Comment', id: `POST_${postId}` },
       ],
     }),
+
+    getLikeStatus: builder.query<LikeStatus, LikeStatusArgs>({
+      queryFn: async ({ postId, userId }) => {
+        const { count, error } = await supabase
+          .from('post_like')
+          .select('*', { count: 'exact', head: true })
+          .eq('post_id', postId)
+
+        if (error) return { error }
+
+        let likedByUser = false
+        if (userId) {
+          const { data } = await supabase
+            .from('post_like')
+            .select('id')
+            .eq('post_id', postId)
+            .eq('user_id', userId)
+            .maybeSingle()
+          likedByUser = data !== null
+        }
+
+        return { data: { count: count ?? 0, likedByUser } }
+      },
+      providesTags: (_result, _error, { postId }) => [
+        { type: 'Like', id: `POST_${postId}` },
+      ],
+    }),
+
+    toggleLike: builder.mutation<
+      null,
+      { postId: number; userId: string; liked: boolean }
+    >({
+      queryFn: async ({ postId, userId, liked }) => {
+        if (liked) {
+          const { error } = await supabase
+            .from('post_like')
+            .delete()
+            .eq('post_id', postId)
+            .eq('user_id', userId)
+          if (error) return { error }
+        } else {
+          const { error } = await supabase
+            .from('post_like')
+            .insert({ post_id: postId, user_id: userId })
+          if (error) return { error }
+        }
+        return { data: null }
+      },
+      invalidatesTags: (_result, _error, { postId }) => [
+        { type: 'Like', id: `POST_${postId}` },
+        { type: 'Like', id: 'USER_LIST' },
+      ],
+    }),
+
+    getUserLikedPosts: builder.query<Post[], string>({
+      queryFn: async (userId) => {
+        const { data: likes, error: likesError } = await supabase
+          .from('post_like')
+          .select('post_id')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+
+        if (likesError) return { error: likesError }
+        if (likes.length === 0) return { data: [] }
+
+        const postIds = likes.map((l) => l.post_id)
+        const { data: posts, error: postsError } = await supabase
+          .from('post')
+          .select('*')
+          .in('id', postIds)
+
+        if (postsError) return { error: postsError }
+
+        const orderMap = new Map(postIds.map((id, i) => [id, i]))
+        posts.sort((a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0))
+
+        return { data: posts }
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Post' as const, id })),
+              { type: 'Like', id: 'USER_LIST' },
+            ]
+          : [{ type: 'Like', id: 'USER_LIST' }],
+    }),
   }),
 })
 
@@ -513,4 +609,7 @@ export const {
   useGetCommentsQuery,
   useCreateCommentMutation,
   useDeleteCommentMutation,
+  useGetLikeStatusQuery,
+  useToggleLikeMutation,
+  useGetUserLikedPostsQuery,
 } = api

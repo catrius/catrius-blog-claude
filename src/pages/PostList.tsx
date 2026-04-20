@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router'
 import type { Tables } from '@/types/database'
+import LikeButton from '@/components/LikeButton'
 
 type Post = Tables<'post'>
 
@@ -55,7 +56,8 @@ export default function PostList({
               <li
                 key={post.id}
                 className="
-                  rounded-lg border border-gray-200 p-6 transition-colors
+                  flex flex-col rounded-lg border border-gray-200 p-6
+                  transition-colors
                   hover:border-blue-500
                   dark:border-gray-700
                 "
@@ -105,6 +107,9 @@ export default function PostList({
                     ))}
                   </div>
                 )}
+                <div className="mt-auto flex justify-end pt-3">
+                  <LikeButton postId={post.id} />
+                </div>
               </li>
             ))}
           </ul>

@@ -238,6 +238,33 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             </ul>
           </div>
 
+          {/* Liked posts — visible when signed in */}
+          {user && (
+            <div className="mt-8">
+              <SidebarLink
+                to="/likes"
+                isActive={location.pathname === '/likes'}
+              >
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill={location.pathname === '/likes' ? 'currentColor' : 'none'}
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>
+                  Liked Posts
+                </span>
+              </SidebarLink>
+            </div>
+          )}
+
           {/* Theme toggle */}
           <div className="
             mt-8 border-t border-gray-200 pt-6

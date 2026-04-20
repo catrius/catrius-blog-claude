@@ -11,6 +11,7 @@ import { SITE_NAME } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
 import CommentSection from '@/components/comments/CommentSection'
+import LikeButton from '@/components/LikeButton'
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
@@ -84,6 +85,8 @@ export default function PostDetail() {
             <span>{post.reading_time_minutes} min read</span>
           </>
         )}
+        <span>&middot;</span>
+        <LikeButton postId={post.id} />
       </div>
       {post.tags.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">
@@ -109,6 +112,10 @@ export default function PostDetail() {
         dark:prose-invert
       ">
         <Markdown rehypePlugins={[rehypeRaw]}>{post.content}</Markdown>
+      </div>
+
+      <div className="mt-8 flex justify-end">
+        <LikeButton postId={post.id} />
       </div>
 
       {relatedPosts && relatedPosts.length > 0 && (

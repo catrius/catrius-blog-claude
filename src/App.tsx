@@ -8,6 +8,7 @@ import TagsIndex from '@/pages/TagsIndex'
 import TagPosts from '@/pages/TagPosts'
 import PostDetail from '@/pages/PostDetail'
 import PageDetail from '@/pages/PageDetail'
+import LikedPosts from '@/pages/LikedPosts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AdminRoute from '@/components/AdminRoute'
@@ -36,6 +37,7 @@ function App() {
           <Route path="/categories/:categorySlug" element={<Home />} />
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/pages/:slug" element={<PageDetail />} />
+          <Route path="/likes" element={<LikedPosts />} />
           <Route element={<AdminRoute />}>
             <Route
               path="/admin"
