@@ -5,10 +5,12 @@ import type { Tables, TablesInsert, TablesUpdate } from '@/types/database'
 type Post = Tables<'post'>
 type Category = Tables<'category'>
 type Page = Tables<'page'>
+type Comment = Tables<'comment'>
 type PostInsert = TablesInsert<'post'>
 type PostUpdate = TablesUpdate<'post'>
 type PageInsert = TablesInsert<'page'>
 type PageUpdate = TablesUpdate<'page'>
+type CommentInsert = TablesInsert<'comment'>
 
 export const PAGE_SIZE = 12
 
@@ -43,7 +45,7 @@ interface RelatedPostsArgs {
 
 export const api = createApi({
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['Post', 'Category', 'Page'],
+  tagTypes: ['Post', 'Category', 'Page', 'Comment'],
   endpoints: (builder) => ({
     getPosts: builder.query<PostsResponse, PostsQueryArgs>({
       queryFn: async ({ offset, limit, categoryId }) => {
@@ -433,6 +435,57 @@ export const api = createApi({
         { type: 'Page', id: 'LIST' },
       ],
     }),
+
+    getComments: builder.query<Comment[], number>({
+      queryFn: async (postId) => {
+        const { data, error } = await supabase
+          .from('comment')
+          .select('*')
+          .eq('post_id', postId)
+          .order('created_at', { ascending: true })
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result, _error, postId) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Comment' as const, id })),
+              { type: 'Comment', id: `POST_${postId}` },
+            ]
+          : [{ type: 'Comment', id: `POST_${postId}` }],
+    }),
+
+    createComment: builder.mutation<Comment, CommentInsert>({
+      queryFn: async (newComment) => {
+        const { data, error } = await supabase
+          .from('comment')
+          .insert(newComment)
+          .select()
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      invalidatesTags: (_result, _error, { post_id }) => [
+        { type: 'Comment', id: `POST_${post_id}` },
+      ],
+    }),
+
+    deleteComment: builder.mutation<null, { id: number; postId: number }>({
+      queryFn: async ({ id }) => {
+        const { error } = await supabase
+          .from('comment')
+          .delete()
+          .eq('id', id)
+
+        if (error) return { error }
+        return { data: null }
+      },
+      invalidatesTags: (_result, _error, { postId }) => [
+        { type: 'Comment', id: `POST_${postId}` },
+      ],
+    }),
   }),
 })
 
@@ -457,4 +510,7 @@ export const {
   useCreatePageMutation,
   useUpdatePageMutation,
   useDeletePageMutation,
+  useGetCommentsQuery,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
 } = api

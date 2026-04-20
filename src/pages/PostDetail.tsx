@@ -10,6 +10,7 @@ import {
 import { SITE_NAME } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog'
+import CommentSection from '@/components/comments/CommentSection'
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
@@ -156,6 +157,8 @@ export default function PostDetail() {
           </div>
         </section>
       )}
+
+      <CommentSection postId={post.id} />
 
       {isAdmin && (
         <DeleteConfirmDialog
