@@ -13,6 +13,7 @@ interface PostFormProps {
     excerpt?: string;
     content: string;
     category_id?: number | null;
+    cover_image?: string | null;
   }) => Promise<void>;
   isSubmitting: boolean;
 }
@@ -37,11 +38,33 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
   const [excerpt, setExcerpt] = useState(postData?.excerpt ?? '');
   const [content, setContent] = useState(initialData?.content ?? '');
   const [categoryId, setCategoryId] = useState<number | null>(postData?.category_id ?? null);
+  const [coverImage, setCoverImage] = useState<string | null>(postData?.cover_image ?? null);
+  const [coverUploading, setCoverUploading] = useState(false);
 
   function handleTitleChange(value: string) {
     setTitle(value);
     if (!slugManual) {
       setSlug(slugify(value));
+    }
+  }
+
+  async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !session?.access_token) return;
+    setCoverUploading(true);
+    try {
+      const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        body: file,
+      });
+      if (!res.ok) throw new Error('Upload failed');
+      const blob = (await res.json()) as { url: string };
+      setCoverImage(blob.url);
+    } catch {
+      alert('Cover image upload failed.');
+    } finally {
+      setCoverUploading(false);
     }
   }
 
@@ -51,7 +74,7 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
       title,
       slug,
       content,
-      ...(isPost && { excerpt, category_id: categoryId }),
+      ...(isPost && { excerpt, category_id: categoryId, cover_image: coverImage }),
     });
   }
 
@@ -206,6 +229,61 @@ export default function PostForm({ variant = 'post', initialData, onSubmit, isSu
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {isPost && (
+        <div>
+          <label
+            htmlFor="cover-image"
+            className="
+              mb-1 block text-sm font-medium text-gray-700
+              dark:text-gray-300
+            "
+          >
+            Cover Image
+          </label>
+          {coverImage && (
+            <div className="relative mb-2">
+              <img src={coverImage} alt="Cover preview" className="
+                h-32 w-full rounded-md object-cover
+              " />
+              <button
+                type="button"
+                onClick={() => setCoverImage(null)}
+                className="
+                  absolute top-1 right-1 cursor-pointer rounded-full bg-black/60
+                  p-1 text-white
+                  hover:bg-black/80
+                "
+              >
+                <svg className="size-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+          <input
+            id="cover-image"
+            type="file"
+            accept="image/*"
+            onChange={handleCoverUpload}
+            disabled={coverUploading}
+            className="
+              block w-full text-sm text-gray-500
+              file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3
+              file:py-1.5 file:text-sm file:font-medium file:text-blue-700
+              hover:file:bg-blue-100
+              dark:text-gray-400
+              dark:file:bg-blue-900/30 dark:file:text-blue-300
+            "
+          />
+          {coverUploading && (
+            <p className="
+              mt-1 text-sm text-blue-600
+              dark:text-blue-400
+            ">Uploading…</p>
+          )}
         </div>
       )}
 

@@ -52,6 +52,14 @@ export default function PostDetail() {
       <meta property="og:title" content={post.title} />
       <meta property="og:description" content={post.excerpt} />
       <meta property="og:type" content="article" />
+      {post.cover_image && <meta property="og:image" content={post.cover_image} />}
+      {post.cover_image && (
+        <img
+          src={post.cover_image}
+          alt=""
+          className="mb-6 aspect-3/1 w-full rounded-lg object-cover"
+        />
+      )}
       {isAdmin && (
         <div className="mb-4 flex gap-2">
           <Link

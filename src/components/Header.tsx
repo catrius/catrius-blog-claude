@@ -34,17 +34,18 @@ export default function Header() {
     <>
       <header
         className="
-          border-b border-gray-200
-          dark:border-gray-800
+          border-b-2 border-transparent
+          bg-[linear-gradient(to_right,#3b82f6,#8b5cf6,#ec4899)]
+          bg-size-[100%_2px] bg-bottom bg-no-repeat
         "
       >
         <div className="mx-auto flex max-w-7xl items-center gap-6 p-4">
           <Link
             to="/"
             className="
-              shrink-0 text-2xl font-bold tracking-tight text-gray-900
+              shrink-0 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600
+              bg-clip-text text-2xl font-bold tracking-tight text-transparent
               no-underline
-              dark:text-white
             "
           >
             Catrius Blog

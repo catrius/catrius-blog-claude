@@ -12,17 +12,21 @@ function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function buildMetaTags(meta: { title: string; description: string; type: string }): string {
+function buildMetaTags(meta: { title: string; description: string; type: string; image?: string | null }): string {
   const safeTitle = escapeHtml(meta.title);
   const safeDescription = escapeHtml(meta.description);
-  return [
+  const tags = [
     `<title>${safeTitle}</title>`,
     `<meta name="description" content="${safeDescription}" />`,
     `<meta property="og:title" content="${safeTitle}" />`,
     `<meta property="og:description" content="${safeDescription}" />`,
     `<meta property="og:type" content="${escapeHtml(meta.type)}" />`,
     `<meta property="og:site_name" content="${escapeHtml(SITE_NAME)}" />`,
-  ].join('\n    ');
+  ];
+  if (meta.image) {
+    tags.push(`<meta property="og:image" content="${escapeHtml(meta.image)}" />`);
+  }
+  return tags.join('\n    ');
 }
 
 function injectMeta(html: string, tags: string): string {
@@ -33,13 +37,14 @@ function injectMeta(html: string, tags: string): string {
 }
 
 async function getPostMeta(slug: string) {
-  const { data } = await supabase.from('post').select('title, excerpt').eq('slug', slug).single();
+  const { data } = await supabase.from('post').select('title, excerpt, cover_image').eq('slug', slug).single();
 
   if (!data) return null;
   return {
     title: `${data.title} | ${SITE_NAME}`,
     description: data.excerpt,
     type: 'article',
+    image: data.cover_image,
   };
 }
 

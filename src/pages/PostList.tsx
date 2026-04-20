@@ -52,12 +52,23 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
               <li
                 key={post.id}
                 className="
-                  flex flex-col rounded-lg border border-gray-200 p-6
-                  transition-colors
-                  hover:border-blue-500
+                  flex flex-col overflow-hidden rounded-lg border
+                  border-gray-200 transition-all duration-200
+                  hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg
                   dark:border-gray-700
+                  dark:hover:shadow-blue-500/10
                 "
               >
+                {post.cover_image && (
+                  <Link to={`/posts/${post.slug}`} className="block">
+                    <img
+                      src={post.cover_image}
+                      alt=""
+                      className="aspect-2/1 w-full object-cover"
+                    />
+                  </Link>
+                )}
+                <div className="flex flex-1 flex-col p-6">
                 <Link to={`/posts/${post.slug}`} className="
                   block text-inherit no-underline
                 ">
@@ -122,6 +133,7 @@ export default function PostList({ posts, title, hasMore, isFetching, onLoadMore
                     {post.view_count} {post.view_count === 1 ? 'view' : 'views'}
                   </span>
                   <LikeButton postId={post.id} />
+                </div>
                 </div>
               </li>
             ))}
