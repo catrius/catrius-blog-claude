@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     data: { user },
   } = await supabase.auth.getUser(token);
 
-  if (!user || user.id !== process.env.VITE_PUBLIC_ADMIN_USER_ID) {
+  if (!user || user.app_metadata?.role !== 'admin') {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 

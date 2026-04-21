@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const user = session?.user ?? null;
-  const isAdmin = user?.id === import.meta.env.VITE_PUBLIC_ADMIN_USER_ID;
+  const isAdmin = user?.app_metadata?.role === 'admin';
 
   async function signInWithGoogle() {
     await supabase.auth.signInWithOAuth({
