@@ -172,6 +172,25 @@ export const api = createApi({
       providesTags: [{ type: 'Post', id: 'LIST' }],
     }),
 
+    getTrendingPosts: builder.query<Post[], number | void>({
+      queryFn: async (arg) => {
+        const limit = arg ?? 5;
+        const { data, error } = await supabase
+          .from('post')
+          .select('*')
+          .gt('view_count', 0)
+          .order('view_count', { ascending: false })
+          .limit(limit);
+
+        if (error) return { error };
+        return { data };
+      },
+      providesTags: (result) =>
+        result
+          ? [...result.map(({ id }) => ({ type: 'Post' as const, id })), { type: 'Post', id: 'TRENDING' }]
+          : [{ type: 'Post', id: 'TRENDING' }],
+    }),
+
     getPostCounts: builder.query<{ countsByCategory: Record<number, number>; total: number }, void>({
       queryFn: async () => {
         const { data, error } = await supabase.from('post').select('category_id');
@@ -480,6 +499,7 @@ export const api = createApi({
 
 export const {
   useGetPostsQuery,
+  useGetTrendingPostsQuery,
   useGetPostsByTagQuery,
   useGetAllTagsQuery,
   useSearchPostsQuery,

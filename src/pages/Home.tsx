@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { useGetPostsQuery, useGetPostCountsQuery, useGetCategoriesQuery, PAGE_SIZE } from '@/store/api';
 import { SITE_NAME } from '@/constants';
 import NavBar from '@/components/NavBar';
+import TrendingPosts from '@/components/TrendingPosts';
 import PostList from '@/pages/PostList';
 
 export default function Home() {
@@ -61,6 +62,7 @@ export default function Home() {
         totalPostCount={postCounts?.total ?? 0}
         selectedCategorySlug={categorySlug ?? null}
       />
+      {!selectedCategory && <TrendingPosts />}
       <PostList
         posts={data?.posts ?? []}
         title={title}
