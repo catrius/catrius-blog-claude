@@ -12,6 +12,7 @@ import LikeButton from '@/components/LikeButton';
 import ReadingProgress from '@/components/ReadingProgress';
 import ShareButtons from '@/components/ShareButtons';
 import TableOfContents from '@/components/TableOfContents';
+import TagPill from '@/components/TagPill';
 import { extractHeadings } from '@/lib/extractHeadings';
 
 export default function PostDetail() {
@@ -221,24 +222,7 @@ export default function PostDetail() {
       {post.tags.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
-            <Link
-              key={tag}
-              to={`/tags/${encodeURIComponent(tag)}`}
-
-              className="
-                rounded-full bg-linear-to-r from-gray-100 to-gray-50 px-3 py-0.5
-                text-sm text-gray-600 no-underline transition-colors
-                hover:from-blue-100 hover:to-blue-50 hover:text-blue-600
-                dark:from-slate-800 dark:to-slate-700 dark:text-slate-400
-                dark:hover:from-blue-900/30 dark:hover:to-blue-800/20
-                dark:hover:text-blue-400
-              "
-            >
-              <span className="
-                mr-0.5 text-gray-400
-                dark:text-slate-500
-              ">#</span>{tag}
-            </Link>
+            <TagPill key={tag} tag={tag} size="md" />
           ))}
         </div>
       )}

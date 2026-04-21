@@ -1,6 +1,6 @@
-import { Link } from 'react-router';
 import { useGetAllTagsQuery } from '@/store/api';
 import { SITE_NAME } from '@/constants';
+import TagPill from '@/components/TagPill';
 
 export default function TagsIndex() {
   const { data: tags = [], isLoading, error } = useGetAllTagsQuery();
@@ -66,33 +66,7 @@ export default function TagsIndex() {
       ) : (
         <div className="flex flex-wrap gap-3">
           {tags.map(({ tag, count }) => (
-            <Link
-              key={tag}
-              to={`/tags/${encodeURIComponent(tag)}`}
-              className="
-                inline-flex items-center gap-1.5 rounded-full bg-linear-to-r
-                from-gray-100 to-gray-50 px-3.5 py-1.5 text-sm text-gray-700
-                no-underline shadow-sm transition-all
-                hover:from-blue-100 hover:to-blue-50 hover:text-blue-600
-                hover:shadow-md
-                dark:from-slate-800 dark:to-slate-700 dark:text-slate-300
-                dark:hover:from-blue-900/30 dark:hover:to-blue-800/20
-                dark:hover:text-blue-400
-              "
-            >
-              <span className="
-                text-gray-400
-                dark:text-slate-500
-              ">#</span>{tag}
-              <span
-                className="
-                  text-xs text-gray-400
-                  dark:text-slate-500
-                "
-              >
-                {count}
-              </span>
-            </Link>
+            <TagPill key={tag} tag={tag} size="lg" count={count} />
           ))}
         </div>
       )}

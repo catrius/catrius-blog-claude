@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router';
 import { useSearchPostsQuery, useGetCategoriesQuery, PAGE_SIZE } from '@/store/api';
 import { SITE_NAME } from '@/constants';
 import type { Tables } from '@/types/database';
+import TagPill from '@/components/TagPill';
 
 type Post = Tables<'post'>;
 
@@ -128,23 +129,7 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
       {post.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
           {post.tags.map((tag) => (
-            <Link
-              key={tag}
-              to={`/tags/${encodeURIComponent(tag)}`}
-              className="
-                rounded-full bg-linear-to-r from-gray-100 to-gray-50 px-2.5
-                py-0.5 text-xs text-gray-600 no-underline transition-colors
-                hover:from-blue-100 hover:to-blue-50 hover:text-blue-600
-                dark:from-slate-800 dark:to-slate-700 dark:text-slate-400
-                dark:hover:from-blue-900/30 dark:hover:to-blue-800/20
-                dark:hover:text-blue-400
-              "
-            >
-              <span className="
-                mr-0.5 text-gray-400
-                dark:text-slate-500
-              ">#</span>{tag}
-            </Link>
+            <TagPill key={tag} tag={tag} />
           ))}
         </div>
       )}
