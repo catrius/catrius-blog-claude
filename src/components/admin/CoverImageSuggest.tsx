@@ -104,7 +104,8 @@ export default function CoverImageSuggest({ query, accessToken, onSelect }: Cove
             <div
               className="
                 absolute inset-0 z-10 flex items-center justify-center
-                rounded-lg bg-white/70 dark:bg-slate-900/70
+                rounded-lg bg-white/70
+                dark:bg-slate-900/70
               "
             >
               <svg

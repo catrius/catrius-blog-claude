@@ -83,9 +83,10 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
   return (
     <li
       className="
-        rounded-lg border border-gray-200 p-5 transition-colors
-        hover:border-blue-500
-        dark:border-slate-700
+        rounded-lg p-5 shadow-md transition-all duration-200
+        hover:-translate-y-0.5 hover:shadow-xl
+        dark:bg-slate-800/50 dark:shadow-slate-900/50
+        dark:hover:shadow-blue-500/10
       "
     >
       <Link
@@ -131,14 +132,18 @@ function SearchResult({ post, query, categoryName }: { post: Post; query: string
               key={tag}
               to={`/tags/${encodeURIComponent(tag)}`}
               className="
-                rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600
-                no-underline transition-colors
-                hover:bg-blue-100 hover:text-blue-600
-                dark:bg-slate-800 dark:text-slate-400
-                dark:hover:bg-blue-900/30 dark:hover:text-blue-400
+                rounded-full bg-linear-to-r from-gray-100 to-gray-50 px-2.5
+                py-0.5 text-xs text-gray-600 no-underline transition-colors
+                hover:from-blue-100 hover:to-blue-50 hover:text-blue-600
+                dark:from-slate-800 dark:to-slate-700 dark:text-slate-400
+                dark:hover:from-blue-900/30 dark:hover:to-blue-800/20
+                dark:hover:text-blue-400
               "
             >
-              {tag}
+              <span className="
+                mr-0.5 text-gray-400
+                dark:text-slate-500
+              ">#</span>{tag}
             </Link>
           ))}
         </div>
@@ -233,7 +238,7 @@ export default function Search() {
             autoFocus
             className="
               w-full rounded-lg border border-gray-200 bg-white py-3 pr-4 pl-10
-              text-gray-900 placeholder-gray-400 transition-colors outline-none
+              text-gray-900 placeholder-gray-400 transition-colors
               focus:border-blue-500
               dark:border-slate-700 dark:bg-slate-800 dark:text-white
               dark:placeholder-slate-500
@@ -246,23 +251,51 @@ export default function Search() {
       {error ? (
         <p className="text-red-500">Error searching posts.</p>
       ) : !query ? (
-        <p
-          className="
-            text-gray-500
+        <div className="py-16 text-center">
+          <svg
+            className="
+              mx-auto mb-4 size-16 text-gray-300
+              dark:text-slate-600
+            "
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <p className="
+            mb-2 text-lg font-medium text-gray-500
             dark:text-slate-400
-          "
-        >
-          Enter a search term to find posts.
-        </p>
+          ">Search for posts</p>
+          <p className="
+            text-sm text-gray-400
+            dark:text-slate-500
+          ">Enter a search term above to find posts.</p>
+        </div>
       ) : posts.length === 0 && !isFetching ? (
-        <p
-          className="
-            text-gray-500
+        <div className="py-16 text-center">
+          <svg
+            className="
+              mx-auto mb-4 size-16 text-gray-300
+              dark:text-slate-600
+            "
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+          </svg>
+          <p className="
+            mb-2 text-lg font-medium text-gray-500
             dark:text-slate-400
-          "
-        >
-          No results for &ldquo;{query}&rdquo;.
-        </p>
+          ">No results found</p>
+          <p className="
+            text-sm text-gray-400
+            dark:text-slate-500
+          ">No posts match &ldquo;{query}&rdquo;. Try a different search term.</p>
+        </div>
       ) : (
         <>
           <p

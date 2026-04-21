@@ -100,6 +100,10 @@ export default function TrendingPosts() {
         dark:text-slate-100
       "
     >
+      <span className="
+        inline-block h-5 w-1 rounded-full bg-linear-to-b from-blue-500
+        via-purple-500 to-pink-500
+      " />
       <svg
         className="size-5 text-orange-500"
         viewBox="0 0 20 20"

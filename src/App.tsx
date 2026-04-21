@@ -10,8 +10,10 @@ import TagPosts from '@/pages/TagPosts';
 import PostDetail from '@/pages/PostDetail';
 import PageDetail from '@/pages/PageDetail';
 import LikedPosts from '@/pages/LikedPosts';
+import NotFound from '@/pages/NotFound';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackToTop from '@/components/BackToTop';
 import AdminRoute from '@/components/AdminRoute';
 
 const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'));
@@ -122,6 +124,7 @@ function AnimatedRoutes() {
               }
             />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -141,6 +144,7 @@ function App() {
         <AnimatedRoutes />
       </main>
       <Footer />
+      <BackToTop />
       <Analytics />
       <SpeedInsights />
     </div>

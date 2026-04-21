@@ -10,6 +10,7 @@ import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import CommentSection from '@/components/comments/CommentSection';
 import LikeButton from '@/components/LikeButton';
 import ReadingProgress from '@/components/ReadingProgress';
+import ShareButtons from '@/components/ShareButtons';
 import TableOfContents from '@/components/TableOfContents';
 import { extractHeadings } from '@/lib/extractHeadings';
 
@@ -43,11 +44,117 @@ export default function PostDetail() {
   }
 
   if (isLoading) {
-    return null;
+    return (
+      <article>
+        {/* Cover image */}
+        <div data-skeleton className="mb-6 aspect-3/1 w-full rounded-lg" />
+        {/* Title */}
+        <div data-skeleton className="mb-2 h-9 w-3/4" />
+        {/* Meta (date, reading time, views) */}
+        <div data-skeleton className="mb-6 h-4 w-64" />
+        {/* Tags */}
+        <div className="mb-6 flex gap-2">
+          <div data-skeleton className="h-6 w-16 rounded-full" />
+          <div data-skeleton className="h-6 w-20 rounded-full" />
+          <div data-skeleton className="h-6 w-14 rounded-full" />
+        </div>
+        {/* Content paragraphs */}
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-5/6" />
+          </div>
+          <div data-skeleton className="h-7 w-1/3" />
+          <div className="space-y-2">
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-4/5" />
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-2/3" />
+          </div>
+          <div data-skeleton className="h-7 w-2/5" />
+          <div className="space-y-2">
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-3/4" />
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-5/6" />
+            <div data-skeleton className="h-4 w-full" />
+            <div data-skeleton className="h-4 w-2/3" />
+          </div>
+        </div>
+        {/* Share + like bar */}
+        <div className="mt-8 flex items-center justify-between">
+          <div data-skeleton className="h-9 w-28 rounded-full" />
+          <div data-skeleton className="h-9 w-16 rounded-full" />
+        </div>
+      </article>
+    );
   }
 
   if (error || !post) {
-    return <p className="text-red-500">Post not found.</p>;
+    return (
+      <div className="py-20 text-center">
+        <title>{`Post Not Found | ${SITE_NAME}`}</title>
+        <svg
+          className="
+            mx-auto mb-4 size-16 text-gray-300
+            dark:text-slate-600
+          "
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+          />
+        </svg>
+        <h1
+          className="
+            mb-2 font-heading text-2xl font-bold text-gray-900
+            dark:text-slate-100
+          "
+        >
+          Post not found
+        </h1>
+        <p
+          className="
+            mb-8 text-gray-500
+            dark:text-slate-400
+          "
+        >
+          This post may have been removed or the URL is incorrect.
+        </p>
+        <div className="flex items-center justify-center gap-3">
+          <Link
+            to="/"
+            className="
+              rounded-full bg-blue-500 px-5 py-2 text-sm font-medium text-white
+              no-underline transition-colors
+              hover:bg-blue-600
+            "
+          >
+            Go home
+          </Link>
+          <Link
+            to="/search"
+            className="
+              rounded-full border border-gray-200 px-5 py-2 text-sm font-medium
+              text-gray-700 no-underline transition-colors
+              hover:border-gray-300 hover:bg-gray-50
+              dark:border-slate-700 dark:text-slate-300
+              dark:hover:border-slate-600 dark:hover:bg-slate-800
+            "
+          >
+            Search posts
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -119,14 +226,18 @@ export default function PostDetail() {
               to={`/tags/${encodeURIComponent(tag)}`}
 
               className="
-                rounded-full bg-gray-100 px-2.5 py-0.5 text-sm text-gray-600
-                no-underline transition-colors
-                hover:bg-blue-100 hover:text-blue-600
-                dark:bg-slate-800 dark:text-slate-400
-                dark:hover:bg-blue-900/30 dark:hover:text-blue-400
+                rounded-full bg-linear-to-r from-gray-100 to-gray-50 px-3 py-0.5
+                text-sm text-gray-600 no-underline transition-colors
+                hover:from-blue-100 hover:to-blue-50 hover:text-blue-600
+                dark:from-slate-800 dark:to-slate-700 dark:text-slate-400
+                dark:hover:from-blue-900/30 dark:hover:to-blue-800/20
+                dark:hover:text-blue-400
               "
             >
-              {tag}
+              <span className="
+                mr-0.5 text-gray-400
+                dark:text-slate-500
+              ">#</span>{tag}
             </Link>
           ))}
         </div>
@@ -141,7 +252,8 @@ export default function PostDetail() {
         <Markdown rehypePlugins={[rehypeSlug, rehypeRaw]}>{post.content}</Markdown>
       </div>
 
-      <div className="mt-8 flex justify-end">
+      <div className="mt-8 flex items-center justify-between">
+        <ShareButtons url={`${window.location.origin}/posts/${post.slug}`} title={post.title} />
         <LikeButton postId={post.id} />
       </div>
 
@@ -152,7 +264,15 @@ export default function PostDetail() {
             dark:border-slate-700
           "
         >
-          <h2 className="mb-4 font-heading text-xl font-bold">Related Posts</h2>
+          <h2 className="
+            mb-4 flex items-center gap-2 font-heading text-xl font-bold
+          ">
+            <span className="
+              inline-block h-5 w-1 rounded-full bg-linear-to-b from-blue-500
+              via-purple-500 to-pink-500
+            " />
+            Related Posts
+          </h2>
           <div
             className="
               grid gap-4
@@ -166,11 +286,11 @@ export default function PostDetail() {
                 to={`/posts/${related.slug}`}
   
                 className="
-                  block rounded-lg border border-gray-200 p-4 no-underline
-                  transition-colors
-                  hover:border-blue-300 hover:bg-blue-50/50
-                  dark:border-slate-700
-                  dark:hover:border-blue-700 dark:hover:bg-blue-900/20
+                  block rounded-lg p-4 no-underline shadow-md transition-all
+                  duration-200
+                  hover:-translate-y-0.5 hover:shadow-xl
+                  dark:bg-slate-800/50 dark:shadow-slate-900/50
+                  dark:hover:shadow-blue-500/10
                 "
               >
                 <h3

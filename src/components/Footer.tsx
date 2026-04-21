@@ -7,10 +7,6 @@ const navLinks = [
 ];
 
 export default function Footer() {
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
   return (
     <footer
       className="
@@ -20,55 +16,22 @@ export default function Footer() {
       "
     >
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <div
-          className="
-            flex flex-col items-center justify-between gap-6
-            sm:flex-row
-          "
-        >
-          <nav className="flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="
-                  text-sm text-gray-600 no-underline transition-colors
-                  hover:text-gray-900
-                  dark:text-slate-400
-                  dark:hover:text-white
-                "
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          <button
-            onClick={scrollToTop}
-            aria-label="Back to top"
-            className="
-              group flex cursor-pointer items-center gap-1.5 text-sm
-              text-gray-500 transition-colors
-              hover:text-gray-900
-              dark:text-slate-400
-              dark:hover:text-white
-            "
-          >
-            Back to top
-            <svg
+        <nav className="flex items-center justify-center gap-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
               className="
-                size-4 transition-transform
-                group-hover:-translate-y-0.5
+                text-sm text-gray-600 no-underline transition-colors
+                hover:text-gray-900
+                dark:text-slate-400
+                dark:hover:text-white
               "
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-            </svg>
-          </button>
-        </div>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
         <div
           className="

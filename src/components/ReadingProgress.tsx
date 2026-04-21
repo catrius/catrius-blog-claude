@@ -43,14 +43,15 @@ export default function ReadingProgress({ targetRef }: ReadingProgressProps) {
   return (
     <div
       className="
-        fixed inset-x-0 top-0 z-50 h-1 bg-gray-200/50
+        fixed inset-x-0 top-0 z-50 h-[3px] bg-gray-200/50
         dark:bg-slate-800/50
       "
     >
       <div
         className="
           h-full bg-linear-to-r from-blue-500 via-purple-500 to-pink-500
-          transition-[width] duration-150 ease-out
+          drop-shadow-[0_0_6px_rgba(139,92,246,0.5)] transition-[width]
+          duration-150 ease-out
         "
         style={{ width: `${progress}%` }}
       />
