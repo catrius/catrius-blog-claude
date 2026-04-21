@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useGetPageQuery, useDeletePageMutation } from '@/store/api';
 import { SITE_NAME } from '@/constants';
@@ -67,7 +68,7 @@ export default function PageDetail() {
           dark:prose-invert
         "
       >
-        <Markdown rehypePlugins={[rehypeRaw]}>{page.content}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{page.content}</Markdown>
       </div>
 
       {isAdmin && (

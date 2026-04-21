@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useGetPostQuery, useGetRelatedPostsQuery, useDeletePostMutation, useRecordPostViewMutation } from '@/store/api';
 import { SITE_NAME } from '@/constants';
@@ -233,7 +234,7 @@ export default function PostDetail() {
           dark:prose-invert
         "
       >
-        <Markdown rehypePlugins={[rehypeSlug, rehypeRaw]}>{post.content}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug, rehypeRaw]}>{post.content}</Markdown>
       </div>
 
       <div className="mt-8 flex items-center justify-between">
