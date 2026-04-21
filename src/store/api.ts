@@ -12,6 +12,25 @@ type PageInsert = TablesInsert<'page'>;
 type PageUpdate = TablesUpdate<'page'>;
 type CommentInsert = TablesInsert<'comment'>;
 
+interface PostAnalyticsRow {
+  id: number;
+  title: string;
+  slug: string;
+  view_count: number;
+  created_at: string;
+  like_count: number;
+  comment_count: number;
+}
+
+interface PostAnalytics {
+  posts: PostAnalyticsRow[];
+  totals: {
+    totalViews: number;
+    totalLikes: number;
+    totalComments: number;
+  };
+}
+
 interface LikeStatus {
   count: number;
   likedByUser: boolean;
@@ -494,6 +513,46 @@ export const api = createApi({
           ? [...result.map(({ id }) => ({ type: 'Post' as const, id })), { type: 'Like', id: 'USER_LIST' }]
           : [{ type: 'Like', id: 'USER_LIST' }],
     }),
+
+    getPostAnalytics: builder.query<PostAnalytics, void>({
+      queryFn: async () => {
+        const [postsResult, likesResult, commentsResult] = await Promise.all([
+          supabase.from('post').select('id, title, slug, view_count, created_at').order('created_at', { ascending: false }),
+          supabase.from('post_like').select('post_id'),
+          supabase.from('comment').select('post_id'),
+        ]);
+
+        if (postsResult.error) return { error: postsResult.error };
+        if (likesResult.error) return { error: likesResult.error };
+        if (commentsResult.error) return { error: commentsResult.error };
+
+        const likeCounts = new Map<number, number>();
+        for (const { post_id } of likesResult.data) {
+          likeCounts.set(post_id, (likeCounts.get(post_id) ?? 0) + 1);
+        }
+
+        const commentCounts = new Map<number, number>();
+        for (const { post_id } of commentsResult.data) {
+          commentCounts.set(post_id, (commentCounts.get(post_id) ?? 0) + 1);
+        }
+
+        let totalViews = 0;
+        let totalLikes = 0;
+        let totalComments = 0;
+
+        const posts: PostAnalyticsRow[] = postsResult.data.map((p) => {
+          const like_count = likeCounts.get(p.id) ?? 0;
+          const comment_count = commentCounts.get(p.id) ?? 0;
+          totalViews += p.view_count;
+          totalLikes += like_count;
+          totalComments += comment_count;
+          return { ...p, like_count, comment_count };
+        });
+
+        return { data: { posts, totals: { totalViews, totalLikes, totalComments } } };
+      },
+      providesTags: [{ type: 'Post', id: 'LIST' }, 'Comment', 'Like'],
+    }),
   }),
 });
 
@@ -526,4 +585,5 @@ export const {
   useToggleLikeMutation,
   useRecordPostViewMutation,
   useGetUserLikedPostsQuery,
+  useGetPostAnalyticsQuery,
 } = api;

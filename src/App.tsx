@@ -21,6 +21,7 @@ const AdminPostEdit = lazy(() => import('@/pages/admin/AdminPostEdit'));
 const AdminPages = lazy(() => import('@/pages/admin/AdminPages'));
 const AdminPageNew = lazy(() => import('@/pages/admin/AdminPageNew'));
 const AdminPageEdit = lazy(() => import('@/pages/admin/AdminPageEdit'));
+const AdminAnalytics = lazy(() => import('@/pages/admin/AdminAnalytics'));
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },
@@ -109,6 +110,14 @@ function AnimatedRoutes() {
               element={
                 <Suspense fallback={null}>
                   <AdminPageEdit />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/analytics"
+              element={
+                <Suspense fallback={null}>
+                  <AdminAnalytics />
                 </Suspense>
               }
             />
